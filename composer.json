@@ -84,5 +84,12 @@
                 "Add support for recipes": "./patches/recipe-10.3.x-20a2005e57ec794f95fa22cf35ec1b0abb4ee4b6.diff"
             }
         }
+    },
+    "scripts": {
+        "post-create-project-cmd": [
+            "drush site-install minimal --yes --db-url sqlite://db.sqlite --account-pass admin",
+            "cd web && php core/scripts/drupal recipe core/recipes/standard",
+            "drush cache:rebuild"
+        ]
     }
 }
