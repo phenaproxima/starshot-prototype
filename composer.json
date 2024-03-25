@@ -78,6 +78,11 @@
                 "  * Remove the plugin that prints this message:",
                 "      composer remove drupal/core-project-message"
             ]
+        },
+        "patches": {
+            "drupal/core": {
+                "Add support for recipes": "./patches/recipe-10.3.x-20a2005e57ec794f95fa22cf35ec1b0abb4ee4b6.diff"
+            }
         }
     }
 }
