@@ -1,0 +1,9 @@
+name: Moderated content
+description: Opts all content types into a moderation workflow.
+type: Drupal Suite
+recipes:
+  - editorial_workflow
+config:
+  actions:
+    workflows.workflow.editorial:
+      addNodeTypes: '*'
