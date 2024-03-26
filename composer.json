@@ -92,7 +92,7 @@
     },
     "scripts": {
         "post-create-project-cmd": [
-            "drush site-install minimal --yes --db-url sqlite://db.sqlite --account-pass admin",
+            "drush site-install minimal --yes --db-url sqlite://db.sqlite --account-pass admin --site-name 'Drupal Suite'",
             "cd web && php core/scripts/drupal recipe ../recipes/drupal_suite",
             "drush cache:rebuild"
         ]
