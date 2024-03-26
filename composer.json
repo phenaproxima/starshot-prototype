@@ -93,14 +93,7 @@
     "scripts": {
         "post-create-project-cmd": [
             "drush site-install minimal --yes --db-url sqlite://db.sqlite --account-pass admin",
-            "cd web && php core/scripts/drupal recipe core/recipes/standard",
-            "cd web && php core/scripts/drupal recipe core/recipes/audio_media_type",
-            "cd web && php core/scripts/drupal recipe core/recipes/document_media_type",
-            "cd web && php core/scripts/drupal recipe core/recipes/image_media_type",
-            "cd web && php core/scripts/drupal recipe core/recipes/local_video_media_type",
-            "cd web && php core/scripts/drupal recipe core/recipes/remote_video_media_type",
-            "cd web && php core/scripts/drupal recipe ../recipes/drupal_suite_content_moderation",
-            "cd web && php core/scripts/drupal recipe ../recipes/drupal_suite_content_url",
+            "cd web && php core/scripts/drupal recipe ../recipes/drupal_suite",
             "drush cache:rebuild"
         ]
     }

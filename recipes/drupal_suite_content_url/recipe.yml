@@ -1,7 +1,0 @@
-name: Pretty URLs for content
-description: Adds human-friendly URL generation to the Page and Article content types.
-type: Drupal Suite
-install:
-  - path
-  - pathauto
-  - token
