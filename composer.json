@@ -21,6 +21,7 @@
         "drupal/core-composer-scaffold": "^10.3",
         "drupal/core-project-message": "^10.3",
         "drupal/core-recommended": "^10.3",
+        "drupal/pathauto": "^1.12",
         "drush/drush": "^12.5",
         "oomphinc/composer-installers-extender": "^2"
     },
@@ -99,6 +100,7 @@
             "cd web && php core/scripts/drupal recipe core/recipes/local_video_media_type",
             "cd web && php core/scripts/drupal recipe core/recipes/remote_video_media_type",
             "cd web && php core/scripts/drupal recipe ../recipes/drupal_suite_content_moderation",
+            "cd web && php core/scripts/drupal recipe ../recipes/drupal_suite_content_url",
             "drush cache:rebuild"
         ]
     }
