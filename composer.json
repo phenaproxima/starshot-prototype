@@ -22,6 +22,7 @@
         "drupal/core-project-message": "^10.3",
         "drupal/core-recommended": "^10.3",
         "drupal/pathauto": "^1.12",
+        "drupal/redirect": "^1.9",
         "drush/drush": "^12.5",
         "oomphinc/composer-installers-extender": "^2"
     },
@@ -91,6 +92,10 @@
         }
     },
     "scripts": {
+        "dev:reinstall": [
+            "chmod +w web/sites/default",
+            "@post-create-project-cmd"
+        ],
         "post-create-project-cmd": [
             "drush site-install minimal --yes --db-url sqlite://db.sqlite --account-pass admin --site-name 'Drupal Suite'",
             "cd web && php core/scripts/drupal recipe ../recipes/drupal_suite",
