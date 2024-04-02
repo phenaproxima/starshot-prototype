@@ -18,6 +18,7 @@
         "ext-pdo_sqlite": "*",
         "composer/installers": "^2.0",
         "cweagans/composer-patches": "^2",
+        "drupal/coffee": "^1.4",
         "drupal/core-composer-scaffold": "^10.3",
         "drupal/core-project-message": "^10.3",
         "drupal/core-recommended": "^10.3",
