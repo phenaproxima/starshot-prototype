@@ -10,6 +10,7 @@ recipes:
   - remote_video_media_type
   - standard
 install:
+  - admin_toolbar
   - coffee
   - content_moderation
   - field
