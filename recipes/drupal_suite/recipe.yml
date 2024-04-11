@@ -10,17 +10,19 @@ recipes:
   - remote_video_media_type
   - standard
 install:
-  - admin_toolbar
   - coffee
   - content_moderation
   - field
   - metatag
+  - navigation
   - path
   - pathauto
   - redirect
   - token
   - workflows
 config:
+  import:
+    navigation: '*'
   actions:
     core.entity_form_display.node.article.default:
       setComponent:
