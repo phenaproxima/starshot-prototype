@@ -20,3 +20,16 @@ install:
 config:
   import:
     navigation: '*'
+  actions:
+    user.role.content_editor:
+      grantPermissions:
+        - 'access coffee'
+        - 'access shortcuts'
+        - 'use text format basic_html'
+        - 'use text format full_html'
+        - 'use text format restricted_html'
+        - 'view own unpublished media'
+      grantPermissionsForEachMediaType:
+        - 'create %bundle media'
+        - 'delete own %bundle media'
+        - 'edit own %bundle media'

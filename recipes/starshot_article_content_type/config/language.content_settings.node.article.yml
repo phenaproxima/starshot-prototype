@@ -15,4 +15,3 @@ target_entity_type_id: node
 target_bundle: article
 default_langcode: site_default
 language_alterable: true
-
