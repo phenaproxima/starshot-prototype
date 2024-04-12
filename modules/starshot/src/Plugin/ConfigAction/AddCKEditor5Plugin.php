@@ -48,14 +48,20 @@ final class AddCKEditor5Plugin implements ConfigActionPluginInterface, Container
       throw new ConfigActionException("The $this->pluginId config action only works with CKEditor 5 editors.");
     }
 
-    $plugin_id = $value['id'];
+    $normalized_parameters = array_is_list($value) ? $value : [$value];
+    array_walk($normalized_parameters, fn ($parameters) => $this->doApply($editor, $parameters));
+    $editor->save();
+  }
+
+  private function doApply(EditorInterface $editor, array $parameters): void {
+    $plugin_id = $parameters['id'];
     $plugin = $this->pluginManager->getPlugin($plugin_id, $editor);
     if ($plugin instanceof CKEditor5PluginConfigurableInterface) {
-      $plugin->setConfiguration($value['configuration']);
+      $plugin->setConfiguration($parameters['configuration'] ?? []);
 
       $settings = $editor->getSettings();
       $settings['plugins'][$plugin_id] = $plugin->getConfiguration();
-      $editor->setSettings($settings)->save();
+      $editor->setSettings($settings);
     }
     else {
       throw new ConfigActionException("The '$plugin_id' plugin is not configurable.");

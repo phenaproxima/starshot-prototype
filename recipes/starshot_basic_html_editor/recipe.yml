@@ -1,0 +1,41 @@
+name: Basic HTML editor
+type: Starshot
+description: 'Enhances the Basic HTML editor with better linking and media support.'
+recipes:
+  - basic_html_format_editor
+install:
+  - file
+  - image
+  - linkit
+  - media
+  - media_library
+  - starshot
+config:
+  import:
+    linkit:
+      - image.style.linkit_result_thumbnail
+  actions:
+    filter.format.basic_html:
+      setFilterConfigs:
+        - instance_id: linkit
+          configuration:
+            id: linkit
+            status: true
+        - instance_id: media_embed
+          configuration:
+            id: media_embed
+            status: true
+    editor.editor.basic_html:
+      addPlugin:
+        # The media_media plugin must be enabled before the drupalMedia toolbar
+        # item can be added.
+        - id: media_media
+        - id: linkit_extension
+          configuration:
+            linkit_enabled: true
+            linkit_profile: default
+      addItemToToolbar:
+        item_name: drupalMedia
+        # Replace the Image button.
+        position: 9
+        replace: true

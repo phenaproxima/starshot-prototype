@@ -9,18 +9,18 @@ recipes:
   - local_video_media_type
   - remote_video_media_type
   - standard
+  - starshot_basic_html_editor
+  - starshot_full_html_editor
 install:
   - coffee
   - content_moderation
   - field
-  - linkit
   - menu_link_content
   - metatag
   - navigation
   - path
   - pathauto
   - redirect
-  - starshot
   - token
   - workflows
 config:
@@ -69,32 +69,6 @@ config:
           third_party_settings: { }
           weight: 111
           region: content
-    # Enable LinkIt in the basic_html and full_html formats, with its
-    # default settings.
-    editor.editor.basic_html:
-      addPlugin:
-        id: linkit_extension
-        configuration:
-          linkit_enabled: true
-          linkit_profile: default
-    editor.editor.full_html:
-      addPlugin:
-        id: linkit_extension
-        configuration:
-          linkit_enabled: true
-          linkit_profile: default
-    filter.format.basic_html:
-      setFilterConfig:
-        instance_id: linkit
-        configuration:
-          id: linkit
-          status: true
-    filter.format.full_html:
-      setFilterConfig:
-        instance_id: linkit
-        configuration:
-          id: linkit
-          status: true
     metatag.settings:
       simple_config_update:
         entity_type_groups:
