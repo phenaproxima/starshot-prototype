@@ -13,6 +13,7 @@ install:
   - coffee
   - content_moderation
   - field
+  - linkit
   - metatag
   - navigation
   - path
@@ -23,6 +24,8 @@ install:
   - workflows
 config:
   import:
+    linkit:
+      - image.style.linkit_result_thumbnail
     navigation: '*'
   actions:
     core.entity_form_display.node.article.default:
@@ -65,6 +68,32 @@ config:
           third_party_settings: { }
           weight: 111
           region: content
+    # Enable LinkIt in the basic_html and full_html formats, with its
+    # default settings.
+    editor.editor.basic_html:
+      addPlugin:
+        id: linkit_extension
+        configuration:
+          linkit_enabled: true
+          linkit_profile: default
+    editor.editor.full_html:
+      addPlugin:
+        id: linkit_extension
+        configuration:
+          linkit_enabled: true
+          linkit_profile: default
+    filter.format.basic_html:
+      setFilterConfig:
+        instance_id: linkit
+        configuration:
+          id: linkit
+          status: true
+    filter.format.full_html:
+      setFilterConfig:
+        instance_id: linkit
+        configuration:
+          id: linkit
+          status: true
     metatag.settings:
       simple_config_update:
         entity_type_groups:
