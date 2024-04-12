@@ -1,0 +1,6 @@
+{
+    "name": "drupal/starshot",
+    "description": "Contains glue code for Drupal Suite.",
+    "version": "dev-main",
+    "type": "drupal-module"
+}

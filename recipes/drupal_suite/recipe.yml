@@ -18,6 +18,7 @@ install:
   - path
   - pathauto
   - redirect
+  - starshot
   - token
   - workflows
 config:

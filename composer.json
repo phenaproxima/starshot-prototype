@@ -8,12 +8,19 @@
         "docs": "https://www.drupal.org/docs/user_guide/en/index.html",
         "chat": "https://www.drupal.org/node/314178"
     },
-    "repositories": [
-        {
+    "repositories": {
+        "starshot": {
+            "type": "path",
+            "url": "modules/starshot",
+            "options": {
+                "symlink": false
+            }
+        },
+        "drupal": {
             "type": "composer",
             "url": "https://packages.drupal.org/8"
         }
-    ],
+    },
     "require": {
         "ext-pdo_sqlite": "*",
         "composer/installers": "^2.0",
@@ -26,6 +33,7 @@
         "drupal/navigation": "^1.0@beta",
         "drupal/pathauto": "^1.12",
         "drupal/redirect": "^1.9",
+        "drupal/starshot": "dev-main",
         "drush/drush": "^12.5",
         "oomphinc/composer-installers-extender": "^2"
     },

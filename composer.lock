@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d066d7c1336eb4624776c98011a13f31",
+    "content-hash": "5aa4bb1e4183e2c65ae2a8c1ba3e9d34",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2016,6 +2016,21 @@
             "homepage": "https://www.drupal.org/project/redirect",
             "support": {
                 "source": "https://git.drupalcode.org/project/redirect"
+            }
+        },
+        {
+            "name": "drupal/starshot",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "modules/starshot",
+                "reference": "8c70182036962c334ee9524d4ec339ce0be25a39"
+            },
+            "type": "drupal-module",
+            "description": "Contains glue code for Drupal Suite.",
+            "transport-options": {
+                "symlink": false,
+                "relative": true
             }
         },
         {
@@ -11965,7 +11980,8 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "drupal/navigation": 10
+        "drupal/navigation": 10,
+        "drupal/starshot": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,
