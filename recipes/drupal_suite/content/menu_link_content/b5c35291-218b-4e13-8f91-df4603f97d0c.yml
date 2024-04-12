@@ -1,0 +1,39 @@
+_meta:
+  version: '1.0'
+  entity_type: menu_link_content
+  uuid: b5c35291-218b-4e13-8f91-df4603f97d0c
+  bundle: menu_link_content
+  default_langcode: en
+default:
+  enabled:
+    -
+      value: true
+  title:
+    -
+      value: 'Audio file'
+  menu_name:
+    -
+      value: content
+  link:
+    -
+      uri: 'internal:/media/add/audio'
+      title: ''
+      options: {  }
+  external:
+    -
+      value: false
+  rediscover:
+    -
+      value: true
+  weight:
+    -
+      value: 0
+  expanded:
+    -
+      value: false
+  parent:
+    -
+      value: navigation.create
+  revision_translation_affected:
+    -
+      value: true

@@ -1,8 +1,8 @@
 diff --git a/core/core.services.yml b/core/core.services.yml
-index 331857d012..abc818ad9a 100644
+index d90685b3ae..a704c295f9 100644
 --- a/core/core.services.yml
 +++ b/core/core.services.yml
-@@ -66,6 +66,10 @@ parameters:
+@@ -67,6 +67,12 @@ parameters:
  services:
    _defaults:
      autoconfigure: true
@@ -10,21 +10,23 @@ index 331857d012..abc818ad9a 100644
 +    class: Drupal\Core\Config\Action\ConfigActionManager
 +    parent: default_plugin_manager
 +    arguments: ['@config.manager', '@config.storage', '@config.typed', '@config.factory']
++  Drupal\Core\DefaultContent\Importer:
++    autowire: true
    # Simple cache contexts, directly derived from the request context.
    cache_context.ip:
      class: Drupal\Core\Cache\Context\IpCacheContext
-@@ -384,6 +388,14 @@ services:
+@@ -385,6 +391,14 @@ services:
      public: false
      tags:
        - { name: backend_overridable }
 +  config.storage.checkpoint:
 +    class: Drupal\Core\Config\Checkpoint\CheckpointStorage
 +    arguments: [ '@config.storage', '@config.checkpoints', '@keyvalue' ]
-+    tags:
-+      - { name: event_subscriber }
++  Drupal\Core\Config\Checkpoint\CheckpointStorageInterface: '@config.storage.checkpoint'
 +  config.checkpoints:
 +    class: Drupal\Core\Config\Checkpoint\LinearHistory
 +    arguments: [ '@state', '@datetime.time' ]
++  Drupal\Core\Config\Checkpoint\CheckpointListInterface: '@config.checkpoints'
    config.import_transformer:
      class: Drupal\Core\Config\ImportStorageTransformer
      arguments: ['@event_dispatcher', '@database', '@lock', '@lock.persistent']
@@ -1056,10 +1058,10 @@ index 0000000000..5031968698
 +}
 diff --git a/core/lib/Drupal/Core/Config/Action/Plugin/ConfigAction/SimpleConfigUpdate.php b/core/lib/Drupal/Core/Config/Action/Plugin/ConfigAction/SimpleConfigUpdate.php
 new file mode 100644
-index 0000000000..151310a5be
+index 0000000000..0caf866213
 --- /dev/null
 +++ b/core/lib/Drupal/Core/Config/Action/Plugin/ConfigAction/SimpleConfigUpdate.php
-@@ -0,0 +1,61 @@
+@@ -0,0 +1,62 @@
 +<?php
 +
 +namespace Drupal\Core\Config\Action\Plugin\ConfigAction;
@@ -1105,7 +1107,8 @@ index 0000000000..151310a5be
 +   */
 +  public function apply(string $configName, mixed $value): void {
 +    $config = $this->configFactory->getEditable($configName);
-+    // @todo Should we error if this is a config entity?
++    // @todo https://www.drupal.org/i/3439713 Should we error if this is a
++    //   config entity?
 +    if ($config->isNew()) {
 +      throw new ConfigActionException(sprintf('Config %s does not exist so can not be updated', $configName));
 +    }
@@ -1265,7 +1268,7 @@ index 0000000000..ef60e217c4
 +}
 diff --git a/core/lib/Drupal/Core/Config/Checkpoint/CheckpointStorage.php b/core/lib/Drupal/Core/Config/Checkpoint/CheckpointStorage.php
 new file mode 100644
-index 0000000000..d67b90224d
+index 0000000000..4cb6e10d46
 --- /dev/null
 +++ b/core/lib/Drupal/Core/Config/Checkpoint/CheckpointStorage.php
 @@ -0,0 +1,492 @@
@@ -1547,8 +1550,8 @@ index 0000000000..d67b90224d
 +      }
 +    }
 +    else {
-+      // @todo https://www.drupal.org/project/distributions_recipes/issues/3408525
-+      //   Consider options for generating a real fingerprint.
++      // @todo https://www.drupal.org/i/3408525 Consider options for generating
++      //   a real fingerprint.
 +      $id = hash('sha1', random_bytes(32));
 +      $active_checkpoint = $this->checkpoints->add($id, $label);
 +    }
@@ -1993,6 +1996,451 @@ index 0000000000..1d6dd928f2
 + */
 +final class UnknownCheckpointException extends \RuntimeException {
 +}
+diff --git a/core/lib/Drupal/Core/DefaultContent/Finder.php b/core/lib/Drupal/Core/DefaultContent/Finder.php
+new file mode 100644
+index 0000000000..e6d9b01337
+--- /dev/null
++++ b/core/lib/Drupal/Core/DefaultContent/Finder.php
+@@ -0,0 +1,82 @@
++<?php
++
++declare(strict_types=1);
++
++namespace Drupal\Core\DefaultContent;
++
++use Drupal\Component\Graph\Graph;
++use Drupal\Component\Serialization\Yaml;
++use Drupal\Component\Utility\SortArray;
++use Symfony\Component\Finder\Exception\DirectoryNotFoundException;
++use Symfony\Component\Finder\Finder as SymfonyFinder;
++
++/**
++ * Finds all default content in a directory, in dependency order.
++ *
++ * @internal
++ *   This API is experimental.
++ */
++final class Finder {
++
++  /**
++   * The content entity data to import, in dependency order, keyed by entity UUID.
++   *
++   * @var array<string, array<mixed>>
++   */
++  public readonly array $data;
++
++  public function __construct(string $path) {
++    try {
++      // Scan for all YAML files in the content directory.
++      $finder = SymfonyFinder::create()
++        ->in($path)
++        ->files()
++        ->name('*.yml');
++    }
++    catch (DirectoryNotFoundException) {
++      $this->data = [];
++      return;
++    }
++
++    $graph = $files = [];
++    /** @var \Symfony\Component\Finder\SplFileInfo $file */
++    foreach ($finder as $file) {
++      /** @var array{_meta: array{uuid: string, depends: array<string, string>|null}} $decoded */
++      $decoded = Yaml::decode($file->getContents());
++      $uuid = $decoded['_meta']['uuid'];
++      $decoded['_meta']['path'] = $file->getPath();
++      $files[$uuid] = $decoded;
++
++      // For the graph to work correctly, every entity must be mentioned in it.
++      // This is inspired by
++      // \Drupal\Core\Config\Entity\ConfigDependencyManager::getGraph().
++      $graph += [
++        $uuid => [
++          'edges' => [],
++          'uuid' => $uuid,
++        ],
++      ];
++
++      foreach ($decoded['_meta']['depends'] ?? [] as $dependency_uuid => $entity_type) {
++        $graph[$dependency_uuid]['edges'][$uuid] = TRUE;
++        $graph[$dependency_uuid]['uuid'] = $dependency_uuid;
++      }
++    }
++    ksort($graph);
++
++    // Sort the dependency graph. The entities that are dependencies of other
++    // entities should come first.
++    $graph_object = new Graph($graph);
++    $sorted = $graph_object->searchAndSort();
++    uasort($sorted, SortArray::sortByWeightElement(...));
++
++    $entities = [];
++    foreach ($sorted as ['uuid' => $uuid]) {
++      if (array_key_exists($uuid, $files)) {
++        $entities[$uuid] = $files[$uuid];
++      }
++    }
++    $this->data = $entities;
++  }
++
++}
+diff --git a/core/lib/Drupal/Core/DefaultContent/ImportException.php b/core/lib/Drupal/Core/DefaultContent/ImportException.php
+new file mode 100644
+index 0000000000..cf8327f4c0
+--- /dev/null
++++ b/core/lib/Drupal/Core/DefaultContent/ImportException.php
+@@ -0,0 +1,9 @@
++<?php
++
++namespace Drupal\Core\DefaultContent;
++
++/**
++ * Exception thrown when there is an error importing content.
++ */
++final class ImportException extends \RuntimeException {
++}
+diff --git a/core/lib/Drupal/Core/DefaultContent/Importer.php b/core/lib/Drupal/Core/DefaultContent/Importer.php
+new file mode 100644
+index 0000000000..9d6c2f331a
+--- /dev/null
++++ b/core/lib/Drupal/Core/DefaultContent/Importer.php
+@@ -0,0 +1,336 @@
++<?php
++
++declare(strict_types=1);
++
++namespace Drupal\Core\DefaultContent;
++
++use Drupal\Component\Plugin\PluginInspectionInterface;
++use Drupal\Core\Entity\ContentEntityInterface;
++use Drupal\Core\Entity\EntityRepositoryInterface;
++use Drupal\Core\Entity\EntityTypeManagerInterface;
++use Drupal\Core\Entity\Plugin\DataType\EntityReference;
++use Drupal\Core\Field\FieldItemInterface;
++use Drupal\Core\File\FileSystemInterface;
++use Drupal\Core\Installer\InstallerKernel;
++use Drupal\Core\Language\LanguageManagerInterface;
++use Drupal\Core\Session\AccountSwitcherInterface;
++use Drupal\file\FileInterface;
++use Drupal\link\Plugin\Field\FieldType\LinkItem;
++use Drupal\user\EntityOwnerInterface;
++use Psr\Log\LoggerAwareInterface;
++use Psr\Log\LoggerAwareTrait;
++
++/**
++ * A service for handling import of content.
++ *
++ * @internal
++ *   This API is experimental.
++ */
++final class Importer implements LoggerAwareInterface {
++
++  use LoggerAwareTrait;
++
++  /**
++   * The dependencies of the currently importing entity, if any.
++   *
++   * The keys are the UUIDs of the dependencies, and the values are their entity
++   * type.
++   *
++   * @var string[]|null
++   */
++  private ?array $dependencies = NULL;
++
++  public function __construct(
++    private readonly EntityTypeManagerInterface $entityTypeManager,
++    private readonly AccountSwitcherInterface $accountSwitcher,
++    private readonly FileSystemInterface $fileSystem,
++    private readonly LanguageManagerInterface $languageManager,
++    private readonly EntityRepositoryInterface $entityRepository,
++  ) {}
++
++  /**
++   * Imports content entities from disk.
++   *
++   * @param \Drupal\Core\DefaultContent\Finder $content
++   *   The content finder, which has information on the entities to create
++   *   in the necessary dependency order.
++   */
++  public function importContent(Finder $content): void {
++    if (count($content->data) === 0) {
++      return;
++    }
++
++    /** @var \Drupal\user\UserInterface $root_user */
++    $root_user = $this->entityTypeManager->getStorage('user')->load(1);
++    $this->accountSwitcher->switchTo($root_user);
++
++    /** @var array{_meta: array<mixed>} $decoded */
++    foreach ($content->data as $decoded) {
++      ['uuid' => $uuid, 'entity_type' => $entity_type_id, 'path' => $path] = $decoded['_meta'];
++      assert(is_string($uuid));
++      assert(is_string($entity_type_id));
++      assert(is_string($path));
++
++      $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
++      /** @var \Drupal\Core\Entity\EntityTypeInterface $entity_type */
++      if (!$entity_type->entityClassImplements(ContentEntityInterface::class)) {
++        throw new ImportException("Content entity $uuid is a '$entity_type_id', which is not a content entity type.");
++      }
++
++      $entity = $this->toEntity($decoded)->enforceIsNew();
++
++      // Ensure that the entity is not owned by the anonymous user.
++      if ($entity instanceof EntityOwnerInterface && empty($entity->getOwnerId())) {
++        $entity->setOwner($root_user);
++      }
++
++      // If a file exists in the same folder, copy it to the designated
++      // target URI.
++      if ($entity instanceof FileInterface) {
++        $this->copyFileAssociatedWithEntity($path, $entity);
++      }
++      $entity->save();
++    }
++    $this->accountSwitcher->switchBack();
++  }
++
++  private function copyFileAssociatedWithEntity(string $path, FileInterface $entity): void {
++    $destination = $entity->getFileUri();
++    assert(is_string($destination));
++
++    // If the source file doesn't exist, there's nothing we can do.
++    $source = $path . '/' . basename($destination);
++    if (!file_exists($source)) {
++      $this->logger?->warning("File entity %name was imported, but the associated file (@path) was not found.", [
++        '%name' => $entity->label(),
++        '@path' => $source,
++      ]);
++      return;
++    }
++
++    if (file_exists($destination)) {
++      $source_hash = hash_file('sha256', $source);
++      assert(is_string($source_hash));
++      $destination_hash = hash_file('sha256', $destination);
++      assert(is_string($destination_hash));
++
++      // If we already have the file, we don't need to do anything else.
++      if (hash_equals($source_hash, $destination_hash)) {
++        return;
++      }
++    }
++
++    $target_directory = dirname($destination);
++    $this->fileSystem->prepareDirectory($target_directory, FileSystemInterface::CREATE_DIRECTORY);
++    $uri = $this->fileSystem->copy($source, $destination);
++    $entity->setFileUri($uri);
++  }
++
++  /**
++   * Converts an array of content entity data to a content entity object.
++   *
++   * @param array<string, array<mixed>> $data
++   *   The entity data.
++   *
++   * @return \Drupal\Core\Entity\ContentEntityInterface
++   *   The unsaved entity.
++   *
++   * @throws \Drupal\Core\DefaultContent\ImportException
++   *   If the `entity_type` or `uuid` meta keys are not set.
++   */
++  private function toEntity(array $data): ContentEntityInterface {
++    if (empty($data['_meta']['entity_type'])) {
++      throw new ImportException('The entity type metadata must be specified.');
++    }
++    if (empty($data['_meta']['uuid'])) {
++      throw new ImportException('The uuid metadata must be specified.');
++    }
++
++    ['entity_type' => $entity_type] = $data['_meta'];
++    assert(is_string($entity_type));
++
++    $is_root = FALSE;
++    // @see ::loadEntityDependency()
++    if ($this->dependencies === NULL && !empty($data['_meta']['depends'])) {
++      $is_root = TRUE;
++      $this->dependencies = $data['_meta']['depends'];
++    }
++
++    /** @var \Drupal\Core\Entity\EntityTypeInterface $entity_type */
++    $entity_type = $this->entityTypeManager->getDefinition($entity_type);
++
++    $values = [
++      'uuid' => $data['_meta']['uuid'],
++    ];
++    if (!empty($data['_meta']['bundle'])) {
++      $values[$entity_type->getKey('bundle')] = $data['_meta']['bundle'];
++    }
++
++    if (!empty($data['_meta']['default_langcode'])) {
++      $data = $this->verifyNormalizedLanguage($data);
++      $values[$entity_type->getKey('langcode')] = $data['_meta']['default_langcode'];
++    }
++
++    /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
++    $entity = $this->entityTypeManager->getStorage($entity_type->id())->create($values);
++    foreach ($data['default'] as $field_name => $values) {
++      $this->setFieldValues($entity, $field_name, $values);
++    }
++
++    foreach ($data['translations'] ?? [] as $langcode => $translation_data) {
++      if ($this->languageManager->getLanguage($langcode)) {
++        $translation = $entity->addTranslation($langcode, $entity->toArray());
++        foreach ($translation_data as $field_name => $values) {
++          $this->setFieldValues($translation, $field_name, $values);
++        }
++      }
++    }
++
++    if ($is_root) {
++      $this->dependencies = NULL;
++    }
++    return $entity;
++  }
++
++  /**
++   * Sets field values based on the normalized data.
++   *
++   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
++   *   The content entity.
++   * @param string $field_name
++   *   The name of the field.
++   * @param array $values
++   *   The normalized data for the field.
++   */
++  private function setFieldValues(ContentEntityInterface $entity, string $field_name, array $values): void {
++    foreach ($values as $delta => $item_value) {
++      if (!$entity->get($field_name)->get($delta)) {
++        $entity->get($field_name)->appendItem();
++      }
++      /** @var \Drupal\Core\Field\FieldItemInterface $item */
++      $item = $entity->get($field_name)->get($delta);
++
++      // Update the URI based on the target UUID for link fields.
++      if (isset($item_value['target_uuid']) && $item instanceof LinkItem) {
++        $target_entity = $this->loadEntityDependency($item_value['target_uuid']);
++        if ($target_entity) {
++          $item_value['uri'] = 'entity:' . $target_entity->getEntityTypeId() . '/' . $target_entity->id();
++        }
++        unset($item_value['target_uuid']);
++      }
++
++      $serialized_property_names = $this->getCustomSerializedPropertyNames($item);
++      foreach ($item_value as $property_name => $value) {
++        if (\in_array($property_name, $serialized_property_names)) {
++          if (\is_string($value)) {
++            throw new ImportException("Received string for serialized property $field_name.$delta.$property_name");
++          }
++          $value = serialize($value);
++        }
++
++        $property = $item->get($property_name);
++
++        if ($property instanceof EntityReference) {
++          if (is_array($value)) {
++            $value = $this->toEntity($value);
++          }
++          else {
++            $value = $this->loadEntityDependency($value);
++          }
++        }
++        $property->setValue($value);
++      }
++    }
++  }
++
++  /**
++   * Gets the names of all properties the plugin treats as serialized data.
++   *
++   * This allows the field storage definition or entity type to provide a
++   * setting for serialized properties. This can be used for fields that
++   * handle serialized data themselves and do not rely on the serialized schema
++   * flag.
++   *
++   * @param \Drupal\Core\Field\FieldItemInterface $field_item
++   *   The field item.
++   *
++   * @return string[]
++   *   The property names for serialized properties.
++   *
++   * @see \Drupal\serialization\Normalizer\SerializedColumnNormalizerTrait::getCustomSerializedPropertyNames
++   */
++  private function getCustomSerializedPropertyNames(FieldItemInterface $field_item): array {
++    if ($field_item instanceof PluginInspectionInterface) {
++      $definition = $field_item->getPluginDefinition();
++      $serialized_fields = $field_item->getEntity()->getEntityType()->get('serialized_field_property_names');
++      $field_name = $field_item->getFieldDefinition()->getName();
++      if (is_array($serialized_fields) && isset($serialized_fields[$field_name]) && is_array($serialized_fields[$field_name])) {
++        return $serialized_fields[$field_name];
++      }
++      if (isset($definition['serialized_property_names']) && is_array($definition['serialized_property_names'])) {
++        return $definition['serialized_property_names'];
++      }
++    }
++    return [];
++  }
++
++  /**
++   * Loads the entity dependency by its UUID.
++   *
++   * @param string $target_uuid
++   *   The entity UUID.
++   *
++   * @return \Drupal\Core\Entity\ContentEntityInterface|null
++   *   The loaded entity.
++   */
++  private function loadEntityDependency(string $target_uuid): ?ContentEntityInterface {
++    if ($this->dependencies && array_key_exists($target_uuid, $this->dependencies)) {
++      $entity = $this->entityRepository->loadEntityByUuid($this->dependencies[$target_uuid], $target_uuid);
++      assert($entity instanceof ContentEntityInterface || $entity === NULL);
++      return $entity;
++    }
++    return NULL;
++  }
++
++  /**
++   * Verifies that the site knows the default language of the normalized entity.
++   *
++   * Will attempt to switch to an alternative translation or just import it
++   * with the site default language.
++   *
++   * @param array $data
++   *   The normalized entity data.
++   *
++   * @return array
++   *   The normalized entity data, possibly with altered default language
++   *   and translations.
++   */
++  private function verifyNormalizedLanguage(array $data): array {
++    $default_langcode = $data['_meta']['default_langcode'];
++    $default_language = $this->languageManager->getDefaultLanguage();
++    // Check the language. If the default language isn't known, import as one
++    // of the available translations if one exists with those values. If none
++    // exists, create the entity in the default language.
++    // During the installer, when installing with an alternative language,
++    // `en` is still the default when modules are installed so check the default language
++    // instead.
++    if (!$this->languageManager->getLanguage($default_langcode) || (InstallerKernel::installationAttempted() && $default_language->getId() !== $default_langcode)) {
++      $use_default = TRUE;
++      foreach ($data['translations'] ?? [] as $langcode => $translation_data) {
++        if ($this->languageManager->getLanguage($langcode)) {
++          $data['_meta']['default_langcode'] = $langcode;
++          $data['default'] = \array_merge($data['default'], $translation_data);
++          unset($data['translations'][$langcode]);
++          $use_default = FALSE;
++          break;
++        }
++      }
++
++      if ($use_default) {
++        $data['_meta']['default_langcode'] = $default_language->getId();
++      }
++    }
++    return $data;
++  }
++
++}
 diff --git a/core/lib/Drupal/Core/Entity/EntityDisplayBase.php b/core/lib/Drupal/Core/Entity/EntityDisplayBase.php
 index 768835903f..4951ef32d7 100644
 --- a/core/lib/Drupal/Core/Entity/EntityDisplayBase.php
@@ -2045,10 +2493,10 @@ index ca9a5b5285..610977ec2d 100644
      return $this;
 diff --git a/core/lib/Drupal/Core/Recipe/ConfigConfigurator.php b/core/lib/Drupal/Core/Recipe/ConfigConfigurator.php
 new file mode 100644
-index 0000000000..971660fbeb
+index 0000000000..3a5221ecb8
 --- /dev/null
 +++ b/core/lib/Drupal/Core/Recipe/ConfigConfigurator.php
-@@ -0,0 +1,109 @@
+@@ -0,0 +1,110 @@
 +<?php
 +
 +namespace Drupal\Core\Recipe;
@@ -2077,7 +2525,8 @@ index 0000000000..971660fbeb
 +    $recipe_storage = $this->getConfigStorage();
 +    foreach ($recipe_storage->listAll() as $config_name) {
 +      if ($active_data = $active_configuration->read($config_name)) {
-+        // @todo investigate if there is any generic code in core for this.
++        // @todo https://www.drupal.org/i/3439714 Investigate if there is any
++        //   generic code in core for this.
 +        unset($active_data['uuid'], $active_data['_core']);
 +        if (empty($active_data['dependencies'])) {
 +          unset($active_data['dependencies']);
@@ -2158,34 +2607,9 @@ index 0000000000..971660fbeb
 +  }
 +
 +}
-diff --git a/core/lib/Drupal/Core/Recipe/ContentConfigurator.php b/core/lib/Drupal/Core/Recipe/ContentConfigurator.php
-new file mode 100644
-index 0000000000..753ecc16d4
---- /dev/null
-+++ b/core/lib/Drupal/Core/Recipe/ContentConfigurator.php
-@@ -0,0 +1,19 @@
-+<?php
-+
-+namespace Drupal\Core\Recipe;
-+
-+/**
-+ * @internal
-+ *   This API is experimental.
-+ */
-+final class ContentConfigurator {
-+
-+  /**
-+   * @param array $content
-+   *   Content options for a recipe.
-+   */
-+  public function __construct(public readonly array $content) {
-+    // @todo https://www.drupal.org/project/distributions_recipes/issues/3292287
-+  }
-+
-+}
 diff --git a/core/lib/Drupal/Core/Recipe/InstallConfigurator.php b/core/lib/Drupal/Core/Recipe/InstallConfigurator.php
 new file mode 100644
-index 0000000000..2fd2059e5b
+index 0000000000..1c1b4ca425
 --- /dev/null
 +++ b/core/lib/Drupal/Core/Recipe/InstallConfigurator.php
 @@ -0,0 +1,120 @@
@@ -2250,8 +2674,8 @@ index 0000000000..2fd2059e5b
 +    }
 +
 +    // Add modules that other modules depend on.
-+    // @todo should recipes do this? I think so. It allows modules to add
-+    //   dependencies and recipes continue to work
++    // @todo https://www.drupal.org/i/3439715 Should recipes allow modules to
++    //   add dependencies and recipes continue to work?
 +    foreach ($modules as $module) {
 +      if ($module_data[$module]->requires) {
 +        $modules = array_merge($modules, array_keys($module_data[$module]->requires));
@@ -2374,14 +2798,15 @@ index 0000000000..cbf61a3de6
 +}
 diff --git a/core/lib/Drupal/Core/Recipe/Recipe.php b/core/lib/Drupal/Core/Recipe/Recipe.php
 new file mode 100644
-index 0000000000..924ade4f7b
+index 0000000000..22d0ea567c
 --- /dev/null
 +++ b/core/lib/Drupal/Core/Recipe/Recipe.php
-@@ -0,0 +1,249 @@
+@@ -0,0 +1,300 @@
 +<?php
 +
 +namespace Drupal\Core\Recipe;
 +
++use Drupal\Core\DefaultContent\Finder;
 +use Drupal\Core\Extension\Dependency;
 +use Drupal\Core\Extension\ModuleExtensionList;
 +use Drupal\Core\Extension\ThemeExtensionList;
@@ -2417,7 +2842,7 @@ index 0000000000..924ade4f7b
 +    public readonly RecipeConfigurator $recipes,
 +    public readonly InstallConfigurator $install,
 +    public readonly ConfigConfigurator $config,
-+    public readonly ContentConfigurator $content
++    public readonly Finder $content
 +  ) {
 +  }
 +
@@ -2437,7 +2862,7 @@ index 0000000000..924ade4f7b
 +    $recipes = new RecipeConfigurator(is_array($recipe_data['recipes']) ? $recipe_data['recipes'] : [], $recipe_discovery);
 +    $install = new InstallConfigurator($recipe_data['install'], \Drupal::service('extension.list.module'), \Drupal::service('extension.list.theme'));
 +    $config = new ConfigConfigurator($recipe_data['config'], $path, \Drupal::service('config.storage'));
-+    $content = new ContentConfigurator($recipe_data['content']);
++    $content = new Finder($path . '/content');
 +    return new static($recipe_data['name'], $recipe_data['description'], $recipe_data['type'], $recipes, $install, $config, $content);
 +  }
 +
@@ -2462,6 +2887,11 @@ index 0000000000..924ade4f7b
 +    if (!$recipe_contents) {
 +      throw new RecipeFileException($file, "$file does not exist or could not be read.");
 +    }
++    // Certain parts of our validation need to be able to scan for other
++    // recipes.
++    // @see ::validateRecipeExists()
++    // @see ::validateConfigActions()
++    $discovery = self::getRecipeDiscovery(dirname($file, 2));
 +
 +    $constraints = new Collection([
 +      'name' => new Required([
@@ -2507,12 +2937,13 @@ index 0000000000..924ade4f7b
 +            ),
 +            new Callback(
 +              callback: self::validateRecipeExists(...),
-+              payload: dirname(dirname($file))
++              payload: $discovery,
 +            ),
 +          ]),
 +        ]),
 +      ]),
-+      // @todo Validate the corresponding `import` in https://www.drupal.org/project/distributions_recipes/issues/3424603
++      // @todo https://www.drupal.org/i/3424603 Validate the corresponding
++      //   import.
 +      'install' => new Optional([
 +        new All([
 +          new Type('string'),
@@ -2525,7 +2956,8 @@ index 0000000000..924ade4f7b
 +          // Each entry in the `import` list can either be `*` (import all of
 +          // the extension's config), or a list of config names to import from
 +          // the extension.
-+          // @todo Validate config file name, if given.
++          // @todo https://www.drupal.org/i/3439716 Validate config file name,
++          //   if given.
 +          'import' => new Optional([
 +            new All([
 +              new AtLeastOneOf([
@@ -2542,6 +2974,10 @@ index 0000000000..924ade4f7b
 +            new All([
 +              new Type('array'),
 +              new NotBlank(),
++              new Callback(
++                callback: self::validateConfigActions(...),
++                payload: $discovery,
++              ),
 +            ]),
 +          ]),
 +        ]),
@@ -2599,15 +3035,15 @@ index 0000000000..924ade4f7b
 +   *   The machine name of the recipe to look for.
 +   * @param \Symfony\Component\Validator\Context\ExecutionContextInterface $context
 +   *   The validator execution context.
-+   * @param string $recipeDirectory
-+   *   The directory the contains the recipe being validated.
++   * @param \Drupal\Core\Recipe\RecipeDiscovery $discovery
++   *   A discovery object to find other recipes.
 +   */
-+  private static function validateRecipeExists(string $name, ExecutionContextInterface $context, string $recipeDirectory): void {
++  private static function validateRecipeExists(string $name, ExecutionContextInterface $context, RecipeDiscovery $discovery): void {
 +    if (empty($name)) {
 +      return;
 +    }
 +    try {
-+      static::getRecipeDiscovery($recipeDirectory)->getRecipe($name);
++      $discovery->getRecipe($name);
 +    }
 +    catch (UnknownRecipeException) {
 +      $context->addViolation('The %name recipe does not exist.', ['%name' => $name]);
@@ -2624,6 +3060,45 @@ index 0000000000..924ade4f7b
 +   */
 +  private static function getRecipeDiscovery(string $recipeDirectory): RecipeDiscovery {
 +    return new RecipeDiscovery([$recipeDirectory]);
++  }
++
++  /**
++   * Validates that the corresponding extension is enabled for a config action.
++   *
++   * @param mixed $value
++   *   The config action; not used.
++   * @param \Symfony\Component\Validator\Context\ExecutionContextInterface $context
++   *   The validator execution context.
++   * @param \Drupal\Core\Recipe\RecipeDiscovery $discovery
++   *   A discovery object to find other recipes.
++   */
++  private static function validateConfigActions(mixed $value, ExecutionContextInterface $context, RecipeDiscovery $discovery): void {
++    $config_name = str_replace(['[config][actions]', '[', ']'], '', $context->getPropertyPath());
++    [$config_provider] = explode('.', $config_name);
++    if ($config_provider === 'core') {
++      return;
++    }
++
++    $recipe_being_validated = $context->getRoot();
++    assert(is_array($recipe_being_validated));
++
++    $configurator = new RecipeConfigurator($recipe_being_validated['recipes'] ?? [], $discovery);
++
++    // The config provider must either be an already-installed module or theme,
++    // or an extension being installed by this recipe or a recipe it depends on.
++    $all_extensions = [
++      ...array_keys(\Drupal::service('extension.list.module')->getAllInstalledInfo()),
++      ...array_keys(\Drupal::service('extension.list.theme')->getAllInstalledInfo()),
++      ...$recipe_being_validated['install'] ?? [],
++      ...$configurator->listAllExtensions(),
++    ];
++
++    if (!in_array($config_provider, $all_extensions, TRUE)) {
++      $context->addViolation('Config actions cannot be applied to %config_name because the %config_provider extension is not installed, and is not installed by this recipe or any of the recipes it depends on.', [
++        '%config_name' => $config_name,
++        '%config_provider' => $config_provider,
++      ]);
++    }
 +  }
 +
 +}
@@ -3038,10 +3513,10 @@ index 0000000000..d2808d16dd
 +}
 diff --git a/core/lib/Drupal/Core/Recipe/RecipeConfigurator.php b/core/lib/Drupal/Core/Recipe/RecipeConfigurator.php
 new file mode 100644
-index 0000000000..f541675e36
+index 0000000000..851766fd5d
 --- /dev/null
 +++ b/core/lib/Drupal/Core/Recipe/RecipeConfigurator.php
-@@ -0,0 +1,24 @@
+@@ -0,0 +1,54 @@
 +<?php
 +
 +namespace Drupal\Core\Recipe;
@@ -3063,6 +3538,36 @@ index 0000000000..f541675e36
 +   */
 +  public function __construct(array $recipes, RecipeDiscovery $recipeDiscovery) {
 +    $this->recipes = array_map([$recipeDiscovery, 'getRecipe'], $recipes);
++  }
++
++  /**
++   * Returns all the recipes installed by this recipe.
++   *
++   * @return \Drupal\Core\Recipe\Recipe[]
++   *   An array of all the recipes being installed.
++   */
++  private function listAllRecipes(): array {
++    $recipes = [];
++    foreach ($this->recipes as $recipe) {
++      $recipes[] = $recipe;
++      $recipes = array_merge($recipes, $recipe->recipes->listAllRecipes());
++    }
++    return $recipes;
++  }
++
++  /**
++   * List all the extensions installed by this recipe and its dependencies.
++   *
++   * @return string[]
++   *   All the modules and themes that will be installed by the current
++   *   recipe and all the recipes it depends on.
++   */
++  public function listAllExtensions(): array {
++    $extensions = [];
++    foreach ($this->listAllRecipes() as $recipe) {
++      $extensions = array_merge($extensions, $recipe->install->modules, $recipe->install->themes);
++    }
++    return $extensions;
 +  }
 +
 +}
@@ -3550,10 +4055,10 @@ index 0000000000..ce0bd543bc
 +}
 diff --git a/core/lib/Drupal/Core/Recipe/RecipeRunner.php b/core/lib/Drupal/Core/Recipe/RecipeRunner.php
 new file mode 100644
-index 0000000000..5670c1f871
+index 0000000000..7d7721508c
 --- /dev/null
 +++ b/core/lib/Drupal/Core/Recipe/RecipeRunner.php
-@@ -0,0 +1,124 @@
+@@ -0,0 +1,131 @@
 +<?php
 +
 +namespace Drupal\Core\Recipe;
@@ -3561,6 +4066,8 @@ index 0000000000..5670c1f871
 +use Drupal\Core\Config\FileStorage;
 +use Drupal\Core\Config\InstallStorage;
 +use Drupal\Core\Config\StorageInterface;
++use Drupal\Core\DefaultContent\Importer;
++use Drupal\Core\DefaultContent\Finder;
 +
 +/**
 + * Applies a recipe.
@@ -3571,6 +4078,9 @@ index 0000000000..5670c1f871
 + *
 + * @internal
 + *   This API is experimental.
++ *
++ * @todo https://www.drupal.org/i/3439717 Determine if there is a better to
++ *   inject and re-inject services.
 + */
 +final class RecipeRunner {
 +
@@ -3647,7 +4157,6 @@ index 0000000000..5670c1f871
 +   *   The config configurator from the recipe.
 +   */
 +  protected static function processConfiguration(ConfigConfigurator $config): void {
-+    // @todo sort out this monstrosity.
 +    $config_installer = new RecipeConfigInstaller(
 +      \Drupal::service('config.factory'),
 +      \Drupal::service('config.storage'),
@@ -3673,8 +4182,11 @@ index 0000000000..5670c1f871
 +    }
 +  }
 +
-+  protected static function processContent(ContentConfigurator $content): void {
-+    // @todo https://www.drupal.org/project/distributions_recipes/issues/3292287
++  protected static function processContent(Finder $content): void {
++    /** @var \Drupal\Core\DefaultContent\Importer $importer */
++    $importer = \Drupal::service(Importer::class);
++    $importer->setLogger(\Drupal::logger('recipe'));
++    $importer->importContent($content);
 +  }
 +
 +}
@@ -3710,6 +4222,262 @@ index 0000000000..9351ba4dc6
 +   */
 +  public function __construct(public readonly string $recipe, public readonly array $searchPaths, string $message = "", int $code = 0, ?\Throwable $previous = NULL) {
 +    parent::__construct($message, $code, $previous);
++  }
++
++}
+diff --git a/core/modules/ckeditor5/src/Plugin/ConfigAction/AddItemToToolbar.php b/core/modules/ckeditor5/src/Plugin/ConfigAction/AddItemToToolbar.php
+new file mode 100644
+index 0000000000..f239e226bc
+--- /dev/null
++++ b/core/modules/ckeditor5/src/Plugin/ConfigAction/AddItemToToolbar.php
+@@ -0,0 +1,102 @@
++<?php
++
++namespace Drupal\ckeditor5\Plugin\ConfigAction;
++
++use Drupal\ckeditor5\Plugin\CKEditor5PluginManagerInterface;
++use Drupal\Core\Config\Action\Attribute\ConfigAction;
++use Drupal\Core\Config\Action\ConfigActionException;
++use Drupal\Core\Config\Action\ConfigActionPluginInterface;
++use Drupal\Core\Config\ConfigManagerInterface;
++use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
++use Drupal\Core\StringTranslation\TranslatableMarkup;
++use Drupal\editor\EditorInterface;
++use Symfony\Component\DependencyInjection\ContainerInterface;
++
++#[ConfigAction(
++  id: 'editor:addItemToToolbar',
++  admin_label: new TranslatableMarkup('Add an item to a CKEditor 5 toolbar'),
++  entity_types: ['editor'],
++)]
++final class AddItemToToolbar implements ConfigActionPluginInterface, ContainerFactoryPluginInterface {
++
++  public function __construct(
++    private readonly ConfigManagerInterface $configManager,
++    private readonly CKEditor5PluginManagerInterface $pluginManager,
++    private readonly string $pluginId,
++  ) {}
++
++  /**
++   * {@inheritdoc}
++   */
++  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
++    return new static(
++      $container->get(ConfigManagerInterface::class),
++      $container->get(CKEditor5PluginManagerInterface::class),
++      $plugin_id,
++    );
++  }
++
++  /**
++   * {@inheritdoc}
++   */
++  public function apply(string $configName, mixed $value): void {
++    $editor = $this->configManager->loadConfigEntityByName($configName);
++    assert($editor instanceof EditorInterface);
++
++    if ($editor->getEditor() !== 'ckeditor5') {
++      throw new ConfigActionException(sprintf('The %s config action only works with editors that use CKEditor 5.', $this->pluginId));
++    }
++
++    $editor_settings = $editor->getSettings();
++    if (is_string($value)) {
++      $editor_settings['toolbar']['items'][] = $item_name = $value;
++    }
++    else {
++      assert(is_array($value));
++
++      $item_name = $value['item_name'];
++      assert(is_string($item_name));
++
++      $replace = $value['replace'] ?? FALSE;
++      assert(is_bool($replace));
++
++      $position = $value['position'] ?? NULL;
++      if (is_int($position)) {
++        // If we want to replace the item at this position, then `replace`
++        // should be true. This would be useful if, for example, we wanted to
++        // replace the Image button with the Media Library.
++        array_splice($editor_settings['toolbar']['items'], $position, $replace ? 1 : 0, $item_name);
++      }
++      else {
++        $editor_settings['toolbar']['items'][] = $item_name;
++      }
++    }
++    // If we're just adding a vertical separator, there's nothing else we need
++    // to do at this point.
++    if ($item_name === '|') {
++      return;
++    }
++
++    // If this item is associated with a plugin, ensure that it's configured
++    // at the editor level, if necessary.
++    /** @var \Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition $definition */
++    foreach ($this->pluginManager->getDefinitions() as $id => $definition) {
++      if (array_key_exists($item_name, $definition->getToolbarItems())) {
++        // If plugin settings already exist, don't change them.
++        if (array_key_exists($id, $editor_settings['plugins'])) {
++          break;
++        }
++        elseif ($definition->isConfigurable()) {
++          /** @var \Drupal\ckeditor5\Plugin\CKEditor5PluginConfigurableInterface $plugin */
++          $plugin = $this->pluginManager->getPlugin($id, NULL);
++          $editor_settings['plugins'][$id] = $plugin->defaultConfiguration();
++        }
++        // No need to examine any other plugins.
++        break;
++      }
++    }
++
++    $editor->setSettings($editor_settings)->save();
++  }
++
++}
+diff --git a/core/modules/ckeditor5/tests/src/Kernel/ConfigAction/AddItemToToolbarConfigActionTest.php b/core/modules/ckeditor5/tests/src/Kernel/ConfigAction/AddItemToToolbarConfigActionTest.php
+new file mode 100644
+index 0000000000..f02df4d4bb
+--- /dev/null
++++ b/core/modules/ckeditor5/tests/src/Kernel/ConfigAction/AddItemToToolbarConfigActionTest.php
+@@ -0,0 +1,142 @@
++<?php
++
++declare(strict_types=1);
++
++namespace Drupal\Tests\ckeditor5\Kernel\ConfigAction;
++
++use Drupal\Component\Serialization\Yaml;
++use Drupal\Core\Config\Action\ConfigActionException;
++use Drupal\Core\Recipe\InvalidConfigException;
++use Drupal\Core\Recipe\Recipe;
++use Drupal\Core\Recipe\RecipeRunner;
++use Drupal\editor\Entity\Editor;
++use Drupal\KernelTests\KernelTestBase;
++
++/**
++ * @covers \Drupal\ckeditor5\Plugin\ConfigAction\AddItemToToolbar
++ * @group ckeditor5
++ * @group Recipe
++ */
++class AddItemToToolbarConfigActionTest extends KernelTestBase {
++
++  /**
++   * {@inheritdoc}
++   */
++  protected static $modules = [
++    'ckeditor5',
++    'editor',
++    'filter',
++    'filter_test',
++    'user',
++  ];
++
++  /**
++   * {@inheritdoc}
++   */
++  protected static $configSchemaCheckerExclusions = [
++    // This test must be allowed to save invalid config, we can confirm that
++    // any invalid stuff is validated by the config actions system.
++    'editor.editor.filter_test',
++  ];
++
++  /**
++   * {@inheritdoc}
++   */
++  protected function setUp(): void {
++    parent::setUp();
++    $this->installConfig('filter_test');
++
++    $editor = Editor::create([
++      'editor' => 'ckeditor5',
++      'format' => 'filter_test',
++    ]);
++    $editor->save();
++
++    /** @var array{toolbar: array{items: array<int, string>}} $settings */
++    $settings = Editor::load('filter_test')?->getSettings();
++    $this->assertSame(['heading', 'bold', 'italic'], $settings['toolbar']['items']);
++  }
++
++  /**
++   * @param string|array<string, mixed> $action
++   *   The value to pass to the config action.
++   * @param string[] $expected_toolbar_items
++   *   The items which should be in the editor toolbar, in the expected order.
++   *
++   * @testWith ["sourceEditing", ["heading", "bold", "italic", "sourceEditing"]]
++   *   [{"item_name": "sourceEditing"}, ["heading", "bold", "italic", "sourceEditing"]]
++   *   [{"item_name": "sourceEditing", "position": 1}, ["heading", "sourceEditing", "bold", "italic"]]
++   *   [{"item_name": "sourceEditing", "position": 1, "replace": true}, ["heading", "sourceEditing", "italic"]]
++   */
++  public function testAddItemToToolbar(string|array $action, array $expected_toolbar_items): void {
++    $recipe = $this->createRecipe([
++      'name' => 'CKEditor 5 toolbar item test',
++      'config' => [
++        'actions' => [
++          'editor.editor.filter_test' => [
++            'addItemToToolbar' => $action,
++          ],
++        ],
++      ],
++    ]);
++    RecipeRunner::processRecipe($recipe);
++
++    /** @var array{toolbar: array{items: string[]}, plugins: array<string, array<mixed>>} $settings */
++    $settings = Editor::load('filter_test')?->getSettings();
++    $this->assertSame($expected_toolbar_items, $settings['toolbar']['items']);
++    // The plugin's default settings should have been added.
++    $this->assertSame([], $settings['plugins']['ckeditor5_sourceEditing']['allowed_tags']);
++  }
++
++  public function testAddNonExistentItem(): void {
++    $recipe = $this->createRecipe([
++      'name' => 'Add an invalid toolbar item',
++      'config' => [
++        'actions' => [
++          'editor.editor.filter_test' => [
++            'addItemToToolbar' => 'bogus_item',
++          ],
++        ],
++      ],
++    ]);
++
++    $this->expectException(InvalidConfigException::class);
++    $this->expectExceptionMessage("There were validation errors in editor.editor.filter_test:\n- settings.toolbar.items.3: The provided toolbar item <em class=\"placeholder\">bogus_item</em> is not valid.");
++    RecipeRunner::processRecipe($recipe);
++  }
++
++  public function testActionRequiresCKEditor5(): void {
++    $this->enableModules(['editor_test']);
++    Editor::load('filter_test')?->setEditor('unicorn')->setSettings([])->save();
++
++    $recipe = <<<YAML
++name: Not a CKEditor
++config:
++  actions:
++    editor.editor.filter_test:
++      addItemToToolbar: strikethrough
++YAML;
++
++    $this->expectException(ConfigActionException::class);
++    $this->expectExceptionMessage('The editor:addItemToToolbar config action only works with editors that use CKEditor 5.');
++    RecipeRunner::processRecipe($this->createRecipe($recipe));
++  }
++
++  /**
++   * @param string|array<mixed> $contents
++   *   The contents of recipe.yml, as either a YAML string or an array to encode
++   *   to YAML.
++   *
++   * @return \Drupal\Core\Recipe\Recipe
++   */
++  private function createRecipe(string|array $contents): Recipe {
++    if (is_array($contents)) {
++      $contents = Yaml::encode($contents);
++    }
++    $dir = uniqid('public://');
++    mkdir($dir);
++    file_put_contents($dir . '/recipe.yml', $contents);
++    return Recipe::createFromDirectory($dir);
 +  }
 +
 +}
@@ -3849,7 +4617,7 @@ index 6b9e8007db..b461828a63 100644
 +
  }
 diff --git a/core/modules/config/tests/config_test/src/Entity/ConfigTest.php b/core/modules/config/tests/config_test/src/Entity/ConfigTest.php
-index 30a7a3526d..0ff6bdd5a8 100644
+index 30a7a3526d..e2597f0277 100644
 --- a/core/modules/config/tests/config_test/src/Entity/ConfigTest.php
 +++ b/core/modules/config/tests/config_test/src/Entity/ConfigTest.php
 @@ -2,10 +2,12 @@
@@ -3887,7 +4655,7 @@ index 30a7a3526d..0ff6bdd5a8 100644
    /**
     * {@inheritdoc}
     */
-@@ -188,4 +198,130 @@ public function isInstallable() {
+@@ -188,4 +198,142 @@ public function isInstallable() {
      return $this->id != 'isinstallable' || \Drupal::state()->get('config_test.isinstallable');
    }
  
@@ -4015,6 +4783,18 @@ index 30a7a3526d..0ff6bdd5a8 100644
 +  public function setArray(array $value): static {
 +    $this->array_property = $value;
 +    return $this;
++  }
++
++  /**
++   * {@inheritdoc}
++   */
++  public function toArray() {
++    $properties = parent::toArray();
++    // Only export the 'array_property' is there is data.
++    if (empty($properties['array_property'])) {
++      unset($properties['array_property']);
++    }
++    return $properties;
 +  }
 +
  }
@@ -4165,11 +4945,13 @@ index 0000000000..fec8c773e6
 +}
 diff --git a/core/modules/content_moderation/tests/src/Kernel/ConfigAction/AddModerationConfigActionTest.php b/core/modules/content_moderation/tests/src/Kernel/ConfigAction/AddModerationConfigActionTest.php
 new file mode 100644
-index 0000000000..5abb5ebc90
+index 0000000000..82a515e128
 --- /dev/null
 +++ b/core/modules/content_moderation/tests/src/Kernel/ConfigAction/AddModerationConfigActionTest.php
-@@ -0,0 +1,108 @@
+@@ -0,0 +1,110 @@
 +<?php
++
++declare(strict_types=1);
 +
 +namespace Drupal\Tests\content_moderation\Kernel\ConfigAction;
 +
@@ -7906,12 +8688,60 @@ index 0000000000..f14dc36a91
 +weight: 2
 +is_admin: false
 +permissions: {  }
+diff --git a/core/recipes/standard/content/shortcut/478b3170-1dfd-49d8-8eb3-f1b285445ab7.yml b/core/recipes/standard/content/shortcut/478b3170-1dfd-49d8-8eb3-f1b285445ab7.yml
+new file mode 100644
+index 0000000000..13985a8573
+--- /dev/null
++++ b/core/recipes/standard/content/shortcut/478b3170-1dfd-49d8-8eb3-f1b285445ab7.yml
+@@ -0,0 +1,18 @@
++_meta:
++  version: '1.0'
++  entity_type: shortcut
++  uuid: 478b3170-1dfd-49d8-8eb3-f1b285445ab7
++  bundle: default
++  default_langcode: en
++default:
++  title:
++    -
++      value: 'All content'
++  weight:
++    -
++      value: -19
++  link:
++    -
++      uri: 'internal:/admin/content'
++      title: ''
++      options: {  }
+diff --git a/core/recipes/standard/content/shortcut/d5377721-d6de-4fdf-82e2-557c50f84ceb.yml b/core/recipes/standard/content/shortcut/d5377721-d6de-4fdf-82e2-557c50f84ceb.yml
+new file mode 100644
+index 0000000000..ad2dc75d68
+--- /dev/null
++++ b/core/recipes/standard/content/shortcut/d5377721-d6de-4fdf-82e2-557c50f84ceb.yml
+@@ -0,0 +1,18 @@
++_meta:
++  version: '1.0'
++  entity_type: shortcut
++  uuid: d5377721-d6de-4fdf-82e2-557c50f84ceb
++  bundle: default
++  default_langcode: en
++default:
++  title:
++    -
++      value: 'Add content'
++  weight:
++    -
++      value: -20
++  link:
++    -
++      uri: 'internal:/node/add'
++      title: ''
++      options: {  }
 diff --git a/core/recipes/standard/recipe.yml b/core/recipes/standard/recipe.yml
 new file mode 100644
-index 0000000000..a6944acecc
+index 0000000000..edbfc6089f
 --- /dev/null
 +++ b/core/recipes/standard/recipe.yml
-@@ -0,0 +1,124 @@
+@@ -0,0 +1,125 @@
 +name: 'Standard'
 +description: 'Provides a standard site with commonly used features pre-configured.'
 +type: 'Site'
@@ -7946,6 +8776,7 @@ index 0000000000..a6944acecc
 +  - toolbar
 +  - field_ui
 +  - views_ui
++  - link
 +  - shortcut
 +config:
 +  import:
@@ -8524,10 +9355,10 @@ index 0000000000..8b3683695f
 +}
 diff --git a/core/tests/Drupal/FunctionalTests/Core/Recipe/StandardRecipeTest.php b/core/tests/Drupal/FunctionalTests/Core/Recipe/StandardRecipeTest.php
 new file mode 100644
-index 0000000000..0e61ecab48
+index 0000000000..a01196c05e
 --- /dev/null
 +++ b/core/tests/Drupal/FunctionalTests/Core/Recipe/StandardRecipeTest.php
-@@ -0,0 +1,157 @@
+@@ -0,0 +1,164 @@
 +<?php
 +
 +declare(strict_types=1);
@@ -8535,7 +9366,9 @@ index 0000000000..0e61ecab48
 +namespace Drupal\FunctionalTests\Core\Recipe;
 +
 +use Drupal\contact\Entity\ContactForm;
++use Drupal\shortcut\Entity\Shortcut;
 +use Drupal\Tests\standard\Functional\StandardTest;
++use Drupal\user\Entity\User;
 +use Drupal\user\RoleInterface;
 +
 +/**
@@ -8601,6 +9434,7 @@ index 0000000000..0e61ecab48
 +
 +    // Add a Home link to the main menu as Standard expects "Main navigation"
 +    // block on the page.
++    User::load(1)->addRole('administrator')->save();
 +    $this->drupalLogin($this->rootUser);
 +    $this->drupalGet('admin/structure/menu/manage/main/add');
 +    $this->submitForm([
@@ -8622,7 +9456,8 @@ index 0000000000..0e61ecab48
 +    $sync = \Drupal::service('config.storage.sync');
 +    /** @var \Drupal\Core\Config\StorageInterface $active */
 +    $active = \Drupal::service('config.storage');
-+    // @todo think about the _core unset some more...
++    // @todo https://www.drupal.org/i/3439749 Determine if the the _core unset
++    //   is correct.
 +    foreach ($active->listAll() as $name) {
 +      /** @var mixed[] $active_data */
 +      $active_data = $active->read($name);
@@ -8659,13 +9494,16 @@ index 0000000000..0e61ecab48
 +    $expected_list['update'] = ['core.extension'];
 +    $this->assertSame($expected_list, $comparer->getChangelist());
 +
++    // Standard ships two shortcuts; ensure they exist.
++    $this->assertCount(2, Shortcut::loadMultiple());
++
 +    parent::testStandard();
 +  }
 +
 +  /**
 +   * {@inheritdoc}
 +   *
-+   * @todo Remove this override in https://www.drupal.org/node/2941757.
++   * @todo https://www.drupal.org/i/3439750 Remove this.
 +   */
 +  protected function rebuildContainer(): void {
 +    // Compare the module list before and after the container is rebuilt, to
@@ -8685,13 +9523,227 @@ index 0000000000..0e61ecab48
 +  }
 +
 +}
+diff --git a/core/tests/Drupal/FunctionalTests/DefaultContent/ContentImportTest.php b/core/tests/Drupal/FunctionalTests/DefaultContent/ContentImportTest.php
+new file mode 100644
+index 0000000000..3f1f85b5d7
+--- /dev/null
++++ b/core/tests/Drupal/FunctionalTests/DefaultContent/ContentImportTest.php
+@@ -0,0 +1,206 @@
++<?php
++
++declare(strict_types=1);
++
++namespace Drupal\FunctionalTests\DefaultContent;
++
++use ColinODell\PsrTestLogger\TestLogger;
++use Drupal\block_content\BlockContentInterface;
++use Drupal\block_content\Entity\BlockContentType;
++use Drupal\Core\DefaultContent\Finder;
++use Drupal\Core\DefaultContent\Importer;
++use Drupal\Core\Entity\EntityRepositoryInterface;
++use Drupal\Core\Url;
++use Drupal\field\Entity\FieldConfig;
++use Drupal\field\Entity\FieldStorageConfig;
++use Drupal\file\FileInterface;
++use Drupal\FunctionalTests\Core\Recipe\RecipeTestTrait;
++use Drupal\language\Entity\ConfigurableLanguage;
++use Drupal\language\Entity\ContentLanguageSettings;
++use Drupal\media\MediaInterface;
++use Drupal\menu_link_content\MenuLinkContentInterface;
++use Drupal\node\NodeInterface;
++use Drupal\taxonomy\TermInterface;
++use Drupal\Tests\BrowserTestBase;
++use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
++use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
++use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
++use Psr\Log\LogLevel;
++
++/**
++ * @covers \Drupal\Core\DefaultContent\Importer
++ * @group DefaultContent
++ * @group Recipe
++ */
++class ContentImportTest extends BrowserTestBase {
++
++  use EntityReferenceFieldCreationTrait;
++  use MediaTypeCreationTrait;
++  use RecipeTestTrait;
++  use TaxonomyTestTrait;
++
++  /**
++   * {@inheritdoc}
++   */
++  protected $defaultTheme = 'stark';
++
++  /**
++   * {@inheritdoc}
++   */
++  protected static $modules = [
++    'block_content',
++    'content_translation',
++    'entity_test',
++    'media',
++    'menu_link_content',
++    'node',
++    'path',
++    'path_alias',
++    'system',
++    'taxonomy',
++    'user',
++  ];
++
++  private readonly string $contentDir;
++
++  /**
++   * {@inheritdoc}
++   */
++  protected function setUp(): void {
++    parent::setUp();
++
++    BlockContentType::create(['id' => 'basic', 'label' => 'Basic'])->save();
++    block_content_add_body_field('basic');
++
++    $this->createVocabulary(['vid' => 'tags']);
++    $this->createMediaType('image', ['id' => 'image']);
++    $this->drupalCreateContentType(['type' => 'page']);
++    $this->drupalCreateContentType(['type' => 'article']);
++    $this->createEntityReferenceField('node', 'article', 'field_tags', 'Tags', 'taxonomy_term');
++
++    // Create a field with custom serialization, so we can ensure that the
++    // importer handles that properly.
++    $field_storage = FieldStorageConfig::create([
++      'entity_type' => 'taxonomy_term',
++      'field_name' => 'field_serialized_stuff',
++      'type' => 'serialized_property_item_test',
++    ]);
++    $field_storage->save();
++    FieldConfig::create([
++      'field_storage' => $field_storage,
++      'bundle' => 'tags',
++    ])->save();
++
++    ConfigurableLanguage::createFromLangcode('fr')->save();
++    ContentLanguageSettings::create([
++      'target_entity_type_id' => 'node',
++      'target_bundle' => 'article',
++    ])
++      ->setThirdPartySetting('content_translation', 'enabled', TRUE)
++      ->save();
++
++    $this->contentDir = $this->getDrupalRoot() . '/core/tests/fixtures/default_content';
++  }
++
++  /**
++   * Tests importing content directly, via the API.
++   */
++  public function testDirectContentImport(): void {
++    $logger = new TestLogger();
++
++    /** @var \Drupal\Core\DefaultContent\Importer $importer */
++    $importer = $this->container->get(Importer::class);
++    $importer->setLogger($logger);
++    $importer->importContent(new Finder($this->contentDir));
++
++    $this->assertContentWasImported();
++    // We should see a warning about importing a file entity associated with a
++    // file that doesn't exist.
++    $predicate = function (array $record): bool {
++      return (
++        $record['message'] === 'File entity %name was imported, but the associated file (@path) was not found.' &&
++        $record['context']['%name'] === 'dce9cdc3-d9fc-4d37-849d-105e913bb5ad.png' &&
++        $record['context']['@path'] === $this->contentDir . '/file/dce9cdc3-d9fc-4d37-849d-105e913bb5ad.png'
++      );
++    };
++    $this->assertTrue($logger->hasRecordThatPasses($predicate, LogLevel::WARNING));
++  }
++
++  /**
++   * Asserts that the default content was imported as expected.
++   */
++  private function assertContentWasImported(): void {
++    /** @var \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository */
++    $entity_repository = $this->container->get(EntityRepositoryInterface::class);
++
++    $node = $entity_repository->loadEntityByUuid('node', 'e1714f23-70c0-4493-8e92-af1901771921');
++    $this->assertInstanceOf(NodeInterface::class, $node);
++    $this->assertSame('Crikey it works!', $node->body->value);
++    $this->assertSame('article', $node->bundle());
++    $this->assertSame('Test Article', $node->label());
++    $tag = $node->field_tags->entity;
++    $this->assertInstanceOf(TermInterface::class, $tag);
++    $this->assertSame('Default Content', $tag->label());
++    $this->assertSame('tags', $tag->bundle());
++    $this->assertSame('550f86ad-aa11-4047-953f-636d42889f85', $tag->uuid());
++    // The tag carries a field with serialized data, so ensure it came through
++    // properly.
++    $this->assertSame('a:2:{i:0;s:2:"Hi";i:1;s:6:"there!";}', $tag->field_serialized_stuff->value);
++    $owner = $node->getOwner();
++    $this->assertSame('Naomi Malone', $owner->getAccountName());
++    $this->assertSame('94503467-be7f-406c-9795-fc25baa22203', $owner->uuid());
++    // The node's URL should use the path alias shipped with the recipe.
++    $node_url = $node->toUrl()->toString();
++    $this->assertSame(Url::fromUserInput('/test-article')->toString(), $node_url);
++
++    $media = $entity_repository->loadEntityByUuid('media', '344b943c-b231-4d73-9669-0b0a2be12aa5');
++    $this->assertInstanceOf(MediaInterface::class, $media);
++    $this->assertSame('image', $media->bundle());
++    $this->assertSame('druplicon.png', $media->label());
++    $file = $media->field_media_image->entity;
++    $this->assertInstanceOf(FileInterface::class, $file);
++    $this->assertSame('druplicon.png', $file->getFilename());
++    $this->assertSame('d8404562-efcc-40e3-869e-40132d53fe0b', $file->uuid());
++
++    // Another file entity referencing an existing file should have the same
++    // file URI -- in other words, it should have reused the existing file.
++    $duplicate_file = $entity_repository->loadEntityByUuid('file', '23a7f61f-1db3-407d-a6dd-eb4731995c9f');
++    $this->assertInstanceOf(FileInterface::class, $duplicate_file);
++    $this->assertSame('druplicon-duplicate.png', $duplicate_file->getFilename());
++    $this->assertSame($file->getFileUri(), $duplicate_file->getFileUri());
++
++    // Another file entity that references a file with the same name as, but
++    // different contents than, an existing file, should be imported and the
++    // file should be renamed.
++    $different_file = $entity_repository->loadEntityByUuid('file', 'a6b79928-838f-44bd-a8f0-44c2fff9e4cc');
++    $this->assertInstanceOf(FileInterface::class, $different_file);
++    $this->assertSame('druplicon-different.png', $different_file->getFilename());
++    $this->assertStringEndsWith('/druplicon_0.png', (string) $different_file->getFileUri());
++
++    // Our node should have a menu link, and it should use the path alias we
++    // included with the recipe.
++    $menu_link = $entity_repository->loadEntityByUuid('menu_link_content', '3434bd5a-d2cd-4f26-bf79-a7f6b951a21b');
++    $this->assertInstanceOf(MenuLinkContentInterface::class, $menu_link);
++    $this->assertSame($menu_link->getUrlObject()->toString(), $node_url);
++    $this->assertSame('main', $menu_link->getMenuName());
++
++    $block_content = $entity_repository->loadEntityByUuid('block_content', 'd9b72b2f-a5ea-4a3f-b10c-28deb7b3b7bf');
++    $this->assertInstanceOf(BlockContentInterface::class, $block_content);
++    $this->assertSame('basic', $block_content->bundle());
++    $this->assertSame('Useful Info', $block_content->label());
++    $this->assertSame("<p>I'd love to put some useful info here.</p>", $block_content->body->value);
++
++    // A node with a non-existent owner should be reassigned to user 1.
++    $node = $entity_repository->loadEntityByUuid('node', '7f1dd75a-0be2-4d3b-be5d-9d1a868b9267');
++    $this->assertInstanceOf(NodeInterface::class, $node);
++    $this->assertSame('1', $node->getOwner()->id());
++
++    // Ensure a node with a translation is imported properly.
++    $node = $entity_repository->loadEntityByUuid('node', '2d3581c3-92c7-4600-8991-a0d4b3741198');
++    $this->assertInstanceOf(NodeInterface::class, $node);
++    $translation = $node->getTranslation('fr');
++    $this->assertSame('Perdu en traduction', $translation->label());
++    $this->assertSame("<p>I√ßi c'est la version fran√ßais.</p>", $translation->body->value);
++  }
++
++}
 diff --git a/core/tests/Drupal/KernelTests/Core/Config/Action/ConfigActionTest.php b/core/tests/Drupal/KernelTests/Core/Config/Action/ConfigActionTest.php
 new file mode 100644
-index 0000000000..3681457776
+index 0000000000..ec34c1036b
 --- /dev/null
 +++ b/core/tests/Drupal/KernelTests/Core/Config/Action/ConfigActionTest.php
-@@ -0,0 +1,322 @@
+@@ -0,0 +1,324 @@
 +<?php
++
++declare(strict_types=1);
 +
 +namespace Drupal\KernelTests\Core\Config\Action;
 +
@@ -9331,10 +10383,10 @@ index 0000000000..9032d234bc
 +}
 diff --git a/core/tests/Drupal/KernelTests/Core/Recipe/ConfigActionValidationTest.php b/core/tests/Drupal/KernelTests/Core/Recipe/ConfigActionValidationTest.php
 new file mode 100644
-index 0000000000..1bb576365f
+index 0000000000..91bdd1ef55
 --- /dev/null
 +++ b/core/tests/Drupal/KernelTests/Core/Recipe/ConfigActionValidationTest.php
-@@ -0,0 +1,97 @@
+@@ -0,0 +1,141 @@
 +<?php
 +
 +declare(strict_types=1);
@@ -9344,6 +10396,7 @@ index 0000000000..1bb576365f
 +use Drupal\Core\Entity\EntityTypeManagerInterface;
 +use Drupal\Core\Recipe\InvalidConfigException;
 +use Drupal\Core\Recipe\Recipe;
++use Drupal\Core\Recipe\RecipeFileException;
 +use Drupal\Core\Recipe\RecipeRunner;
 +use Drupal\KernelTests\KernelTestBase;
 +
@@ -9431,6 +10484,49 @@ index 0000000000..1bb576365f
 +    }
 +  }
 +
++  /**
++   * Tests validating that config actions' dependencies are present.
++   *
++   * Tests that the all of the config listed in a recipe's config actions are
++   * provided by extensions that will be installed by the recipe, or one of its
++   * dependencies (no matter how deeply nested).
++   *
++   * @testWith ["direct_dependency"]
++   *   ["indirect_dependency_one_level_down"]
++   *   ["indirect_dependency_two_levels_down"]
++   */
++  public function testConfigActionDependenciesAreValidated(string $name): void {
++    Recipe::createFromDirectory("core/tests/fixtures/recipes/config_actions_dependency_validation/$name");
++  }
++
++  /**
++   * Tests config action validation for missing dependency.
++   */
++  public function testConfigActionMissingDependency(): void {
++    $recipe_data = <<<YAML
++name: Config actions making bad decisions
++config:
++  actions:
++    random.config:
++      simple_config_update:
++        label: ''
++YAML;
++
++    $dir = uniqid('public://');
++    mkdir($dir);
++    file_put_contents($dir . '/recipe.yml', $recipe_data);
++    try {
++      Recipe::createFromDirectory($dir);
++      $this->fail('An exception should have been thrown.');
++    }
++    catch (RecipeFileException $e) {
++      $this->assertIsObject($e->violations);
++      $this->assertCount(1, $e->violations);
++      $this->assertSame('[config][actions][random.config]', $e->violations[0]->getPropertyPath());
++      $this->assertSame("Config actions cannot be applied to random.config because the random extension is not installed, and is not installed by this recipe or any of the recipes it depends on.", (string) $e->violations[0]->getMessage());
++    }
++  }
++
 +}
 diff --git a/core/tests/Drupal/KernelTests/Core/Recipe/ConfigConfiguratorTest.php b/core/tests/Drupal/KernelTests/Core/Recipe/ConfigConfiguratorTest.php
 new file mode 100644
@@ -9486,11 +10582,13 @@ index 0000000000..b91ea75b37
 +}
 diff --git a/core/tests/Drupal/KernelTests/Core/Recipe/ConfigValidationTest.php b/core/tests/Drupal/KernelTests/Core/Recipe/ConfigValidationTest.php
 new file mode 100644
-index 0000000000..686d6e79d6
+index 0000000000..0d6119703c
 --- /dev/null
 +++ b/core/tests/Drupal/KernelTests/Core/Recipe/ConfigValidationTest.php
-@@ -0,0 +1,75 @@
+@@ -0,0 +1,77 @@
 +<?php
++
++declare(strict_types=1);
 +
 +namespace Drupal\KernelTests\Core\Recipe;
 +
@@ -9806,11 +10904,13 @@ index 0000000000..88090b47c0
 +}
 diff --git a/core/tests/Drupal/KernelTests/Core/Recipe/RecipeDiscoveryTest.php b/core/tests/Drupal/KernelTests/Core/Recipe/RecipeDiscoveryTest.php
 new file mode 100644
-index 0000000000..daa0a98b9d
+index 0000000000..7eab347ca7
 --- /dev/null
 +++ b/core/tests/Drupal/KernelTests/Core/Recipe/RecipeDiscoveryTest.php
-@@ -0,0 +1,63 @@
+@@ -0,0 +1,65 @@
 +<?php
++
++declare(strict_types=1);
 +
 +namespace Drupal\KernelTests\Core\Recipe;
 +
@@ -9875,11 +10975,13 @@ index 0000000000..daa0a98b9d
 +}
 diff --git a/core/tests/Drupal/KernelTests/Core/Recipe/RecipeRunnerTest.php b/core/tests/Drupal/KernelTests/Core/Recipe/RecipeRunnerTest.php
 new file mode 100644
-index 0000000000..b39c79fb53
+index 0000000000..c4d90c6538
 --- /dev/null
 +++ b/core/tests/Drupal/KernelTests/Core/Recipe/RecipeRunnerTest.php
-@@ -0,0 +1,220 @@
+@@ -0,0 +1,222 @@
 +<?php
++
++declare(strict_types=1);
 +
 +namespace Drupal\KernelTests\Core\Recipe;
 +
@@ -10101,11 +11203,13 @@ index 0000000000..b39c79fb53
 +}
 diff --git a/core/tests/Drupal/KernelTests/Core/Recipe/RecipeTest.php b/core/tests/Drupal/KernelTests/Core/Recipe/RecipeTest.php
 new file mode 100644
-index 0000000000..d54ec5cdfe
+index 0000000000..33fb933628
 --- /dev/null
 +++ b/core/tests/Drupal/KernelTests/Core/Recipe/RecipeTest.php
-@@ -0,0 +1,75 @@
+@@ -0,0 +1,77 @@
 +<?php
++
++declare(strict_types=1);
 +
 +namespace Drupal\KernelTests\Core\Recipe;
 +
@@ -10182,10 +11286,10 @@ index 0000000000..d54ec5cdfe
 +}
 diff --git a/core/tests/Drupal/KernelTests/Core/Recipe/RecipeValidationTest.php b/core/tests/Drupal/KernelTests/Core/Recipe/RecipeValidationTest.php
 new file mode 100644
-index 0000000000..bebaeae196
+index 0000000000..20551fb972
 --- /dev/null
 +++ b/core/tests/Drupal/KernelTests/Core/Recipe/RecipeValidationTest.php
-@@ -0,0 +1,337 @@
+@@ -0,0 +1,340 @@
 +<?php
 +
 +declare(strict_types=1);
@@ -10447,6 +11551,8 @@ index 0000000000..bebaeae196
 +    yield 'config actions list is valid' => [
 +      <<<YAML
 +name: 'Correct config actions list'
++install:
++  - config_test
 +config:
 +  actions:
 +    config_test.dynamic.recipe:
@@ -10476,6 +11582,7 @@ index 0000000000..bebaeae196
 +        '[config][actions][0]' => [
 +          'This value should be of type array.',
 +          'This value should not be blank.',
++          'Config actions cannot be applied to 0 because the 0 extension is not installed, and is not installed by this recipe or any of the recipes it depends on.',
 +        ],
 +      ],
 +    ];
@@ -10789,10 +11896,10 @@ index 0000000000..e61f3c16e4
 +}
 diff --git a/core/tests/Drupal/Tests/Core/Config/Checkpoint/CheckpointStorageTest.php b/core/tests/Drupal/Tests/Core/Config/Checkpoint/CheckpointStorageTest.php
 new file mode 100644
-index 0000000000..e79c307e5e
+index 0000000000..f0d8251bf5
 --- /dev/null
 +++ b/core/tests/Drupal/Tests/Core/Config/Checkpoint/CheckpointStorageTest.php
-@@ -0,0 +1,294 @@
+@@ -0,0 +1,296 @@
 +<?php
 +
 +declare(strict_types=1);
@@ -10800,6 +11907,7 @@ index 0000000000..e79c307e5e
 +namespace Drupal\Tests\Core\Config\Checkpoint;
 +
 +use Drupal\Component\Datetime\Time;
++use Drupal\Core\Cache\NullBackend;
 +use Drupal\Core\Config\Checkpoint\Checkpoint;
 +use Drupal\Core\Config\Checkpoint\LinearHistory;
 +use Drupal\Core\Config\Checkpoint\CheckpointStorage;
@@ -10809,6 +11917,7 @@ index 0000000000..e79c307e5e
 +use Drupal\Core\Config\StorageCopyTrait;
 +use Drupal\Core\Config\StorageInterface;
 +use Drupal\Core\KeyValueStore\KeyValueMemoryFactory;
++use Drupal\Core\Lock\NullLockBackend;
 +use Drupal\Core\State\State;
 +use Drupal\Tests\UnitTestCase;
 +use Drupal\TestTools\Random;
@@ -10844,7 +11953,7 @@ index 0000000000..e79c307e5e
 +    // Set up a memory storage we can manipulate to set fixtures.
 +    $this->memory = new MemoryStorage();
 +    $keyValueMemoryFactory = new KeyValueMemoryFactory();
-+    $state = new State($keyValueMemoryFactory);
++    $state = new State($keyValueMemoryFactory, new NullBackend('test'), new NullLockBackend());
 +    $time = new Time();
 +    $checkpoints = new LinearHistory($state, $time);
 +    $this->storage = new CheckpointStorage($this->memory, $checkpoints, $keyValueMemoryFactory);
@@ -11283,6 +12392,47 @@ index 0000000000..1a3ee6cd7c
 +  }
 +
 +}
+diff --git a/core/tests/Drupal/Tests/Core/DefaultContent/FinderTest.php b/core/tests/Drupal/Tests/Core/DefaultContent/FinderTest.php
+new file mode 100644
+index 0000000000..d8303959b6
+--- /dev/null
++++ b/core/tests/Drupal/Tests/Core/DefaultContent/FinderTest.php
+@@ -0,0 +1,35 @@
++<?php
++
++declare(strict_types=1);
++
++namespace Drupal\Tests\Core\DefaultContent;
++
++use Drupal\Core\DefaultContent\Finder;
++use Drupal\Tests\UnitTestCase;
++
++/**
++ * @covers \Drupal\Core\DefaultContent\Finder
++ * @group DefaultContent
++ */
++class FinderTest extends UnitTestCase {
++
++  /**
++   * Tests that any discovered entity data is sorted into dependency order.
++   */
++  public function testFoundDataIsInDependencyOrder(): void {
++    $finder = new Finder(__DIR__ . '/../../../../fixtures/default_content');
++
++    $expected_order = [
++      // First is the author of the node.
++      '94503467-be7f-406c-9795-fc25baa22203',
++      // Next, the taxonomy term referenced by the node.
++      '550f86ad-aa11-4047-953f-636d42889f85',
++      // Then we have the node itself, since it has no other dependencies.
++      'e1714f23-70c0-4493-8e92-af1901771921',
++      // Finally, the menu link to the node.
++      '3434bd5a-d2cd-4f26-bf79-a7f6b951a21b',
++    ];
++    $this->assertSame($expected_order, array_slice(array_keys($finder->data), 0, 4));
++  }
++
++}
 diff --git a/core/tests/Drupal/Tests/Core/Recipe/RecipeConfigStorageWrapperTest.php b/core/tests/Drupal/Tests/Core/Recipe/RecipeConfigStorageWrapperTest.php
 new file mode 100644
 index 0000000000..b74c14d8b4
@@ -11613,6 +12763,589 @@ index 0000000000..b74c14d8b4
 +  }
 +
 +}
+diff --git a/core/tests/fixtures/default_content/a6b79928-838f-44bd-a8f0-44c2fff9e4cc.yml b/core/tests/fixtures/default_content/a6b79928-838f-44bd-a8f0-44c2fff9e4cc.yml
+new file mode 100644
+index 0000000000..f126741702
+--- /dev/null
++++ b/core/tests/fixtures/default_content/a6b79928-838f-44bd-a8f0-44c2fff9e4cc.yml
+@@ -0,0 +1,27 @@
++_meta:
++  version: '1.0'
++  entity_type: file
++  uuid: a6b79928-838f-44bd-a8f0-44c2fff9e4cc
++  default_langcode: en
++default:
++  uid:
++    -
++      target_id: 1
++  filename:
++    -
++      value: druplicon-different.png
++  uri:
++    -
++      value: 'public://2024-03/druplicon.png'
++  filemime:
++    -
++      value: text/plain
++  filesize:
++    -
++      value: 11
++  status:
++    -
++      value: true
++  created:
++    -
++      value: 1711121742
+diff --git a/core/tests/fixtures/default_content/block_content/d9b72b2f-a5ea-4a3f-b10c-28deb7b3b7bf.yml b/core/tests/fixtures/default_content/block_content/d9b72b2f-a5ea-4a3f-b10c-28deb7b3b7bf.yml
+new file mode 100644
+index 0000000000..07bc793fe5
+--- /dev/null
++++ b/core/tests/fixtures/default_content/block_content/d9b72b2f-a5ea-4a3f-b10c-28deb7b3b7bf.yml
+@@ -0,0 +1,24 @@
++_meta:
++  version: '1.0'
++  entity_type: block_content
++  uuid: d9b72b2f-a5ea-4a3f-b10c-28deb7b3b7bf
++  bundle: basic
++  default_langcode: en
++default:
++  status:
++    -
++      value: true
++  info:
++    -
++      value: 'Useful Info'
++  reusable:
++    -
++      value: true
++  revision_translation_affected:
++    -
++      value: true
++  body:
++    -
++      value: "<p>I'd love to put some useful info here.</p>"
++      format: basic_html
++      summary: ''
+diff --git a/core/tests/fixtures/default_content/druplicon.png b/core/tests/fixtures/default_content/druplicon.png
+new file mode 100644
+index 0000000000..51bb1074d3
+--- /dev/null
++++ b/core/tests/fixtures/default_content/druplicon.png
+@@ -0,0 +1 @@
++Not a PNG.
+diff --git a/core/tests/fixtures/default_content/file/23a7f61f-1db3-407d-a6dd-eb4731995c9f.yml b/core/tests/fixtures/default_content/file/23a7f61f-1db3-407d-a6dd-eb4731995c9f.yml
+new file mode 100644
+index 0000000000..f64d6f0eff
+--- /dev/null
++++ b/core/tests/fixtures/default_content/file/23a7f61f-1db3-407d-a6dd-eb4731995c9f.yml
+@@ -0,0 +1,27 @@
++_meta:
++  version: '1.0'
++  entity_type: file
++  uuid: 23a7f61f-1db3-407d-a6dd-eb4731995c9f
++  default_langcode: en
++default:
++  uid:
++    -
++      target_id: 1
++  filename:
++    -
++      value: druplicon-duplicate.png
++  uri:
++    -
++      value: 'public://2024-03/druplicon.png'
++  filemime:
++    -
++      value: image/png
++  filesize:
++    -
++      value: 3905
++  status:
++    -
++      value: true
++  created:
++    -
++      value: 1711121742
+diff --git a/core/tests/fixtures/default_content/file/2b8e0616-3ef0-4a91-8cfb-b31d9128f9f8.yml b/core/tests/fixtures/default_content/file/2b8e0616-3ef0-4a91-8cfb-b31d9128f9f8.yml
+new file mode 100644
+index 0000000000..d07b0e6346
+--- /dev/null
++++ b/core/tests/fixtures/default_content/file/2b8e0616-3ef0-4a91-8cfb-b31d9128f9f8.yml
+@@ -0,0 +1,27 @@
++_meta:
++  version: '1.0'
++  entity_type: file
++  uuid: 2b8e0616-3ef0-4a91-8cfb-b31d9128f9f8
++  default_langcode: en
++default:
++  uid:
++    -
++      target_id: 1
++  filename:
++    -
++      value: dce9cdc3-d9fc-4d37-849d-105e913bb5ad.png
++  uri:
++    -
++      value: 'public://2024-03/dce9cdc3-d9fc-4d37-849d-105e913bb5ad.png'
++  filemime:
++    -
++      value: image/png
++  filesize:
++    -
++      value: 1233169
++  status:
++    -
++      value: true
++  created:
++    -
++      value: 1711729897
+diff --git a/core/tests/fixtures/default_content/file/d8404562-efcc-40e3-869e-40132d53fe0b.yml b/core/tests/fixtures/default_content/file/d8404562-efcc-40e3-869e-40132d53fe0b.yml
+new file mode 100644
+index 0000000000..7b2a0aa83a
+--- /dev/null
++++ b/core/tests/fixtures/default_content/file/d8404562-efcc-40e3-869e-40132d53fe0b.yml
+@@ -0,0 +1,27 @@
++_meta:
++  version: '1.0'
++  entity_type: file
++  uuid: d8404562-efcc-40e3-869e-40132d53fe0b
++  default_langcode: en
++default:
++  uid:
++    -
++      target_id: 1
++  filename:
++    -
++      value: druplicon.png
++  uri:
++    -
++      value: 'public://2024-03/druplicon.png'
++  filemime:
++    -
++      value: image/png
++  filesize:
++    -
++      value: 3905
++  status:
++    -
++      value: true
++  created:
++    -
++      value: 1711121742
+diff --git a/core/tests/fixtures/default_content/file/druplicon.png b/core/tests/fixtures/default_content/file/druplicon.png
+new file mode 100644
+index 0000000000..3b49a4ce78
+--- /dev/null
++++ b/core/tests/fixtures/default_content/file/druplicon.png
+@@ -0,0 +1,18 @@
++âPNG
++
++   IHDR   X   d   -˜‚  IDATx⁄Ì]	PTW}ÄâFÕ¶…ƒ§íTe2©‘ƒL*ì‘$ï…:•©LêM1j‘∏ƒwA6√*;"õH@\AEAQD≈E¡ê]dﬂ°YÓ‹˜ú/{Ûª˚74O’-ñÊˇ˛ˇÙ}Á›{ﬂ}¢Ú0tÀ$¶>Ô Å∫éM—µo!¶€'√‘wÚ"‡ïï˚ÄË;W√ƒ{ï]‘u¯e3? ≥›≤à1€˝“ÒÙbM)≤Ê#4œSDÑ@òıGkQM3$ÂV?!ÿ<àÅc/o"BAò¯Ã˙ zPd<™g3[}àÆSo"B∫Fﬁ( äÃ≤F–XﬂIÚ h ⁄6ÄΩûàêor{wŸhÔË ä€Ë¡c7ú¶‰v'Y◊ûíºéàêI∆ç7rnK-¨«nóQR{€™„Ä:M59Ñà‡”ÌS◊µo=å“¿°∫©ñGeˆI0ß…('OB∏9æDDøû´˝Çâs{ÏùG¿°•≠ˆ•ñ¬.ó(ôRç≈…≥∂∂¢dX›ºvz`÷'ÎC ªº8T5∂B»µ0OóFl/]f±≤æS÷/æ'£&ﬁ+'9µy«g‡ÑívHÃÆﬂKEkƒP[K…ì—ñ¢ÁHcÊ«HÙèd‘aŒˆ–k≥∞€yïç¿°†∫â-üãOlöˇuJò¸∂‰ %ôzt-J–"2*`ÏÌ2…ÿ˛L Çæp´§˛)¡ÆÁÚ)Qä€ @ÇiÇ“å«∂ë*∆97Øø eı-–òDp€ƒÁRÇÑ≥« %àñujuÏHâå1tnXÖ’M0n’=%¯á¿Bë€;~6›¨Œl‚m>\£É7à·∂Bm◊(∏˜®x =[~óãπé	·πç,{Sû≠8J„g†◊â◊˚⁄0ô¿vh#˜õBNy=ãywﬂxƒ»ıN*Ñ˜ú.R«ñF —±bÏπW’u÷d¨°ìdÎ— A¬¯BÇ1⁄°Ù«O•·Á‡õÉG.g´O“îõÆúT”åR’‰`<µªüo
++Öå‚Zêç8©HÎ$◊do®—*[¥»L+ZD≤Qr?T”shqåπ	X¸í	µÕmú,0[q‘◊∆ô“Î˙NT2bá:Bò˜ºâKG4.Î»ää	KÖ9rWÀÇ1\ÕWÃ<é.O—BRﬁß˙$^AÔ,ÒÖ€%µ +Jj[ (π¯)πã"Ô¬≥ÎYƒ†z6◊üzs5J∆∏A$◊3‚k´=¨ #+r*öXùÅ#◊`w:®≥zÉ
++€Ø°tÚ´Eí«πa≥=£iqF&4µ∂C\f≈SbΩ—¶∞Dbxÿ¸]î‰JLı’ï)˛¶€O π≤±˚†ºÇØvJÇWR|‚qe¯êÀôìã"e≈∏ÓÜ^«°M◊m¬,∂”kôm8˛ ^≥97Ï»ÂåM|⁄÷ª≈|¥æ∑è§√\nØıFõö∆E
++√ÿ‚ÿä6Æû,™?ÏÂ∑˚∂◊4ÛLz{≠C¬CnŸgDõÙ4-öëd≈ª>«œÒ,={øB+J«ı¬Zø∫k≠^ÿ-ò∞ÈÃà!ó´]†Síã»èÎ‘ô‘¬Á'A≥i†öúV\árP“ÕkóæSTOkÖ+‡π?ëäô["Â’›ﬁ˙Õóï˚ #˝J~¯_)ÍFÏñÿò∫ç…¡»6cœ'•Œõ⁄âéÌ7DfË⁄7/âHg§ùæ_	•u-ê]—)µqãg∫ôKb¸«Ô:◊‚4ÚmÆﬂ/6p¶^¸XVip;?<.PÚ§”YCÃ∆&nf:;zÃåÃ=òFÀ	oË9Jﬁ¥=+ïXO$Œæx›ñÈÏË≥9æ¡L*–ãÀ¯zo ÆJ¿≥ÿlÁv>ø±6ßr·˚Ä\d0zÕ‘áí€›ãµm÷Úizn#´bÿI^¥LÄØ}Ø¡å‡T¯‘3&m9K/7…u%x∂+Nxõ´•ÜmxP8÷>EÚx,ˇ#©ΩMÀöJ≈“/tÏ⁄Ò`ë¿ÅÏ∑˝}l‡BΩ∏¢øbŒz,dà‰Ò,]"°}€LKQ|GzŸ/&Àâ‰ÒYJ2ÒÍü`}G*Ò=.ü!⁄∂£û<>ÜNàDJ5ÃÓ{6‰9a,'í«KÇ&ò…Ñ›ÙÆ;zÓì!"yºä<åL#äΩ]c_â=‰Ω\}B”"è”ﬂó0<…„˚Ú∑ü7∂±§√3‘`ë¿Ål^ê,s:¸AM9âK "Å“lY§l‰r:¨m≥Ö–÷ ÃLD˚≥U1\‹+ì±M8ZVá	~SGñâÏ;©‡
++Î≤+ƒ[¶”˙CÜ"ô}ŸÇJñ|f∏ç÷% 	€b'íŸ”Ôëõ\Æœ2:1EñR-S–ê‡ödàÑvµ•Ö!%¢ïNr"©ú—…ﬁ»CHÇ€ë`ß°∏÷lñkéeÇ˚πáp ıƒﬁ+øK`q‚>ò·ÇÍ4ˇîAñFÆp¶i	î‡A’‡opç/¸z14J⁄ÄV6¡∂ƒáπW≤Ú6«,ìôºè6ÏÜ7ñDp¡´ˆ¡ ˆ˜+ÃCAJA¸¥ÛÜÄqn,¶¿;yì˙÷Ú O∫≠mÌ¿°∫°Ãwü5„>	ñPnUÆƒÉu‹÷¥-2pÁËW€Ø*æì»å_Ò¬¸Ìv˛HªÖ†ÑÙﬁ$kZ4“IÆYYqã	êîS BËµ"òluVæÙ◊‘áπ∆>'‡qM#¡÷√Wz\G%¢ä¸%8π„∞qÂ\v%(ï–K„ﬂ<ΩhØ…ÏÌﬂÉ‡¯Õêç-≠‚ﬂÆQD%}|a*æ©‡≤ëˆánï¬´÷â“ΩvÆˇ@ƒ≤aæ&¸vè∂Å<XºÛÙˇSeZã∏C[•<…/AÇ¸˚ëª0`†:!©}'∆Wƒ>\óÔÉ"àMÕÌZM;JwkN≈!#πØY'≤˝sCâ∞îbx…2ÅnÊµÃ3ŒÃãÈgˆ<+ä{Eï]Î¡6ÑAœA®Pç%
++™ÄäÜ0ˆçê‹/mˆCÓ„
++ıÕíŒ6*ªiÑ∑ä
++1—ç€xö=HNïp#∑¶€˜Zë`øKº#º3W’sÑÑ8i
++îàxlRò`Ω–4PU¥∂∑CRfæz$ò((Ó±Z0&ªvˆL%Üä7û\.Ä—é–Û∑ŸCKQ"BI'òL4·√Ç"¯Tf9åvXG\¢—’ﬂoI'òLDìy¡
++úU÷ ™åÏ“jH∏ù ÓÂ¶	F}_O.ô¢hm8ªºTiye†Ìv‘M:≥∑gÁx¡Ü}ÿ?°ÒØıª®Gë>°Ô\°»
++Û’¸PúŒ»É/≠•/˝ºπ,êÜhÇFÍZ[:P>ËoÛ·lE&ªìwÀ`®ëÉ20Àùwõ#˘v°0sáﬂ©Tû©¿«Z…È≈¨,9D`æ≈ÅãòïyÀ\<üº»íîÄ¢òf
++∏àºz†È €+¸±€el`çñ¡—Zﬁô8œ‚”Û@^$cCM”¢í{t “πHŒ(©É¡B^y-¸õ”YL›ÿ¢R(‡Ω6ÊÑLºæ¡}mdE¥Ã·ùÃV/îâÙ¸2òÈzT*Y~Ò#ü„`ÖqÈGí¡!*VÖ%Ç©ÔIc‚ŸÔqœòz¬¡+ô N‹Ã°⁄[CdÇñu ´-9 3…Ngrï3Å=ÆÜ9;Nr!Wüˆ:.DF&gÅ∞5µç˚.Ù{¸ òÏA	FSÃú1r∞’#2C”≤òÊ’l_ÓrŸv Y≈
++7·=™nÄÂ!	4~ïÊµlÒ±Y¬øPæ0(æﬂsi‡á∏+1§Äç‘Ô¨¬G{íºˇKËüHr;NzÏMYÁÇ]¿Ùye4≠∑ˆˇ†M|}ÜﬂEx\€$…±Æ	¨#/HÏ÷˛ßªö2
++ ŸÍ¬èŒG‡XHˇ÷Ó ÃÛèÉ#◊Ó3b∏%ûW˚Ù°ıí<Óÿüú—¨≠	G˙KD^†Tÿbf“!uÇ0ÒÃ{ÔﬂE{nÆ7òÌà•)*ØÃ)≥∏\cR‡”Õ¸õÔ¢Øgá ˙f–ıàñ˙˜õ˜'‘ËÅŒœ>úS∑Ú—(	Ï˝ﬁ[Ωãı=`XfJÅDÙfAfjÏ-†EnÙ¨√†ÁÛ‚`ÜK¸}ÌütX z>v,åe©GÚZw;∑("Æd…u®π¥b∂ü›?‘ë‰|¨∏—ì´î}¥!åçå®T>Óù¡¨>¸˛ö9∫◊ËÇfzéœ„ê(≈≠¢*GÚX3Ø¡{?t2‘›—œ¡°c˜
++ûºäÛ‰Qf‹£ºjq˜–€Di–≤zãÎq¬Ë"Ôù´ùÏØÉÒØ '°Â£6èÚ0EñZÀ`urÊπ['ë¡
++ΩzÛeúMïß≠ˇ.	>Q◊ AJy}œ»«öFfIeˇ˚›4-ÛÒÎd2$¿îΩπ3>¡oﬁ>*π[÷ÑÕ!¥”Q·Û>èÁXº3RrJÅ∆È=˛Œ–Åhñvû9”êB€f’'ºA	6ﬂùÿWyí≠‹Æ∆◊0†ı_^ıﬁü0£≥âºLKíΩ2≥$\jüÚõœHAÇ˜eIT®«?œ≤æŸÆBÃ‚Zá(©’9$ºÉeoÀjXïÌbfm(a-L•5Ïı˛ÄÈ4M•{HÇïÑúÃﬁ'™º0=ú™+p5EÌ3ÀΩõ&HÖé%%«Æg”∞{Ê®kOΩ∂%oQu‡´·Özêü7µ —BIÊˇ!∞µªÕÈ<ﬂé÷>pÊ¸O'Àﬁ#÷*'≤ó…∞ÇÅ”x‘±@ÙËJ4'BŸ_˚√‘u°Ã√ø€zêÈ¨ñÎQ∂ Ò¡⁄P‹§ÿO%Œçy,^W;«™a√Ë%D€⁄Å•⁄83„œCó,h€–òMx{ëÿW…à√,ª/P>bà&Õäli·D^≠Ê_òa§nn¡ê+ÀãëXu2Äû¸ﬁ4ímQ»∂<!·ç∞0IÊ∏⁄–ïá«SBŸG£#&GèÅ0pûéÊÄ§«#9πÏaõ3-ÎÒÁ4Ë4K$êöE+Z#≠n·œŸ¯Zé7¸†tÿD´¯~I]EÌ∏    IENDÆB`Ç
+\ No newline at end of file
+diff --git a/core/tests/fixtures/default_content/media/344b943c-b231-4d73-9669-0b0a2be12aa5.yml b/core/tests/fixtures/default_content/media/344b943c-b231-4d73-9669-0b0a2be12aa5.yml
+new file mode 100644
+index 0000000000..d54c09c769
+--- /dev/null
++++ b/core/tests/fixtures/default_content/media/344b943c-b231-4d73-9669-0b0a2be12aa5.yml
+@@ -0,0 +1,38 @@
++_meta:
++  version: '1.0'
++  entity_type: media
++  uuid: 344b943c-b231-4d73-9669-0b0a2be12aa5
++  bundle: image
++  default_langcode: en
++  depends:
++    d8404562-efcc-40e3-869e-40132d53fe0b: file
++default:
++  revision_user:
++    -
++      target_id: 1
++  status:
++    -
++      value: true
++  uid:
++    -
++      target_id: 1
++  name:
++    -
++      value: druplicon.png
++  created:
++    -
++      value: 1711121695
++  revision_translation_affected:
++    -
++      value: true
++  path:
++    -
++      alias: ''
++      langcode: en
++  field_media_image:
++    -
++      entity: d8404562-efcc-40e3-869e-40132d53fe0b
++      alt: 'A Druplicon on a transparent background.'
++      title: ''
++      width: 88
++      height: 100
+diff --git a/core/tests/fixtures/default_content/menu_link_content/3434bd5a-d2cd-4f26-bf79-a7f6b951a21b.yml b/core/tests/fixtures/default_content/menu_link_content/3434bd5a-d2cd-4f26-bf79-a7f6b951a21b.yml
+new file mode 100644
+index 0000000000..eecf8562c0
+--- /dev/null
++++ b/core/tests/fixtures/default_content/menu_link_content/3434bd5a-d2cd-4f26-bf79-a7f6b951a21b.yml
+@@ -0,0 +1,38 @@
++_meta:
++  version: '1.0'
++  entity_type: menu_link_content
++  uuid: 3434bd5a-d2cd-4f26-bf79-a7f6b951a21b
++  bundle: menu_link_content
++  default_langcode: en
++  depends:
++    e1714f23-70c0-4493-8e92-af1901771921: node
++default:
++  enabled:
++    -
++      value: true
++  title:
++    -
++      value: 'Test Article'
++  menu_name:
++    -
++      value: main
++  link:
++    -
++      target_uuid: e1714f23-70c0-4493-8e92-af1901771921
++      title: ''
++      options: {  }
++  external:
++    -
++      value: false
++  rediscover:
++    -
++      value: false
++  weight:
++    -
++      value: 0
++  expanded:
++    -
++      value: false
++  revision_translation_affected:
++    -
++      value: true
+diff --git a/core/tests/fixtures/default_content/node/2d3581c3-92c7-4600-8991-a0d4b3741198.yml b/core/tests/fixtures/default_content/node/2d3581c3-92c7-4600-8991-a0d4b3741198.yml
+new file mode 100644
+index 0000000000..feb20325c9
+--- /dev/null
++++ b/core/tests/fixtures/default_content/node/2d3581c3-92c7-4600-8991-a0d4b3741198.yml
+@@ -0,0 +1,83 @@
++_meta:
++  version: '1.0'
++  entity_type: node
++  uuid: 2d3581c3-92c7-4600-8991-a0d4b3741198
++  bundle: article
++  default_langcode: en
++  depends:
++    94503467-be7f-406c-9795-fc25baa22203: user
++default:
++  revision_uid:
++    -
++      target_id: 1
++  status:
++    -
++      value: true
++  uid:
++    -
++      entity: 94503467-be7f-406c-9795-fc25baa22203
++  title:
++    -
++      value: 'Lost in translation'
++  created:
++    -
++      value: 1711976268
++  promote:
++    -
++      value: true
++  sticky:
++    -
++      value: false
++  path:
++    -
++      alias: ''
++      langcode: en
++  content_translation_source:
++    -
++      value: und
++  content_translation_outdated:
++    -
++      value: false
++  body:
++    -
++      value: "<p>Here's the English version.</p>"
++      format: basic_html
++      summary: ''
++translations:
++  fr:
++    status:
++      -
++        value: true
++    uid:
++      -
++        target_id: 1
++    title:
++      -
++        value: 'Perdu en traduction'
++    created:
++      -
++        value: 1711976291
++    promote:
++      -
++        value: true
++    sticky:
++      -
++        value: false
++    revision_translation_affected:
++      -
++        value: true
++    path:
++      -
++        alias: ''
++        langcode: fr
++    content_translation_source:
++      -
++        value: en
++    content_translation_outdated:
++      -
++        value: false
++    body:
++      -
++        value: "<p>I√ßi c'est la version fran√ßais.</p>"
++        format: basic_html
++        summary: ''
+diff --git a/core/tests/fixtures/default_content/node/7f1dd75a-0be2-4d3b-be5d-9d1a868b9267.yml b/core/tests/fixtures/default_content/node/7f1dd75a-0be2-4d3b-be5d-9d1a868b9267.yml
+new file mode 100644
+index 0000000000..efb1bb14e5
+--- /dev/null
++++ b/core/tests/fixtures/default_content/node/7f1dd75a-0be2-4d3b-be5d-9d1a868b9267.yml
+@@ -0,0 +1,44 @@
++_meta:
++  version: '1.0'
++  entity_type: node
++  uuid: 7f1dd75a-0be2-4d3b-be5d-9d1a868b9267
++  bundle: page
++  default_langcode: en
++  depends:
++    # This user does not actually exist; this lets us test that the node
++    # will be assigned to user 1 during the import.
++    e2b1b3fb-27ea-41ec-b70f-dbf2907fb658: user
++default:
++  revision_uid:
++    -
++      target_id: 1
++  status:
++    -
++      value: true
++  uid:
++    -
++      entity: e2b1b3fb-27ea-41ec-b70f-dbf2907fb658
++  title:
++    -
++      value: 'No Owner'
++  created:
++    -
++      value: 1711638565
++  promote:
++    -
++      value: false
++  sticky:
++    -
++      value: false
++  revision_translation_affected:
++    -
++      value: true
++  path:
++    -
++      alias: ''
++      langcode: en
++  body:
++    -
++      value: '<p>This page was authored by a non-existent user.</p>'
++      format: basic_html
++      summary: ''
+diff --git a/core/tests/fixtures/default_content/node/e1714f23-70c0-4493-8e92-af1901771921.yml b/core/tests/fixtures/default_content/node/e1714f23-70c0-4493-8e92-af1901771921.yml
+new file mode 100644
+index 0000000000..3a20eaec5c
+--- /dev/null
++++ b/core/tests/fixtures/default_content/node/e1714f23-70c0-4493-8e92-af1901771921.yml
+@@ -0,0 +1,46 @@
++_meta:
++  version: '1.0'
++  entity_type: node
++  uuid: e1714f23-70c0-4493-8e92-af1901771921
++  bundle: article
++  default_langcode: en
++  depends:
++    94503467-be7f-406c-9795-fc25baa22203: user
++    550f86ad-aa11-4047-953f-636d42889f85: taxonomy_term
++default:
++  revision_uid:
++    -
++      target_id: 1
++  status:
++    -
++      value: true
++  uid:
++    -
++      entity: 94503467-be7f-406c-9795-fc25baa22203
++  title:
++    -
++      value: 'Test Article'
++  created:
++    -
++      value: 1711476803
++  promote:
++    -
++      value: true
++  sticky:
++    -
++      value: false
++  revision_translation_affected:
++    -
++      value: true
++  path:
++    -
++      alias: /test-article
++      langcode: en
++  body:
++    -
++      value: 'Crikey it works!'
++      format: basic_html
++      summary: ''
++  field_tags:
++    -
++      entity: 550f86ad-aa11-4047-953f-636d42889f85
+diff --git a/core/tests/fixtures/default_content/path_alias/9952d42c-4eac-4424-ad25-e18d9612f395.yml b/core/tests/fixtures/default_content/path_alias/9952d42c-4eac-4424-ad25-e18d9612f395.yml
+new file mode 100644
+index 0000000000..76ab27c774
+--- /dev/null
++++ b/core/tests/fixtures/default_content/path_alias/9952d42c-4eac-4424-ad25-e18d9612f395.yml
+@@ -0,0 +1,15 @@
++_meta:
++  version: '1.0'
++  entity_type: path_alias
++  uuid: 9952d42c-4eac-4424-ad25-e18d9612f395
++  default_langcode: en
++default:
++  path:
++    -
++      value: /node/3
++  alias:
++    -
++      value: /test-article
++  status:
++    -
++      value: true
+diff --git a/core/tests/fixtures/default_content/taxonomy_term/550f86ad-aa11-4047-953f-636d42889f85.yml b/core/tests/fixtures/default_content/taxonomy_term/550f86ad-aa11-4047-953f-636d42889f85.yml
+new file mode 100644
+index 0000000000..be025a848a
+--- /dev/null
++++ b/core/tests/fixtures/default_content/taxonomy_term/550f86ad-aa11-4047-953f-636d42889f85.yml
+@@ -0,0 +1,31 @@
++_meta:
++  version: '1.0'
++  entity_type: taxonomy_term
++  uuid: 550f86ad-aa11-4047-953f-636d42889f85
++  bundle: tags
++  default_langcode: en
++default:
++  status:
++    -
++      value: true
++  name:
++    -
++      value: 'Default Content'
++  weight:
++    -
++      value: 0
++  parent:
++    -
++      target_id: 0
++  revision_translation_affected:
++    -
++      value: true
++  path:
++    -
++      alias: ''
++      langcode: en
++  field_serialized_stuff:
++    -
++      value:
++        - Hi
++        - there!
+diff --git a/core/tests/fixtures/default_content/user/94503467-be7f-406c-9795-fc25baa22203.yml b/core/tests/fixtures/default_content/user/94503467-be7f-406c-9795-fc25baa22203.yml
+new file mode 100644
+index 0000000000..cef089ef94
+--- /dev/null
++++ b/core/tests/fixtures/default_content/user/94503467-be7f-406c-9795-fc25baa22203.yml
+@@ -0,0 +1,46 @@
++_meta:
++  version: '1.0'
++  entity_type: user
++  uuid: 94503467-be7f-406c-9795-fc25baa22203
++  default_langcode: en
++default:
++  preferred_langcode:
++    -
++      value: en
++  preferred_admin_langcode:
++    -
++      value: en
++  name:
++    -
++      value: 'Naomi Malone'
++  pass:
++    -
++      # cspell:disable
++      value: $2y$10$3GlpQmjbJ9raJNQ.JZmg/OVS7avJ7KPQxucunwovUtOvpKbe3k8lK
++      # cspell:enable
++      existing: ''
++      pre_hashed: false
++  mail:
++    -
++      value: author@example.com
++  timezone:
++    -
++      value: UTC
++  status:
++    -
++      value: true
++  created:
++    -
++      value: 1711125883
++  access:
++    -
++      value: 0
++  login:
++    -
++      value: 0
++  init:
++    -
++      value: author@example.com
++  roles:
++    -
++      target_id: content_editor
 diff --git a/core/tests/fixtures/recipes/base_theme_and_views/recipe.yml b/core/tests/fixtures/recipes/base_theme_and_views/recipe.yml
 new file mode 100644
 index 0000000000..6d9589f9c3
@@ -11644,6 +13377,71 @@ index 0000000000..4e16eeb67b
 +    config_test.system:
 +      simple_config_update:
 +        foo: 'not bar'
+diff --git a/core/tests/fixtures/recipes/config_actions_dependency_validation/direct_dependency/recipe.yml b/core/tests/fixtures/recipes/config_actions_dependency_validation/direct_dependency/recipe.yml
+new file mode 100644
+index 0000000000..369e09357e
+--- /dev/null
++++ b/core/tests/fixtures/recipes/config_actions_dependency_validation/direct_dependency/recipe.yml
+@@ -0,0 +1,9 @@
++name: Recipe with direct dependency present
++type: 'Testing'
++install:
++  - node
++config:
++  actions:
++    node.settings:
++      simple_config_update:
++        use_admin_theme: true
+diff --git a/core/tests/fixtures/recipes/config_actions_dependency_validation/indirect_dependency_one_level_down/recipe.yml b/core/tests/fixtures/recipes/config_actions_dependency_validation/indirect_dependency_one_level_down/recipe.yml
+new file mode 100644
+index 0000000000..f6ebd037e8
+--- /dev/null
++++ b/core/tests/fixtures/recipes/config_actions_dependency_validation/indirect_dependency_one_level_down/recipe.yml
+@@ -0,0 +1,9 @@
++name: Recipe with first level indirect dependency
++type: 'Testing'
++recipes:
++  - level_2
++config:
++  actions:
++    node.settings:
++      simple_config_update:
++        use_admin_theme: true
+diff --git a/core/tests/fixtures/recipes/config_actions_dependency_validation/indirect_dependency_two_levels_down/recipe.yml b/core/tests/fixtures/recipes/config_actions_dependency_validation/indirect_dependency_two_levels_down/recipe.yml
+new file mode 100644
+index 0000000000..ac2e9bdef7
+--- /dev/null
++++ b/core/tests/fixtures/recipes/config_actions_dependency_validation/indirect_dependency_two_levels_down/recipe.yml
+@@ -0,0 +1,9 @@
++name: Recipe with second level indirect dependency
++type: 'Testing'
++recipes:
++  - level_1
++config:
++  actions:
++    node.settings:
++      simple_config_update:
++        use_admin_theme: true
+diff --git a/core/tests/fixtures/recipes/config_actions_dependency_validation/level_1/recipe.yml b/core/tests/fixtures/recipes/config_actions_dependency_validation/level_1/recipe.yml
+new file mode 100644
+index 0000000000..3f902e7f41
+--- /dev/null
++++ b/core/tests/fixtures/recipes/config_actions_dependency_validation/level_1/recipe.yml
+@@ -0,0 +1,4 @@
++name: First level sub recipe
++type: 'Testing'
++recipes:
++  - level_2
+diff --git a/core/tests/fixtures/recipes/config_actions_dependency_validation/level_2/recipe.yml b/core/tests/fixtures/recipes/config_actions_dependency_validation/level_2/recipe.yml
+new file mode 100644
+index 0000000000..5e467f72cc
+--- /dev/null
++++ b/core/tests/fixtures/recipes/config_actions_dependency_validation/level_2/recipe.yml
+@@ -0,0 +1,4 @@
++name: Second level sub recipe
++type: 'Testing'
++install:
++  - node
 diff --git a/core/tests/fixtures/recipes/config_from_module/recipe.yml b/core/tests/fixtures/recipes/config_from_module/recipe.yml
 new file mode 100644
 index 0000000000..f88aa486c1

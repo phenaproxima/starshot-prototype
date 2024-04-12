@@ -1,0 +1,39 @@
+_meta:
+  version: '1.0'
+  entity_type: menu_link_content
+  uuid: ba874a64-9955-4e4c-bbc7-9f6e32f635e1
+  bundle: menu_link_content
+  default_langcode: en
+default:
+  enabled:
+    -
+      value: true
+  title:
+    -
+      value: 'Remote video'
+  menu_name:
+    -
+      value: content
+  link:
+    -
+      uri: 'internal:/media/add/remote_video'
+      title: ''
+      options: {  }
+  external:
+    -
+      value: false
+  rediscover:
+    -
+      value: true
+  weight:
+    -
+      value: 0
+  expanded:
+    -
+      value: false
+  parent:
+    -
+      value: navigation.create
+  revision_translation_affected:
+    -
+      value: true

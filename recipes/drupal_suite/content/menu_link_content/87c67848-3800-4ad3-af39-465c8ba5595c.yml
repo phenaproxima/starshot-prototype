@@ -1,0 +1,39 @@
+_meta:
+  version: '1.0'
+  entity_type: menu_link_content
+  uuid: 87c67848-3800-4ad3-af39-465c8ba5595c
+  bundle: menu_link_content
+  default_langcode: en
+default:
+  enabled:
+    -
+      value: true
+  title:
+    -
+      value: 'Video file'
+  menu_name:
+    -
+      value: content
+  link:
+    -
+      uri: 'internal:/media/add/video'
+      title: ''
+      options: {  }
+  external:
+    -
+      value: false
+  rediscover:
+    -
+      value: true
+  weight:
+    -
+      value: -47
+  expanded:
+    -
+      value: false
+  parent:
+    -
+      value: navigation.create
+  revision_translation_affected:
+    -
+      value: true

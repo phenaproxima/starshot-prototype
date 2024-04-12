@@ -100,7 +100,7 @@
         },
         "patches": {
             "drupal/core": {
-                "Add support for recipes": "./patches/recipe-10.3.x-20a2005e57ec794f95fa22cf35ec1b0abb4ee4b6.diff"
+                "Add support for recipes": "./patches/recipe-10.3.x-648993414b00d5a99738372f42a2a8f7799ca0b5.diff"
             }
         }
     },
