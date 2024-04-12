@@ -25,6 +25,14 @@ config:
       grantPermissions:
         - 'access coffee'
         - 'access shortcuts'
+        - 'create content translations'
+        - 'delete content translations'
+        - 'update content translations'
+        - 'use editorial transition archive'
+        - 'use editorial transition create_new_draft'
+        - 'use editorial transition publish'
+        - 'use editorial transition archived_published'
+        - 'use editorial transition archived_draft'
         - 'use text format basic_html'
         - 'use text format full_html'
         - 'use text format restricted_html'
@@ -33,3 +41,5 @@ config:
         - 'create %bundle media'
         - 'delete own %bundle media'
         - 'edit own %bundle media'
+      grantPermissionsForEachNodeType:
+        - 'translate %bundle node'
