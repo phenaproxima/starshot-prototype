@@ -1,17 +1,21 @@
 name: Basic Page
 type: Starshot
-description: 'Adds pretty URLs, moderation, and meta tag support to the basic Page content type.'
+description: 'Adds pretty URLs, moderation, translation, and meta tag support to the basic Page content type.'
 recipes:
   - editorial_workflow
   - page_content_type
 install:
+  - content_translation
   - field
+  - language
   - metatag
   - path
   - pathauto
   - token
   - workflows
 config:
+  import:
+    language: '*'
   actions:
     core.entity_form_display.node.page.default:
       setComponent:

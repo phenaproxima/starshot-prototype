@@ -4,7 +4,6 @@ type: Drupal Suite
 recipes:
   - audio_media_type
   - document_media_type
-  - editorial_workflow
   - image_media_type
   - local_video_media_type
   - remote_video_media_type
