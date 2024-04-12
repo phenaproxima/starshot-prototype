@@ -1,0 +1,41 @@
+name: Article
+type: Starshot
+description: 'Adds pretty URLs, moderation, and meta tag support to the Article content type.'
+recipes:
+  - editorial_workflow
+  - article_content_type
+install:
+  - field
+  - metatag
+  - path
+  - pathauto
+  - token
+  - workflows
+config:
+  actions:
+    core.entity_form_display.node.article.default:
+      setComponent:
+        name: field_meta_tags
+        options:
+          type: metatag_firehose
+          weight: 121
+          region: content
+          settings:
+            sidebar: true
+            use_details: true
+    core.entity_view_display.node.article.default:
+      setComponent:
+        name: field_meta_tags
+        options:
+          type: metatag_empty_formatter
+          label: above
+          settings: { }
+          third_party_settings: { }
+          weight: 111
+          region: content
+    metatag.settings:
+      simple_config_update:
+        entity_type_groups.node.article.basic: basic
+    workflows.workflow.editorial:
+      addNodeTypes:
+        - article
