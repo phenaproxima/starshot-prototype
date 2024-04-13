@@ -13,10 +13,12 @@ install:
   - pathauto
   - scheduler
   - token
+  - views
   - workflows
 config:
   import:
     language: '*'
+    scheduler: '*'
   actions:
     core.entity_form_display.node.article.default:
       setComponents:
