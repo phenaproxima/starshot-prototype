@@ -1,0 +1,28 @@
+diff --git a/core/lib/Drupal/Core/Config/Entity/ConfigEntityBase.php b/core/lib/Drupal/Core/Config/Entity/ConfigEntityBase.php
+index c82bcddfbb78d2dd480c407521c81010379ca22a..2ea3c04f1da063e9fe3bfebdc79d1b5617b26d33 100644
+--- a/core/lib/Drupal/Core/Config/Entity/ConfigEntityBase.php
++++ b/core/lib/Drupal/Core/Config/Entity/ConfigEntityBase.php
+@@ -4,6 +4,7 @@
+
+ use Drupal\Component\Utility\NestedArray;
+ use Drupal\Core\Cache\Cache;
++use Drupal\Core\Config\Action\Attribute\ActionMethod;
+ use Drupal\Core\Config\Schema\SchemaIncompleteException;
+ use Drupal\Core\Entity\EntityBase;
+ use Drupal\Core\Config\ConfigDuplicateUUIDException;
+@@ -12,6 +13,7 @@
+ use Drupal\Core\Entity\EntityWithPluginCollectionInterface;
+ use Drupal\Core\Entity\SynchronizableEntityTrait;
+ use Drupal\Core\Plugin\PluginDependencyTrait;
++use Drupal\Core\StringTranslation\TranslatableMarkup;
+
+ /**
+  * Defines a base configuration entity class.
+@@ -502,6 +504,7 @@ protected static function invalidateTagsOnDelete(EntityTypeInterface $entity_typ
+   /**
+    * {@inheritdoc}
+    */
++  #[ActionMethod(adminLabel: new TranslatableMarkup('Set third-party setting'))]
+   public function setThirdPartySetting($module, $key, $value) {
+     $this->third_party_settings[$module][$key] = $value;
+     return $this;

@@ -1,6 +1,6 @@
 name: Basic Page
 type: Starshot
-description: 'Adds pretty URLs, moderation, translation, and meta tag support to the basic Page content type.'
+description: 'Adds pretty URLs, moderation, scheduling, translation, and meta tags to the basic Page content type.'
 recipes:
   - editorial_workflow
   - page_content_type
@@ -11,6 +11,7 @@ install:
   - metatag
   - path
   - pathauto
+  - scheduler
   - token
   - workflows
 config:
@@ -18,15 +19,29 @@ config:
     language: '*'
   actions:
     core.entity_form_display.node.page.default:
-      setComponent:
-        name: field_meta_tags
-        options:
-          type: metatag_firehose
-          weight: 121
-          region: content
-          settings:
-            sidebar: true
-            use_details: true
+      setComponents:
+        - name: field_meta_tags
+          options:
+            type: metatag_firehose
+            weight: 121
+            region: content
+            settings:
+              sidebar: true
+              use_details: true
+        - name: scheduler_settings
+          options:
+            weight: 13
+            region: content
+        - name: publish_on
+          options:
+            type: datetime_timestamp_no_default
+            weight: 14
+            region: content
+        - name: unpublish_on
+          options:
+            type: datetime_timestamp_no_default
+            weight: 15
+            region: content
     core.entity_view_display.node.page.default:
       setComponent:
         name: field_meta_tags
@@ -40,6 +55,44 @@ config:
     metatag.settings:
       simple_config_update:
         entity_type_groups.node.page.basic: basic
+    node.type.page:
+      setThirdPartySettings:
+        - module: scheduler
+          key: expand_fieldset
+          value: when_required
+        - module: scheduler
+          key: fields_display_mode
+          value: vertical_tab
+        - module: scheduler
+          key: publish_enable
+          value: true
+        - module: scheduler
+          key: publish_past_date
+          value: error
+        - module: scheduler
+          key: publish_past_date_created
+          value: false
+        - module: scheduler
+          key: publish_required
+          value: false
+        - module: scheduler
+          key: publish_revision
+          value: true
+        - module: scheduler
+          key: publish_touch
+          value: true
+        - module: scheduler
+          key: show_message_after_update
+          value: true
+        - module: scheduler
+          key: unpublish_enable
+          value: true
+        - module: scheduler
+          key: unpublish_required
+          value: false
+        - module: scheduler
+          key: unpublish_revision
+          value: true
     workflows.workflow.editorial:
       addNodeTypes:
         - page

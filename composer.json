@@ -34,6 +34,7 @@
         "drupal/navigation": "^1.0@beta",
         "drupal/pathauto": "^1.12",
         "drupal/redirect": "^1.9",
+        "drupal/scheduler": "^2.0",
         "drupal/starshot": "dev-main",
         "drush/drush": "^12.5",
         "oomphinc/composer-installers-extender": "^2"
@@ -100,7 +101,8 @@
         },
         "patches": {
             "drupal/core": {
-                "Add support for recipes": "./patches/recipe-10.3.x-648993414b00d5a99738372f42a2a8f7799ca0b5.diff"
+                "Add support for recipes": "./patches/recipe-10.3.x-648993414b00d5a99738372f42a2a8f7799ca0b5.diff",
+                "Expose setThirdPartySetting() as a config action": "./patches/recipe-103-c83a17427d2c7e1e721e9dac8cb4c03b199daf2a.partial.diff"
             }
         }
     },
