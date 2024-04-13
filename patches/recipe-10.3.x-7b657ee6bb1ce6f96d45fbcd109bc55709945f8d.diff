@@ -1996,6 +1996,34 @@ index 0000000000..1d6dd928f2
 + */
 +final class UnknownCheckpointException extends \RuntimeException {
 +}
+diff --git a/core/lib/Drupal/Core/Config/Entity/ConfigEntityBase.php b/core/lib/Drupal/Core/Config/Entity/ConfigEntityBase.php
+index ad50387947..32178d9d23 100644
+--- a/core/lib/Drupal/Core/Config/Entity/ConfigEntityBase.php
++++ b/core/lib/Drupal/Core/Config/Entity/ConfigEntityBase.php
+@@ -4,6 +4,7 @@
+ 
+ use Drupal\Component\Utility\NestedArray;
+ use Drupal\Core\Cache\Cache;
++use Drupal\Core\Config\Action\Attribute\ActionMethod;
+ use Drupal\Core\Config\Schema\SchemaIncompleteException;
+ use Drupal\Core\Entity\EntityBase;
+ use Drupal\Core\Config\ConfigDuplicateUUIDException;
+@@ -12,6 +13,7 @@
+ use Drupal\Core\Entity\EntityWithPluginCollectionInterface;
+ use Drupal\Core\Entity\SynchronizableEntityTrait;
+ use Drupal\Core\Plugin\PluginDependencyTrait;
++use Drupal\Core\StringTranslation\TranslatableMarkup;
+ 
+ /**
+  * Defines a base configuration entity class.
+@@ -502,6 +504,7 @@ protected static function invalidateTagsOnDelete(EntityTypeInterface $entity_typ
+   /**
+    * {@inheritdoc}
+    */
++  #[ActionMethod(adminLabel: new TranslatableMarkup('Set third-party setting'))]
+   public function setThirdPartySetting($module, $key, $value) {
+     $this->third_party_settings[$module][$key] = $value;
+     return $this;
 diff --git a/core/lib/Drupal/Core/DefaultContent/Finder.php b/core/lib/Drupal/Core/DefaultContent/Finder.php
 new file mode 100644
 index 0000000000..e6d9b01337
@@ -4335,22 +4363,21 @@ index 0000000000..f239e226bc
 +}
 diff --git a/core/modules/ckeditor5/tests/src/Kernel/ConfigAction/AddItemToToolbarConfigActionTest.php b/core/modules/ckeditor5/tests/src/Kernel/ConfigAction/AddItemToToolbarConfigActionTest.php
 new file mode 100644
-index 0000000000..f02df4d4bb
+index 0000000000..3bbe0535fa
 --- /dev/null
 +++ b/core/modules/ckeditor5/tests/src/Kernel/ConfigAction/AddItemToToolbarConfigActionTest.php
-@@ -0,0 +1,142 @@
+@@ -0,0 +1,126 @@
 +<?php
 +
 +declare(strict_types=1);
 +
 +namespace Drupal\Tests\ckeditor5\Kernel\ConfigAction;
 +
-+use Drupal\Component\Serialization\Yaml;
 +use Drupal\Core\Config\Action\ConfigActionException;
 +use Drupal\Core\Recipe\InvalidConfigException;
-+use Drupal\Core\Recipe\Recipe;
 +use Drupal\Core\Recipe\RecipeRunner;
 +use Drupal\editor\Entity\Editor;
++use Drupal\FunctionalTests\Core\Recipe\RecipeTestTrait;
 +use Drupal\KernelTests\KernelTestBase;
 +
 +/**
@@ -4359,6 +4386,8 @@ index 0000000000..f02df4d4bb
 + * @group Recipe
 + */
 +class AddItemToToolbarConfigActionTest extends KernelTestBase {
++
++  use RecipeTestTrait;
 +
 +  /**
 +   * {@inheritdoc}
@@ -4461,23 +4490,6 @@ index 0000000000..f02df4d4bb
 +    $this->expectException(ConfigActionException::class);
 +    $this->expectExceptionMessage('The editor:addItemToToolbar config action only works with editors that use CKEditor 5.');
 +    RecipeRunner::processRecipe($this->createRecipe($recipe));
-+  }
-+
-+  /**
-+   * @param string|array<mixed> $contents
-+   *   The contents of recipe.yml, as either a YAML string or an array to encode
-+   *   to YAML.
-+   *
-+   * @return \Drupal\Core\Recipe\Recipe
-+   */
-+  private function createRecipe(string|array $contents): Recipe {
-+    if (is_array($contents)) {
-+      $contents = Yaml::encode($contents);
-+    }
-+    $dir = uniqid('public://');
-+    mkdir($dir);
-+    file_put_contents($dir . '/recipe.yml', $contents);
-+    return Recipe::createFromDirectory($dir);
 +  }
 +
 +}
@@ -4945,7 +4957,7 @@ index 0000000000..fec8c773e6
 +}
 diff --git a/core/modules/content_moderation/tests/src/Kernel/ConfigAction/AddModerationConfigActionTest.php b/core/modules/content_moderation/tests/src/Kernel/ConfigAction/AddModerationConfigActionTest.php
 new file mode 100644
-index 0000000000..82a515e128
+index 0000000000..374ea3e1f0
 --- /dev/null
 +++ b/core/modules/content_moderation/tests/src/Kernel/ConfigAction/AddModerationConfigActionTest.php
 @@ -0,0 +1,110 @@
@@ -4959,6 +4971,7 @@ index 0000000000..82a515e128
 +use Drupal\Core\Config\Action\ConfigActionException;
 +use Drupal\Core\Recipe\Recipe;
 +use Drupal\Core\Recipe\RecipeRunner;
++use Drupal\FunctionalTests\Core\Recipe\RecipeTestTrait;
 +use Drupal\KernelTests\KernelTestBase;
 +use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 +use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
@@ -4973,6 +4986,9 @@ index 0000000000..82a515e128
 +class AddModerationConfigActionTest extends KernelTestBase {
 +
 +  use ContentTypeCreationTrait;
++  use RecipeTestTrait {
++    createRecipe as traitCreateRecipe;
++  }
 +  use TaxonomyTestTrait;
 +
 +  /**
@@ -5039,9 +5055,6 @@ index 0000000000..82a515e128
 +  }
 +
 +  private function createRecipe(string $config_name): Recipe {
-+    $dir = uniqid('public://');
-+    mkdir($dir);
-+
 +    $recipe = <<<YAML
 +name: 'Add entity types and bundles to workflow'
 +recipes:
@@ -5054,8 +5067,7 @@ index 0000000000..82a515e128
 +        - b
 +      addTaxonomyVocabularies: '*'
 +YAML;
-+    file_put_contents($dir . '/recipe.yml', $recipe);
-+    return Recipe::createFromDirectory($dir);
++    return $this->traitCreateRecipe($recipe);
 +  }
 +
 +}
@@ -5154,10 +5166,10 @@ index 0000000000..e1642a80bb
 +}
 diff --git a/core/modules/field/tests/src/Kernel/AddToAllBundlesConfigActionTest.php b/core/modules/field/tests/src/Kernel/AddToAllBundlesConfigActionTest.php
 new file mode 100644
-index 0000000000..5f8d51e3bf
+index 0000000000..4f6ec73087
 --- /dev/null
 +++ b/core/modules/field/tests/src/Kernel/AddToAllBundlesConfigActionTest.php
-@@ -0,0 +1,150 @@
+@@ -0,0 +1,148 @@
 +<?php
 +
 +declare(strict_types=1);
@@ -5168,9 +5180,9 @@ index 0000000000..5f8d51e3bf
 +use Drupal\Core\Config\Action\ConfigActionException;
 +use Drupal\Core\Entity\EntityFieldManagerInterface;
 +use Drupal\Core\Entity\EntityTypeManagerInterface;
-+use Drupal\Core\Recipe\Recipe;
 +use Drupal\Core\Recipe\RecipeRunner;
 +use Drupal\field\Entity\FieldConfig;
++use Drupal\FunctionalTests\Core\Recipe\RecipeTestTrait;
 +use Drupal\KernelTests\KernelTestBase;
 +use Drupal\node\Entity\NodeType;
 +
@@ -5181,6 +5193,8 @@ index 0000000000..5f8d51e3bf
 + * @group field
 + */
 +class AddToAllBundlesConfigActionTest extends KernelTestBase {
++
++  use RecipeTestTrait;
 +
 +  /**
 +   * {@inheritdoc}
@@ -5299,11 +5313,7 @@ index 0000000000..5f8d51e3bf
 +        description: Set by config actions.
 +        fail_if_exists: $fail_if_exists
 +YAML;
-+    $dir = uniqid('public://');
-+    mkdir($dir);
-+    file_put_contents($dir . '/recipe.yml', $contents);
-+
-+    $recipe = Recipe::createFromDirectory($dir);
++    $recipe = $this->createRecipe($contents);
 +    RecipeRunner::processRecipe($recipe);
 +  }
 +
@@ -9286,16 +9296,18 @@ index 0000000000..2de9c9f987
 +}
 diff --git a/core/tests/Drupal/FunctionalTests/Core/Recipe/RecipeTestTrait.php b/core/tests/Drupal/FunctionalTests/Core/Recipe/RecipeTestTrait.php
 new file mode 100644
-index 0000000000..8b3683695f
+index 0000000000..3ee24b85dc
 --- /dev/null
 +++ b/core/tests/Drupal/FunctionalTests/Core/Recipe/RecipeTestTrait.php
-@@ -0,0 +1,63 @@
+@@ -0,0 +1,86 @@
 +<?php
 +
 +declare(strict_types=1);
 +
 +namespace Drupal\FunctionalTests\Core\Recipe;
 +
++use Drupal\Component\Serialization\Yaml;
++use Drupal\Core\Recipe\Recipe;
 +use Drupal\Tests\BrowserTestBase;
 +use Symfony\Component\Process\PhpExecutableFinder;
 +use Symfony\Component\Process\Process;
@@ -9304,6 +9316,27 @@ index 0000000000..8b3683695f
 + * Contains helper methods for interacting with recipes in functional tests.
 + */
 +trait RecipeTestTrait {
++
++  /**
++   * Creates a recipe in a temporary directory.
++   *
++   * @param string|array<mixed> $data
++   *   The contents of recipe.yml. If passed as an array, will be encoded to
++   *   YAML.
++   *
++   * @return \Drupal\Core\Recipe\Recipe
++   *   The recipe object.
++   */
++  protected function createRecipe(string|array $data): Recipe {
++    if (is_array($data)) {
++      $data = Yaml::encode($data);
++    }
++    $dir = uniqid('public://');
++    mkdir($dir);
++    file_put_contents($dir . '/recipe.yml', $data);
++
++    return Recipe::createFromDirectory($dir);
++  }
 +
 +  /**
 +   * Applies a recipe to the site.
@@ -10383,10 +10416,10 @@ index 0000000000..9032d234bc
 +}
 diff --git a/core/tests/Drupal/KernelTests/Core/Recipe/ConfigActionValidationTest.php b/core/tests/Drupal/KernelTests/Core/Recipe/ConfigActionValidationTest.php
 new file mode 100644
-index 0000000000..91bdd1ef55
+index 0000000000..eef3ba5f8a
 --- /dev/null
 +++ b/core/tests/Drupal/KernelTests/Core/Recipe/ConfigActionValidationTest.php
-@@ -0,0 +1,141 @@
+@@ -0,0 +1,137 @@
 +<?php
 +
 +declare(strict_types=1);
@@ -10398,12 +10431,15 @@ index 0000000000..91bdd1ef55
 +use Drupal\Core\Recipe\Recipe;
 +use Drupal\Core\Recipe\RecipeFileException;
 +use Drupal\Core\Recipe\RecipeRunner;
++use Drupal\FunctionalTests\Core\Recipe\RecipeTestTrait;
 +use Drupal\KernelTests\KernelTestBase;
 +
 +/**
 + * @group Recipe
 + */
 +class ConfigActionValidationTest extends KernelTestBase {
++
++  use RecipeTestTrait;
 +
 +  /**
 +   * {@inheritdoc}
@@ -10467,11 +10503,7 @@ index 0000000000..91bdd1ef55
 +        $label_key: ''
 +YAML;
 +
-+    $dir = uniqid('public://');
-+    mkdir($dir);
-+    file_put_contents($dir . '/recipe.yml', $recipe_data);
-+
-+    $recipe = Recipe::createFromDirectory($dir);
++    $recipe = $this->createRecipe($recipe_data);
 +    try {
 +      RecipeRunner::processRecipe($recipe);
 +      $this->fail('An exception should have been thrown.');
@@ -10512,11 +10544,8 @@ index 0000000000..91bdd1ef55
 +        label: ''
 +YAML;
 +
-+    $dir = uniqid('public://');
-+    mkdir($dir);
-+    file_put_contents($dir . '/recipe.yml', $recipe_data);
 +    try {
-+      Recipe::createFromDirectory($dir);
++      $this->createRecipe($recipe_data);
 +      $this->fail('An exception should have been thrown.');
 +    }
 +    catch (RecipeFileException $e) {
@@ -10663,12 +10692,112 @@ index 0000000000..0d6119703c
 +  }
 +
 +}
+diff --git a/core/tests/Drupal/KernelTests/Core/Recipe/EntityMethodConfigActionsTest.php b/core/tests/Drupal/KernelTests/Core/Recipe/EntityMethodConfigActionsTest.php
+new file mode 100644
+index 0000000000..5590fe0e75
+--- /dev/null
++++ b/core/tests/Drupal/KernelTests/Core/Recipe/EntityMethodConfigActionsTest.php
+@@ -0,0 +1,94 @@
++<?php
++
++declare(strict_types=1);
++
++namespace Drupal\KernelTests\Core\Recipe;
++
++use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
++use Drupal\Core\Recipe\RecipeRunner;
++use Drupal\FunctionalTests\Core\Recipe\RecipeTestTrait;
++use Drupal\KernelTests\KernelTestBase;
++use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
++
++/**
++ * @group Recipe
++ */
++class EntityMethodConfigActionsTest extends KernelTestBase {
++
++  use ContentTypeCreationTrait;
++  use RecipeTestTrait;
++
++  /**
++   * {@inheritdoc}
++   */
++  protected static $modules = [
++    'field',
++    'layout_builder',
++    'layout_discovery',
++    'node',
++    'system',
++    'text',
++    'user',
++  ];
++
++  /**
++   * {@inheritdoc}
++   */
++  protected function setUp(): void {
++    parent::setUp();
++
++    $this->installConfig('node');
++    $this->createContentType(['type' => 'test']);
++
++    $this->container->get(EntityDisplayRepositoryInterface::class)
++      ->getViewDisplay('node', 'test', 'full')
++      ->save();
++  }
++
++  public function testSetSingleThirdPartySetting(): void {
++    $recipe = <<<YAML
++name: Third-party setting
++config:
++  actions:
++    core.entity_view_display.node.test.full:
++      setThirdPartySetting:
++        module: layout_builder
++        key: enabled
++        value: true
++YAML;
++    $recipe = $this->createRecipe($recipe);
++    RecipeRunner::processRecipe($recipe);
++
++    /** @var \Drupal\Core\Config\Entity\ThirdPartySettingsInterface $display */
++    $display = $this->container->get(EntityDisplayRepositoryInterface::class)
++      ->getViewDisplay('node', 'test', 'full');
++    $this->assertTrue($display->getThirdPartySetting('layout_builder', 'enabled'));
++  }
++
++  public function testSetMultipleThirdPartySettings(): void {
++    $recipe = <<<YAML
++name: Third-party setting
++config:
++  actions:
++    core.entity_view_display.node.test.full:
++      setThirdPartySettings:
++        -
++          module: layout_builder
++          key: enabled
++          value: true
++        -
++          module: layout_builder
++          key: allow_custom
++          value: true
++YAML;
++    $recipe = $this->createRecipe($recipe);
++    RecipeRunner::processRecipe($recipe);
++
++    /** @var \Drupal\Core\Config\Entity\ThirdPartySettingsInterface $display */
++    $display = $this->container->get(EntityDisplayRepositoryInterface::class)
++      ->getViewDisplay('node', 'test', 'full');
++    $this->assertTrue($display->getThirdPartySetting('layout_builder', 'enabled'));
++    $this->assertTrue($display->getThirdPartySetting('layout_builder', 'allow_custom'));
++  }
++
++}
 diff --git a/core/tests/Drupal/KernelTests/Core/Recipe/PermissionsPerBundleTest.php b/core/tests/Drupal/KernelTests/Core/Recipe/PermissionsPerBundleTest.php
 new file mode 100644
-index 0000000000..88090b47c0
+index 0000000000..c9465a31d4
 --- /dev/null
 +++ b/core/tests/Drupal/KernelTests/Core/Recipe/PermissionsPerBundleTest.php
-@@ -0,0 +1,233 @@
+@@ -0,0 +1,231 @@
 +<?php
 +
 +declare(strict_types=1);
@@ -10678,8 +10807,8 @@ index 0000000000..88090b47c0
 +use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 +use Drupal\Component\Serialization\Json;
 +use Drupal\Core\Config\Action\ConfigActionException;
-+use Drupal\Core\Recipe\Recipe;
 +use Drupal\Core\Recipe\RecipeRunner;
++use Drupal\FunctionalTests\Core\Recipe\RecipeTestTrait;
 +use Drupal\KernelTests\KernelTestBase;
 +use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
 +use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
@@ -10698,6 +10827,7 @@ index 0000000000..88090b47c0
 +
 +  use ContentTypeCreationTrait;
 +  use MediaTypeCreationTrait;
++  use RecipeTestTrait;
 +  use TaxonomyTestTrait;
 +  use UserCreationTrait;
 +
@@ -10894,10 +11024,7 @@ index 0000000000..88090b47c0
 +   *   The contents of `recipe.yml`.
 +   */
 +  private function applyRecipeFromString(string $recipe_data): void {
-+    $dir = uniqid('public://');
-+    mkdir($dir);
-+    file_put_contents($dir . '/recipe.yml', $recipe_data);
-+    $recipe = Recipe::createFromDirectory($dir);
++    $recipe = $this->createRecipe($recipe_data);
 +    RecipeRunner::processRecipe($recipe);
 +  }
 +
@@ -10975,10 +11102,10 @@ index 0000000000..7eab347ca7
 +}
 diff --git a/core/tests/Drupal/KernelTests/Core/Recipe/RecipeRunnerTest.php b/core/tests/Drupal/KernelTests/Core/Recipe/RecipeRunnerTest.php
 new file mode 100644
-index 0000000000..c4d90c6538
+index 0000000000..09de4be4bb
 --- /dev/null
 +++ b/core/tests/Drupal/KernelTests/Core/Recipe/RecipeRunnerTest.php
-@@ -0,0 +1,222 @@
+@@ -0,0 +1,221 @@
 +<?php
 +
 +declare(strict_types=1);
@@ -10989,6 +11116,7 @@ index 0000000000..c4d90c6538
 +use Drupal\Core\Recipe\Recipe;
 +use Drupal\Core\Recipe\RecipePreExistingConfigException;
 +use Drupal\Core\Recipe\RecipeRunner;
++use Drupal\FunctionalTests\Core\Recipe\RecipeTestTrait;
 +use Drupal\KernelTests\KernelTestBase;
 +use Drupal\node\Entity\NodeType;
 +use Drupal\views\Entity\View;
@@ -10998,6 +11126,8 @@ index 0000000000..c4d90c6538
 + * @group Recipe
 + */
 +class RecipeRunnerTest extends KernelTestBase {
++
++  use RecipeTestTrait;
 +
 +  public function testModuleInstall(): void {
 +    // Test the state prior to applying the recipe.
@@ -11190,11 +11320,7 @@ index 0000000000..c4d90c6538
 +      setBody: 'Description set by recipe'
 +YAML;
 +
-+    $dir = uniqid('public://');
-+    mkdir($dir);
-+    file_put_contents($dir . '/recipe.yml', $recipe_data);
-+
-+    $recipe = Recipe::createFromDirectory($dir);
++    $recipe = $this->createRecipe($recipe_data);
 +    $this->expectException(PluginNotFoundException::class);
 +    $this->expectExceptionMessage('The "setBody" plugin does not exist.');
 +    RecipeRunner::processRecipe($recipe);
@@ -11717,10 +11843,10 @@ index 0000000000..7a9ea5a228
 +}
 diff --git a/core/tests/Drupal/KernelTests/Core/Recipe/WildcardConfigActionsTest.php b/core/tests/Drupal/KernelTests/Core/Recipe/WildcardConfigActionsTest.php
 new file mode 100644
-index 0000000000..760f538fd3
+index 0000000000..29b1a7e784
 --- /dev/null
 +++ b/core/tests/Drupal/KernelTests/Core/Recipe/WildcardConfigActionsTest.php
-@@ -0,0 +1,141 @@
+@@ -0,0 +1,135 @@
 +<?php
 +
 +declare(strict_types=1);
@@ -11729,11 +11855,11 @@ index 0000000000..760f538fd3
 +
 +use Drupal\Core\Config\Action\ConfigActionException;
 +use Drupal\Core\Entity\EntityTypeManagerInterface;
-+use Drupal\Core\Recipe\Recipe;
 +use Drupal\Core\Recipe\RecipeRunner;
 +use Drupal\entity_test\Entity\EntityTestBundle;
 +use Drupal\field\Entity\FieldConfig;
 +use Drupal\field\Entity\FieldStorageConfig;
++use Drupal\FunctionalTests\Core\Recipe\RecipeTestTrait;
 +use Drupal\KernelTests\KernelTestBase;
 +use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 +
@@ -11745,6 +11871,7 @@ index 0000000000..760f538fd3
 +class WildcardConfigActionsTest extends KernelTestBase {
 +
 +  use ContentTypeCreationTrait;
++  use RecipeTestTrait;
 +
 +  /**
 +   * {@inheritdoc}
@@ -11819,10 +11946,7 @@ index 0000000000..760f538fd3
 +      setLabel: 'Changed by config action'
 +YAML;
 +
-+    $dir = uniqid('public://');
-+    mkdir($dir);
-+    file_put_contents($dir . '/recipe.yml', $contents);
-+    $recipe = Recipe::createFromDirectory($dir);
++    $recipe = $this->createRecipe($contents);
 +    RecipeRunner::processRecipe($recipe);
 +
 +    $changed = $this->container->get(EntityTypeManagerInterface::class)
@@ -11850,11 +11974,7 @@ index 0000000000..760f538fd3
 +      simple_config_update:
 +        label: 'Changed by config action'
 +YAML;
-+
-+    $dir = uniqid('public://');
-+    mkdir($dir);
-+    file_put_contents($dir . '/recipe.yml', $contents);
-+    $recipe = Recipe::createFromDirectory($dir);
++    $recipe = $this->createRecipe($contents);
 +
 +    $this->expectException(ConfigActionException::class);
 +    $this->expectExceptionMessage($expected_exception_message);

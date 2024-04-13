@@ -1,22 +1,12 @@
 {
-    "_hash": "bfebc537dfc0eb89d9576b5402a4d1638d104b1405a9f0dd5b35674cf2b0856c",
+    "_hash": "bc29c68e29881ed72f64fde5f20bf7e1a48f1a056982f02d29661256e4d28009",
     "patches": {
         "drupal/core": [
             {
                 "package": "drupal/core",
                 "description": "Add support for recipes",
-                "url": "./patches/recipe-10.3.x-648993414b00d5a99738372f42a2a8f7799ca0b5.diff",
-                "sha256": "116df07288150f0f5f22df50e483968374e6e5902dcb64531088cbfbf2eda9fb",
-                "depth": 2,
-                "extra": {
-                    "provenance": "root"
-                }
-            },
-            {
-                "package": "drupal/core",
-                "description": "Expose setThirdPartySetting() as a config action",
-                "url": "./patches/recipe-103-c83a17427d2c7e1e721e9dac8cb4c03b199daf2a.partial.diff",
-                "sha256": "b820ea8a7e40f8985f06c9a314d449947433198fa313e9bfd7ce4024640dc5d1",
+                "url": "./patches/recipe-10.3.x-7b657ee6bb1ce6f96d45fbcd109bc55709945f8d.diff",
+                "sha256": "158caf00d1262f6d1a16ddf80579ac4e3cbff08e473d97ea172aeeb499372cb1",
                 "depth": 2,
                 "extra": {
                     "provenance": "root"
