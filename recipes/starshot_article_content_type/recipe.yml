@@ -18,7 +18,8 @@ install:
 config:
   import:
     language: '*'
-    scheduler: '*'
+    scheduler:
+      - views.view.scheduler_scheduled_content
   actions:
     core.entity_form_display.node.article.default:
       setComponents:
