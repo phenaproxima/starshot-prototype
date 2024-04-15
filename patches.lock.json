@@ -1,6 +1,18 @@
 {
-    "_hash": "8f017506cd0ef845e9d8ef504fd47056cfac2b1b88b76788bcce7906b1eda81a",
+    "_hash": "d4ef1b03b1f051a7cf3e965e6426e1c04539a0061d4118ceeed52a9f48b240a5",
     "patches": {
+        "drupal/scheduler": [
+            {
+                "package": "drupal/scheduler",
+                "description": "#3437739: BUG FIX - SchedulerManager should take an EventDispatcherInterface object, not ContainerAwareEventDispatcher",
+                "url": "./patches/scheduler/128.diff",
+                "sha256": "5fa8f2f4c8f13b9b4ba0889748c30c06f21c3f8d593dab76be4af4df8c3d7981",
+                "depth": 1,
+                "extra": {
+                    "provenance": "root"
+                }
+            }
+        ],
         "drupal/core": [
             {
                 "package": "drupal/core",

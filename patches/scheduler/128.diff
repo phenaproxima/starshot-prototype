@@ -1,0 +1,38 @@
+diff --git a/src/SchedulerManager.php b/src/SchedulerManager.php
+index 5a0d593c5af0ab910586f662cb14e65116a2aa5b..f690d46e4de188d6bd3efed81c879f9885b9cd18 100644
+--- a/src/SchedulerManager.php
++++ b/src/SchedulerManager.php
+@@ -3,7 +3,6 @@
+ namespace Drupal\scheduler;
+ 
+ use Drupal\Component\Datetime\TimeInterface;
+-use Drupal\Component\EventDispatcher\ContainerAwareEventDispatcher;
+ use Drupal\Component\EventDispatcher\Event;
+ use Drupal\Core\Cache\Cache;
+ use Drupal\Core\Config\ConfigFactoryInterface;
+@@ -20,6 +19,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
+ use Drupal\Core\Url;
+ use Drupal\scheduler\Event\SchedulerEvent;
+ use Psr\Log\LoggerInterface;
++use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+ 
+ /**
+  * Defines a scheduler manager.
+@@ -66,7 +66,7 @@ class SchedulerManager {
+   /**
+    * The event dispatcher.
+    *
+-   * @var \Drupal\Component\EventDispatcher\ContainerAwareEventDispatcher
++   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
+    */
+   protected $eventDispatcher;
+ 
+@@ -99,7 +99,7 @@ class SchedulerManager {
+                               ModuleHandlerInterface $moduleHandler,
+                               EntityTypeManagerInterface $entityTypeManager,
+                               ConfigFactoryInterface $configFactory,
+-                              ContainerAwareEventDispatcher $eventDispatcher,
++                              EventDispatcherInterface $eventDispatcher,
+                               TimeInterface $time,
+                               EntityFieldManagerInterface $entityFieldManager,
+                               SchedulerPluginManager $pluginManager

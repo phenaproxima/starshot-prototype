@@ -37,7 +37,7 @@
         "drupal/navigation": "^1.0@beta",
         "drupal/pathauto": "^1.12",
         "drupal/redirect": "^1.9",
-        "drupal/scheduler": "^2.0",
+        "drupal/scheduler": "2.x-dev",
         "drupal/starshot": "dev-main",
         "drupal/starshot-core": "^10.3",
         "drush/drush": "^12.5",
@@ -102,6 +102,11 @@
                 "  * Remove the plugin that prints this message:",
                 "      composer remove drupal/core-project-message"
             ]
+        },
+        "patches": {
+            "drupal/scheduler": {
+                "#3437739: BUG FIX - SchedulerManager should take an EventDispatcherInterface object, not ContainerAwareEventDispatcher": "./patches/scheduler/128.diff"
+            }
         }
     },
     "scripts": {

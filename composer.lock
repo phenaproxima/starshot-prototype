@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4b58f0046d4ee3780fb7f0e3f7fe472d",
+    "content-hash": "d78fa3ae844a0ffc709a93c82585650c",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2094,17 +2094,11 @@
         },
         {
             "name": "drupal/scheduler",
-            "version": "2.0.1",
+            "version": "dev-2.x",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/scheduler.git",
-                "reference": "2.0.1"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/scheduler-2.0.1.zip",
-                "reference": "2.0.1",
-                "shasum": "d0666b4278b3e54f5c85c28298a35f492e0b715a"
+                "reference": "8cadfa6abb44e2cce10537a9763b3224d5730ed4"
             },
             "require": {
                 "drupal/core": "^8 || ^9 || ^10"
@@ -2113,16 +2107,21 @@
                 "drupal/commerce": "^2.0",
                 "drupal/devel_generate": ">=4",
                 "drupal/rules": "^3",
+                "drupal/workbench_moderation": "*",
+                "drupal/workbench_moderation_actions": "*",
                 "drush/drush": ">=9"
             },
             "type": "drupal-module",
             "extra": {
+                "branch-alias": {
+                    "dev-2.x": "2.x-dev"
+                },
                 "drupal": {
-                    "version": "2.0.1",
-                    "datestamp": "1689337325",
+                    "version": "2.0.1+34-dev",
+                    "datestamp": "1712918451",
                     "security-coverage": {
-                        "status": "covered",
-                        "message": "Covered by Drupal's security advisory policy"
+                        "status": "not-covered",
+                        "message": "Dev releases are not covered by Drupal security advisories."
                     }
                 },
                 "drush": {
@@ -12261,6 +12260,7 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "drupal/navigation": 10,
+        "drupal/scheduler": 20,
         "drupal/starshot": 20,
         "drupal/default_content": 15
     },

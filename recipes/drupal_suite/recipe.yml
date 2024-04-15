@@ -2,12 +2,25 @@ name: Drupal Suite
 description: Applies all the Drupal Suite recipes.
 type: Drupal Suite
 recipes:
+  - basic_block_type
+  - basic_shortcuts
+  - article_comment
+  - article_tags
+  - feedback_contact_form
+  - content_search
+  - core_recommended_performance
+  - core_recommended_maintenance
+  - core_recommended_admin_theme
+  - core_recommended_front_end_theme
+  - user_picture
+  # Provides a fallback text format which is available to all users.
+  - restricted_html_format
+  # Not in Standard...
   - audio_media_type
   - document_media_type
   - image_media_type
   - local_video_media_type
   - remote_video_media_type
-  - standard
   - starshot_article_content_type
   - starshot_basic_html_editor
   - starshot_full_html_editor
@@ -17,29 +30,74 @@ install:
   - menu_link_content
   - navigation
   - redirect
+  # The rest of these are in Standard.
+  - help
+  - history
+  - config
+  - contextual
+  - menu_link_content
+  - datetime
+  - menu_ui
+  - options
+  - toolbar
+  - field_ui
+  - views_ui
+  - link
 config:
   import:
     navigation: '*'
+    # Standard stuff starts here.
+    claro:
+      - block.block.claro_help
+    help:
+      - search.page.help_search
+      - block.block.claro_help_search
+    image:
+      - image.style.large
+      - image.style.thumbnail
+    node:
+      - views.view.archive
+      - views.view.content
+      - views.view.content_recent
+      - views.view.frontpage
+      - views.view.glossary
+    olivero:
+      - block.block.olivero_help
+      - block.block.olivero_search_form_narrow
+      - block.block.olivero_search_form_wide
+      - block.block.olivero_syndicate
+    user:
+      - core.entity_view_mode.user.compact
+      - search.page.user_search
+      - views.view.user_admin_people
+      - views.view.who_s_new
+      - views.view.who_s_online
   actions:
     user.role.content_editor:
-      grantPermissions:
-        - 'access coffee'
-        - 'access shortcuts'
-        - 'create content translations'
-        - 'delete content translations'
-        - 'update content translations'
-        - 'use editorial transition archive'
-        - 'use editorial transition create_new_draft'
-        - 'use editorial transition publish'
-        - 'use editorial transition archived_published'
-        - 'use editorial transition archived_draft'
-        - 'use text format basic_html'
-        - 'use text format full_html'
-        - 'use text format restricted_html'
-        - 'view own unpublished media'
       grantPermissionsForEachMediaType:
         - 'create %bundle media'
         - 'delete own %bundle media'
         - 'edit own %bundle media'
       grantPermissionsForEachNodeType:
         - 'translate %bundle node'
+        # These are in Standard.
+        - 'create %bundle content'
+        - 'delete %bundle revisions'
+        - 'delete own %bundle content'
+        - 'edit own %bundle content'
+    # This is all in Standard.
+    node.settings:
+      simple_config_update:
+        # @todo Remove `langcode` once https://drupal.org/i/3427564 lands.
+        langcode: en
+        use_admin_theme: true
+    user.role.authenticated:
+      grantPermission: 'delete own files'
+    user.role.anonymous:
+      # This recipe assumes all published content should be publicly accessible.
+      grantPermission: 'access content'
+    user.settings:
+      simple_config_update:
+        verify_mail: true
+        register: visitors_admin_approval
+        cancel_method: user_cancel_block
