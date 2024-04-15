@@ -11,7 +11,7 @@ dependencies:
     - image.style.medium
     - node.type.blog
   module:
-    - image
+    - media
     - text
     - user
 id: node.blog.teaser
@@ -28,7 +28,7 @@ content:
     weight: 0
     region: content
   field_image:
-    type: image
+    type: media_thumbnail
     label: hidden
     settings:
       image_link: content

@@ -4,12 +4,10 @@ description: 'Sets up a basic blog, with tagging and commenting.'
 recipes:
   - comment_base
   - editorial_workflow
+  - image_media_type
   - tags_taxonomy
 install:
   - content_translation
-  - field
-  - file
-  - image
   - language
   - metatag
   - node

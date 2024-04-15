@@ -12,7 +12,7 @@ dependencies:
     - node.type.blog
   module:
     - comment
-    - image
+    - media
     - metatag
     - text
     - user
@@ -38,7 +38,7 @@ content:
     weight: 110
     region: content
   field_image:
-    type: image
+    type: media_thumbnail
     label: hidden
     settings:
       image_link: ''
