@@ -1,0 +1,154 @@
+name: Blog
+type: Starshot
+description: 'Sets up a basic blog, with tagging and commenting.'
+recipes:
+  - comment_base
+  - editorial_workflow
+  - tags_taxonomy
+install:
+  - content_translation
+  - field
+  - file
+  - image
+  - language
+  - metatag
+  - node
+  - path
+  - pathauto
+  - scheduler
+  - token
+  - views
+  - workflows
+config:
+  import:
+    image:
+      # Only import config which is also imported by the Standard profile.
+      - image.style.medium
+      - image.style.thumbnail
+      - image.style.wide
+    language: '*'
+    node:
+      # Only import config which is also imported by the Standard profile.
+      - core.entity_view_mode.node.full
+      - core.entity_view_mode.node.rss
+      - core.entity_view_mode.node.teaser
+      - field.storage.node.body
+      - system.action.node_delete_action
+      - system.action.node_make_sticky_action
+      - system.action.node_make_unsticky_action
+      - system.action.node_promote_action
+      - system.action.node_publish_action
+      - system.action.node_save_action
+      - system.action.node_unpromote_action
+      - system.action.node_unpublish_action
+    scheduler:
+      - views.view.scheduler_scheduled_content
+    taxonomy:
+      - views.view.taxonomy_term
+  actions:
+    core.entity_form_display.node.blog.default:
+      setComponents:
+        - name: comment
+          options:
+            type: comment_default
+            weight: 20
+            region: content
+        - name: field_tags
+          options:
+            type: entity_reference_autocomplete_tags
+            weight: 3
+            region: content
+        - name: field_meta_tags
+          options:
+            type: metatag_firehose
+            weight: 121
+            region: content
+            settings:
+              sidebar: true
+              use_details: true
+        - name: scheduler_settings
+          options:
+            weight: 13
+            region: content
+        - name: publish_on
+          options:
+            type: datetime_timestamp_no_default
+            weight: 14
+            region: content
+        - name: unpublish_on
+          options:
+            type: datetime_timestamp_no_default
+            weight: 15
+            region: content
+    core.entity_view_display.node.blog.default:
+      setComponents:
+        - name: field_tags
+          options:
+            type: entity_reference_label
+            label: above
+            weight: 10
+            region: content
+        - name: comment
+          options:
+            type: comment_default
+            label: above
+            weight: 110
+            region: content
+        - name: field_meta_tags
+          options:
+            type: metatag_empty_formatter
+            label: above
+            weight: 111
+            region: content
+    core.entity_view_display.node.blog.teaser:
+      setComponents:
+        - name: field_tags
+          options:
+            type: entity_reference_label
+            label: above
+            weight: 10
+            region: content
+    metatag.settings:
+      simple_config_update:
+        entity_type_groups.node.blog.basic: basic
+    node.type.blog:
+      setThirdPartySettings:
+        - module: scheduler
+          key: expand_fieldset
+          value: when_required
+        - module: scheduler
+          key: fields_display_mode
+          value: vertical_tab
+        - module: scheduler
+          key: publish_enable
+          value: true
+        - module: scheduler
+          key: publish_past_date
+          value: error
+        - module: scheduler
+          key: publish_past_date_created
+          value: false
+        - module: scheduler
+          key: publish_required
+          value: false
+        - module: scheduler
+          key: publish_revision
+          value: true
+        - module: scheduler
+          key: publish_touch
+          value: true
+        - module: scheduler
+          key: show_message_after_update
+          value: true
+        - module: scheduler
+          key: unpublish_enable
+          value: true
+        - module: scheduler
+          key: unpublish_required
+          value: false
+        - module: scheduler
+          key: unpublish_revision
+          value: true
+    workflows.workflow.editorial:
+      addNodeTypes:
+        - blog

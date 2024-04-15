@@ -4,8 +4,6 @@ type: Drupal Suite
 recipes:
   - basic_block_type
   - basic_shortcuts
-  - article_comment
-  - article_tags
   - feedback_contact_form
   - content_search
   - core_recommended_performance
@@ -21,7 +19,7 @@ recipes:
   - image_media_type
   - local_video_media_type
   - remote_video_media_type
-  - starshot_article_content_type
+  - starshot_blog
   - starshot_basic_html_editor
   - starshot_full_html_editor
   - starshot_page_content_type

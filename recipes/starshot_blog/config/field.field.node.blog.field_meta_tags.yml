@@ -1,16 +1,15 @@
-uuid: 105c6dc7-ec05-4e30-a247-dad4d8540bbc
 langcode: en
 status: true
 dependencies:
   config:
     - field.storage.node.field_meta_tags
-    - node.type.article
+    - node.type.blog
   module:
     - metatag
-id: node.article.field_meta_tags
+id: node.blog.field_meta_tags
 field_name: field_meta_tags
 entity_type: node
-bundle: article
+bundle: blog
 label: 'Meta tags'
 description: ''
 required: false

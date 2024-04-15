@@ -3,13 +3,13 @@ status: true
 dependencies:
   enforced:
     config:
-      - node.type.article
+      - node.type.blog
   module:
     - node
-id: article_content
-label: 'Article content'
+id: blog_content
+label: 'Blog content'
 type: 'canonical_entities:node'
-pattern: '/article/[node:created:html_month]/[node:title]'
+pattern: '/blog/[node:created:html_month]/[node:title]'
 selection_criteria:
   484783df-5ed0-4f01-bff4-c6497c0d6751:
     id: 'entity_bundle:node'
@@ -18,7 +18,7 @@ selection_criteria:
     context_mapping:
       node: node
     bundles:
-      article: article
+      blog: blog
 selection_logic: and
 weight: -5
 relationships: {  }
