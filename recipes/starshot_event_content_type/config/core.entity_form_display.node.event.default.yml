@@ -4,6 +4,7 @@ dependencies:
   config:
     - field.field.node.event.body
     - field.field.node.event.field_date_time
+    - field.field.node.event.field_image
     - field.field.node.event.field_location
     - field.field.node.event.field_meta_tags
     - node.type.event
@@ -12,6 +13,7 @@ dependencies:
     - address
     - content_moderation
     - datetime_range
+    - media_library
     - metatag
     - path
     - scheduler
@@ -42,6 +44,13 @@ content:
     weight: 15
     region: content
     settings: {  }
+    third_party_settings: {  }
+  field_image:
+    type: media_library_widget
+    weight: 1
+    region: content
+    settings:
+      media_types: {  }
     third_party_settings: {  }
   field_location:
     type: address_default

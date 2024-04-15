@@ -4,12 +4,15 @@ dependencies:
   config:
     - field.field.node.event.body
     - field.field.node.event.field_date_time
+    - field.field.node.event.field_image
     - field.field.node.event.field_location
     - field.field.node.event.field_meta_tags
+    - image.style.wide
     - node.type.event
   module:
     - address
     - datetime_range
+    - media
     - metatag
     - text
     - user
@@ -40,6 +43,17 @@ content:
       separator: '-'
     third_party_settings: {  }
     weight: 113
+    region: content
+  field_image:
+    type: media_thumbnail
+    label: hidden
+    settings:
+      image_link: ''
+      image_style: wide
+      image_loading:
+        attribute: eager
+    third_party_settings: {  }
+    weight: -1
     region: content
   field_location:
     type: address_default

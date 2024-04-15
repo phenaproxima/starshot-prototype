@@ -5,10 +5,13 @@ dependencies:
     - core.entity_view_mode.node.teaser
     - field.field.node.event.body
     - field.field.node.event.field_date_time
+    - field.field.node.event.field_image
     - field.field.node.event.field_location
     - field.field.node.event.field_meta_tags
+    - image.style.medium
     - node.type.event
   module:
+    - media
     - text
     - user
 id: node.event.teaser
@@ -28,6 +31,17 @@ content:
     settings: {  }
     third_party_settings: {  }
     weight: -20
+    region: content
+  field_image:
+    type: media_thumbnail
+    label: hidden
+    settings:
+      image_link: content
+      image_style: medium
+      image_loading:
+        attribute: lazy
+    third_party_settings: {  }
+    weight: -1
     region: content
   links:
     settings: {  }

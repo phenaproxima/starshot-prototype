@@ -2,6 +2,7 @@ name: Event content type
 type: Starshot
 recipes:
   - editorial_workflow
+  - starshot_image_media_type
 install:
   - content_translation
   - address
