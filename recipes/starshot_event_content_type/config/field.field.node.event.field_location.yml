@@ -1,0 +1,52 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_location
+    - node.type.event
+  module:
+    - address
+    - content_translation
+third_party_settings:
+  content_translation:
+    translation_sync:
+      langcode: langcode
+      country_code: country_code
+      administrative_area: administrative_area
+      locality: locality
+      dependent_locality: dependent_locality
+      postal_code: postal_code
+      sorting_code: sorting_code
+      address_line1: address_line1
+      address_line2: address_line2
+      address_line3: address_line3
+      organization: organization
+      given_name: given_name
+      additional_name: additional_name
+      family_name: family_name
+id: node.event.field_location
+field_name: field_location
+entity_type: node
+bundle: event
+label: Location
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  available_countries: {  }
+  langcode_override: ''
+  field_overrides:
+    givenName:
+      override: hidden
+    additionalName:
+      override: hidden
+    familyName:
+      override: hidden
+    organization:
+      override: hidden
+    addressLine3:
+      override: hidden
+  fields: {  }
+field_type: address
