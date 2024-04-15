@@ -1,0 +1,15 @@
+_meta:
+  version: '1.0'
+  entity_type: shortcut
+  uuid: eb931759-9b33-4723-934a-5e1ffc20fc13
+  bundle: default
+  default_langcode: en
+default:
+  title:
+    -
+      value: 'Add media'
+  link:
+    -
+      uri: 'internal:/media/add'
+      title: ''
+      options: {  }
