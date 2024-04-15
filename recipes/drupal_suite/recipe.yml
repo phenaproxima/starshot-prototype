@@ -16,12 +16,12 @@ recipes:
   # Not in Standard...
   - audio_media_type
   - document_media_type
-  - image_media_type
   - local_video_media_type
   - remote_video_media_type
   - starshot_blog
   - starshot_basic_html_editor
   - starshot_full_html_editor
+  - starshot_image_media_type
   - starshot_page_content_type
 install:
   - coffee

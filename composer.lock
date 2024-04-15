@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d78fa3ae844a0ffc709a93c82585650c",
+    "content-hash": "0654e0ce3e2f351c873d1de17dfbe1e4",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -1674,6 +1674,63 @@
             "time": "2024-03-16T17:47:29+00:00"
         },
         {
+            "name": "drupal/crop",
+            "version": "2.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/crop.git",
+                "reference": "8.x-2.3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/crop-8.x-2.3.zip",
+                "reference": "8.x-2.3",
+                "shasum": "8e109cf60077f4c605c4d1f895cb3dc28613a23a"
+            },
+            "require": {
+                "drupal/core": "^9.3 || ^10"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-2.3",
+                    "datestamp": "1665437894",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Drupal Media Team",
+                    "homepage": "https://www.drupal.org/user/3260690"
+                },
+                {
+                    "name": "phenaproxima",
+                    "homepage": "https://www.drupal.org/user/205645"
+                },
+                {
+                    "name": "slashrsm",
+                    "homepage": "https://www.drupal.org/user/744628"
+                },
+                {
+                    "name": "woprrr",
+                    "homepage": "https://www.drupal.org/user/858604"
+                }
+            ],
+            "description": "Provides storage and API for image crops.",
+            "homepage": "https://www.drupal.org/project/crop",
+            "support": {
+                "source": "https://git.drupalcode.org/project/crop",
+                "issues": "https://www.drupal.org/project/issues/crop"
+            }
+        },
+        {
             "name": "drupal/ctools",
             "version": "4.0.4",
             "source": {
@@ -1764,6 +1821,61 @@
             "support": {
                 "source": "https://git.drupalcode.org/project/ctools",
                 "issues": "https://www.drupal.org/project/issues/ctools"
+            }
+        },
+        {
+            "name": "drupal/focal_point",
+            "version": "2.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/focal_point.git",
+                "reference": "2.0.3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/focal_point-2.0.3.zip",
+                "reference": "2.0.3",
+                "shasum": "5067b249e39c2f93799a4cadfcc3d3dc981f3ef5"
+            },
+            "require": {
+                "drupal/core": "^9.3 || ^10",
+                "drupal/crop": "^2.3"
+            },
+            "require-dev": {
+                "drupal/crop": "*"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "2.0.3",
+                    "datestamp": "1710483189",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Alexander Ross (bleen)",
+                    "homepage": "https://www.drupal.org/u/bleen",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "Rajeshreeputra",
+                    "homepage": "https://www.drupal.org/user/3418561"
+                }
+            ],
+            "description": "Focal Point allows content creators to mark the most important part of an image for easier cropping.",
+            "homepage": "https://drupal.org/project/focal_point",
+            "support": {
+                "source": "https://cgit.drupalcode.org/focal_point",
+                "issues": "https://drupal.org/project/issues/focal_point",
+                "irc": "irc://irc.freenode.org/drupal-contribute"
             }
         },
         {

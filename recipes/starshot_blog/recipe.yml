@@ -4,7 +4,7 @@ description: 'Sets up a basic blog, with tagging and commenting.'
 recipes:
   - comment_base
   - editorial_workflow
-  - image_media_type
+  - starshot_image_media_type
   - tags_taxonomy
 install:
   - content_translation
