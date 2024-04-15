@@ -4,7 +4,10 @@ dependencies:
   config:
     - core.entity_view_mode.node.teaser
     - field.field.node.blog.body
+    - field.field.node.blog.comment
     - field.field.node.blog.field_image
+    - field.field.node.blog.field_meta_tags
+    - field.field.node.blog.field_tags
     - image.style.medium
     - node.type.blog
   module:
@@ -28,14 +31,25 @@ content:
     type: image
     label: hidden
     settings:
-      image_style: medium
       image_link: content
+      image_style: medium
       image_loading:
         attribute: lazy
     third_party_settings: {  }
     weight: -1
     region: content
+  field_tags:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 10
+    region: content
   links:
     weight: 100
     region: content
-hidden: {  }
+hidden:
+  comment: true
+  field_meta_tags: true
+  langcode: true
