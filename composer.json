@@ -9,6 +9,10 @@
         "chat": "https://www.drupal.org/node/314178"
     },
     "repositories": {
+        "starshot-core": {
+            "type": "vcs",
+            "url": "https://github.com/phenaproxima/starshot-core.git"
+        },
         "starshot": {
             "type": "path",
             "url": "modules/starshot",
@@ -24,7 +28,6 @@
     "require": {
         "ext-pdo_sqlite": "*",
         "composer/installers": "^2.0",
-        "cweagans/composer-patches": "^2",
         "drupal/coffee": "^1.4",
         "drupal/core-composer-scaffold": "^10.3",
         "drupal/core-project-message": "^10.3",
@@ -36,6 +39,7 @@
         "drupal/redirect": "^1.9",
         "drupal/scheduler": "^2.0",
         "drupal/starshot": "dev-main",
+        "drupal/starshot-core": "^10.3",
         "drush/drush": "^12.5",
         "oomphinc/composer-installers-extender": "^2"
     },
@@ -98,11 +102,6 @@
                 "  * Remove the plugin that prints this message:",
                 "      composer remove drupal/core-project-message"
             ]
-        },
-        "patches": {
-            "drupal/core": {
-                "Add support for recipes": "./patches/recipe-10.3.x-7b657ee6bb1ce6f96d45fbcd109bc55709945f8d.diff"
-            }
         }
     },
     "scripts": {
