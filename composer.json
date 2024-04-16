@@ -34,6 +34,7 @@
         "drupal/core-project-message": "^10.3",
         "drupal/core-recommended": "^10.3",
         "drupal/focal_point": "^2.0",
+        "drupal/geolocation": "^3.12",
         "drupal/linkit": "^6.1",
         "drupal/metatag": "^2.0",
         "drupal/navigation": "^1.0@beta",

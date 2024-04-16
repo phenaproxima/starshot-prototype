@@ -4,15 +4,20 @@ recipes:
   - editorial_workflow
   - starshot_image_media_type
 install:
-  - content_translation
   - address
+  - content_translation
   - datetime_range
+  - filter
+  - geolocation_address
+  - geolocation_leaflet
   - metatag
   - node
   - pathauto
   - scheduler
 config:
   import:
+    filter:
+      - filter.format.plain_text
     language: '*'
     node:
       # Only import config which is also imported by the Standard profile.
