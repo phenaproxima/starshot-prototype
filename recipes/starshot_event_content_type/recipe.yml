@@ -10,6 +10,7 @@ install:
   - filter
   - geolocation_address
   - geolocation_leaflet
+  - layout_builder
   - metatag
   - node
   - pathauto
