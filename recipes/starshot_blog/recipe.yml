@@ -8,15 +8,11 @@ recipes:
   - tags_taxonomy
 install:
   - content_translation
-  - language
   - metatag
   - node
-  - path
   - pathauto
   - scheduler
-  - token
   - views
-  - workflows
 config:
   import:
     image:

@@ -6,15 +6,10 @@ recipes:
   - page_content_type
 install:
   - content_translation
-  - field
-  - language
   - metatag
-  - path
   - pathauto
   - scheduler
-  - token
   - views
-  - workflows
 config:
   import:
     language: '*'

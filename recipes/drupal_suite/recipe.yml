@@ -41,7 +41,6 @@ install:
   - toolbar
   - field_ui
   - views_ui
-  - link
 config:
   import:
     navigation: '*'

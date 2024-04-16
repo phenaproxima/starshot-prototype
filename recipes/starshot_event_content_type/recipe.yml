@@ -7,14 +7,10 @@ install:
   - content_translation
   - address
   - datetime_range
-  - field
-  - language
   - metatag
   - node
-  - path
   - pathauto
   - scheduler
-  - text
 config:
   import:
     language: '*'

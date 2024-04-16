@@ -4,10 +4,7 @@ description: 'Enhances the Basic HTML editor with better linking and media suppo
 recipes:
   - basic_html_format_editor
 install:
-  - file
-  - image
   - linkit
-  - media
   - media_library
   - starshot
 config:

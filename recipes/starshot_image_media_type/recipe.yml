@@ -4,7 +4,6 @@ description: 'Adds focal point-based cropping to the image media type.'
 recipes:
   - image_media_type
 install:
-  - crop
   - focal_point
 config:
   import:
