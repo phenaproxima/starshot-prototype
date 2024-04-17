@@ -1,0 +1,39 @@
+_meta:
+  version: '1.0'
+  entity_type: menu_link_content
+  uuid: b87dc8f0-e830-4da4-b477-f5a4fe76006e
+  bundle: menu_link_content
+  default_langcode: en
+default:
+  enabled:
+    -
+      value: true
+  title:
+    -
+      value: 'URL redirect'
+  menu_name:
+    -
+      value: content
+  link:
+    -
+      uri: 'internal:/admin/config/search/redirect/add'
+      title: ''
+      options: {  }
+  external:
+    -
+      value: false
+  rediscover:
+    -
+      value: true
+  weight:
+    -
+      value: 0
+  expanded:
+    -
+      value: false
+  parent:
+    -
+      value: navigation.create
+  revision_translation_affected:
+    -
+      value: true
