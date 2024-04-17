@@ -105,3 +105,23 @@ config:
         verify_mail: true
         register: visitors_admin_approval
         cancel_method: user_cancel_block
+    # Clean up blocks that are copied from Stark. This can all be removed
+    # when it's possible to install Drupal directly from a recipe.
+    block.block.olivero_branding:
+      delete: ~
+    block.block.olivero_tools:
+      delete: ~
+    block.block.olivero_admin:
+      delete: ~
+    block.block.olivero_primary_local_tasks:
+      delete: ~
+    block.block.claro_branding:
+      delete: ~
+    block.block.claro_tools:
+      delete: ~
+    block.block.claro_admin:
+      delete: ~
+    block.block.claro_primary_local_tasks:
+      delete: ~
+    block.block.claro_secondary_local_tasks:
+      delete: ~
