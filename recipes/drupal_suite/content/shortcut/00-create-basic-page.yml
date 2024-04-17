@@ -1,15 +1,18 @@
 _meta:
   version: '1.0'
   entity_type: shortcut
-  uuid: eb931759-9b33-4723-934a-5e1ffc20fc13
+  uuid: a50d2030-42f1-49b4-a401-6769cd723ea0
   bundle: default
   default_langcode: en
 default:
   title:
     -
-      value: 'Add media'
+      value: 'Create a basic page'
+  weight:
+    -
+      value: 0
   link:
     -
-      uri: 'internal:/media/add'
+      uri: 'internal:/node/add/page'
       title: ''
       options: {  }

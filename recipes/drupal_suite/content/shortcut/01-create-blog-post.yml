@@ -1,0 +1,18 @@
+_meta:
+  version: '1.0'
+  entity_type: shortcut
+  uuid: cf0b6257-db94-4c70-ac31-f24b95a0d24a
+  bundle: default
+  default_langcode: en
+default:
+  title:
+    -
+      value: 'Create a blog post'
+  weight:
+    -
+      value: 1
+  link:
+    -
+      uri: 'internal:/node/add/blog'
+      title: ''
+      options: {  }

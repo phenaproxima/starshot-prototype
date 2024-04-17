@@ -1,0 +1,18 @@
+_meta:
+  version: '1.0'
+  entity_type: shortcut
+  uuid: 74a865f5-84a1-4e0e-8e52-3328033f4695
+  bundle: default
+  default_langcode: en
+default:
+  title:
+    -
+      value: 'Upload an image'
+  weight:
+    -
+      value: 3
+  link:
+    -
+      uri: 'internal:/media/add/image'
+      title: ''
+      options: {  }
