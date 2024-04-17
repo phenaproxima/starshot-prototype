@@ -2807,12 +2807,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phenaproxima/starshot-core.git",
-                "reference": "9f58d9ff185f16b391cab43ba465701f9db5da33"
+                "reference": "ac6428852562205b7f93ea2650e4c8ab282484aa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phenaproxima/starshot-core/zipball/9f58d9ff185f16b391cab43ba465701f9db5da33",
-                "reference": "9f58d9ff185f16b391cab43ba465701f9db5da33",
+                "url": "https://api.github.com/repos/phenaproxima/starshot-core/zipball/ac6428852562205b7f93ea2650e4c8ab282484aa",
+                "reference": "ac6428852562205b7f93ea2650e4c8ab282484aa",
                 "shasum": ""
             },
             "require": {
@@ -2827,12 +2827,11 @@
             "extra": {
                 "patches": {
                     "drupal/core": {
-                        "Add support for recipes": "https://git.drupalcode.org/project/distributions_recipes/-/raw/patch/recipe-10.3.x.patch",
-                        "#3441109: Increase atomiticy of Standard recipes": "https://git.drupalcode.org/project/distributions_recipes/-/merge_requests/106.diff"
+                        "Add support for recipes": "https://git.drupalcode.org/project/distributions_recipes/-/raw/patch/recipe-10.3.x.patch"
                     }
                 }
             },
-            "time": "2024-04-15T17:46:08+00:00"
+            "time": "2024-04-17T12:51:23+00:00"
         },
         {
             "name": "drupal/token",

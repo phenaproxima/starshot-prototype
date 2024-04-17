@@ -1,5 +1,5 @@
 {
-    "_hash": "d4ef1b03b1f051a7cf3e965e6426e1c04539a0061d4118ceeed52a9f48b240a5",
+    "_hash": "420d87dd8006539c15a4944c3f2bb044fab9bc4d91722f4840ed038d0239e746",
     "patches": {
         "drupal/scheduler": [
             {
@@ -18,17 +18,7 @@
                 "package": "drupal/core",
                 "description": "Add support for recipes",
                 "url": "https://git.drupalcode.org/project/distributions_recipes/-/raw/patch/recipe-10.3.x.patch",
-                "sha256": "0a79dff329f67f7972b0bdf9bf17dfdaf232f43391be4ce2945d69a83313a188",
-                "depth": 2,
-                "extra": {
-                    "provenance": "dependency:drupal/core"
-                }
-            },
-            {
-                "package": "drupal/core",
-                "description": "#3441109: Increase atomiticy of Standard recipes",
-                "url": "https://git.drupalcode.org/project/distributions_recipes/-/merge_requests/106.diff",
-                "sha256": "def15bd01f0a909b61e9e618ad8ae33ac7d9be648be016589d480fb76880d90e",
+                "sha256": "3593920f716da992261da641e0457b18c3b22b07de6f5012acf7815ee29af69b",
                 "depth": 2,
                 "extra": {
                     "provenance": "dependency:drupal/core"
