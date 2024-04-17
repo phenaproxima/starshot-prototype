@@ -1,0 +1,23 @@
+uuid: 77063e7f-f034-4747-8889-54de8eda27d8
+langcode: en
+status: true
+dependencies:
+  module:
+    - focal_point
+name: wide_16_9_focal_point
+label: 'Wide (1090) 16:9, centered on focal point'
+effects:
+  ed9442f4-a708-451e-99ca-5df9d3887fbd:
+    uuid: ed9442f4-a708-451e-99ca-5df9d3887fbd
+    id: focal_point_scale_and_crop
+    weight: 1
+    data:
+      width: 1090
+      height: 613
+      crop_type: focal_point
+  a9762279-d8ff-4253-ae35-79c0f83d3911:
+    uuid: a9762279-d8ff-4253-ae35-79c0f83d3911
+    id: image_convert
+    weight: 2
+    data:
+      extension: webp

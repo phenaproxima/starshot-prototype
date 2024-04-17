@@ -8,7 +8,7 @@ dependencies:
     - field.field.node.blog.field_image
     - field.field.node.blog.field_meta_tags
     - field.field.node.blog.field_tags
-    - image.style.wide
+    - image.style.wide_16_9_focal_point
     - node.type.blog
   module:
     - comment
@@ -42,7 +42,7 @@ content:
     label: hidden
     settings:
       image_link: ''
-      image_style: wide
+      image_style: wide_16_9_focal_point
       image_loading:
         attribute: eager
     third_party_settings: {  }

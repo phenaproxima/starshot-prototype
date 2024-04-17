@@ -8,7 +8,7 @@ dependencies:
     - field.field.node.event.field_location
     - field.field.node.event.field_meta_tags
     - filter.format.plain_text
-    - image.style.wide
+    - image.style.wide_16_9_focal_point
     - node.type.event
   module:
     - datetime_range
@@ -42,7 +42,7 @@ third_party_settings:
                 label: hidden
                 settings:
                   image_link: ''
-                  image_style: wide
+                  image_style: wide_16_9_focal_point
                   image_loading:
                     attribute: eager
                 third_party_settings: {  }
