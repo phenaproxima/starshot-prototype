@@ -83,6 +83,10 @@ config:
         - 'delete %bundle revisions'
         - 'delete own %bundle content'
         - 'edit own %bundle content'
+    # This view is confusing alongside the media views; there's really no
+    # need to keep it around.
+    views.view.files:
+      delete: ~
     # This is all in Standard.
     node.settings:
       simple_config_update:
