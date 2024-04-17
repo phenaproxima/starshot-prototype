@@ -1,0 +1,18 @@
+_meta:
+  version: '1.0'
+  entity_type: shortcut
+  uuid: 7aa7f3d0-d5f9-4226-b383-f40613326b36
+  bundle: default
+  default_langcode: en
+default:
+  title:
+    -
+      value: See unapproved comments
+  weight:
+    -
+      value: 7
+  link:
+    -
+      uri: 'internal:/admin/content/comment/approval'
+      title: ''
+      options: {  }
