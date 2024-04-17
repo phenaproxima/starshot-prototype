@@ -8,7 +8,7 @@ dependencies:
     - field.field.node.event.field_image
     - field.field.node.event.field_location
     - field.field.node.event.field_meta_tags
-    - image.style.medium
+    - image.style.medium_focal_point
     - node.type.event
   module:
     - media
@@ -37,7 +37,7 @@ content:
     label: hidden
     settings:
       image_link: content
-      image_style: medium
+      image_style: medium_focal_point
       image_loading:
         attribute: lazy
     third_party_settings: {  }

@@ -8,7 +8,7 @@ dependencies:
     - field.field.node.blog.field_image
     - field.field.node.blog.field_meta_tags
     - field.field.node.blog.field_tags
-    - image.style.medium
+    - image.style.medium_focal_point
     - node.type.blog
   module:
     - media
@@ -32,7 +32,7 @@ content:
     label: hidden
     settings:
       image_link: content
-      image_style: medium
+      image_style: medium_focal_point
       image_loading:
         attribute: lazy
     third_party_settings: {  }
