@@ -1,6 +1,6 @@
-name: Drupal Suite
-description: Applies all the Drupal Suite recipes.
-type: Drupal Suite
+name: Drupal CMS
+description: Applies all the Drupal CMS recipes.
+type: Drupal CMS
 recipes:
   - basic_block_type
   - feedback_contact_form
