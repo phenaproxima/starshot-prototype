@@ -1,24 +1,12 @@
 {
-    "_hash": "420d87dd8006539c15a4944c3f2bb044fab9bc4d91722f4840ed038d0239e746",
+    "_hash": "048c24b9d411fe768742c7a69f4d00a7c66fdbbb6160db6847b781bfd55deaa7",
     "patches": {
-        "drupal/scheduler": [
-            {
-                "package": "drupal/scheduler",
-                "description": "#3437739: BUG FIX - SchedulerManager should take an EventDispatcherInterface object, not ContainerAwareEventDispatcher",
-                "url": "./patches/scheduler/128.diff",
-                "sha256": "5fa8f2f4c8f13b9b4ba0889748c30c06f21c3f8d593dab76be4af4df8c3d7981",
-                "depth": 1,
-                "extra": {
-                    "provenance": "root"
-                }
-            }
-        ],
         "drupal/core": [
             {
                 "package": "drupal/core",
                 "description": "Add support for recipes",
                 "url": "https://git.drupalcode.org/project/distributions_recipes/-/raw/patch/recipe-10.3.x.patch",
-                "sha256": "3593920f716da992261da641e0457b18c3b22b07de6f5012acf7815ee29af69b",
+                "sha256": "88d4e6e1d0006d143ee6c8e16e143b39f3b70f61dd4985c32aa0423b2473d066",
                 "depth": 2,
                 "extra": {
                     "provenance": "dependency:drupal/core"

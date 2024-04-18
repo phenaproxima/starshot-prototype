@@ -105,11 +105,6 @@
                 "  * Remove the plugin that prints this message:",
                 "      composer remove drupal/core-project-message"
             ]
-        },
-        "patches": {
-            "drupal/scheduler": {
-                "#3437739: BUG FIX - SchedulerManager should take an EventDispatcherInterface object, not ContainerAwareEventDispatcher": "./patches/scheduler/128.diff"
-            }
         }
     },
     "scripts": {
