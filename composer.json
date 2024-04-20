@@ -40,7 +40,7 @@
         "drupal/navigation": "^1.0@beta",
         "drupal/pathauto": "^1.12",
         "drupal/redirect": "^1.9",
-        "drupal/scheduler": "2.x-dev",
+        "drupal/scheduler": "^2.0.2",
         "drupal/starshot": "dev-main",
         "drupal/starshot-core": "^10.3",
         "drush/drush": "^12.5",
