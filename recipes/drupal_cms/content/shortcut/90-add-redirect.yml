@@ -1,0 +1,18 @@
+_meta:
+  version: '1.0'
+  entity_type: shortcut
+  uuid: 57cd30cb-170d-44b1-a98a-fd5d786bd1d8
+  bundle: default
+  default_langcode: en
+default:
+  title:
+    -
+      value: 'Set up a redirect'
+  weight:
+    -
+      value: 90
+  link:
+    -
+      uri: 'internal:/admin/config/search/redirect/add'
+      title: ''
+      options: {  }
