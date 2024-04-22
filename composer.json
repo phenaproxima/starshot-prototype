@@ -71,7 +71,8 @@
             "cweagans/composer-patches": true,
             "oomphinc/composer-installers-extender": true
         },
-        "sort-packages": true
+        "sort-packages": true,
+        "optimize-autoloader": true
     },
     "extra": {
         "drupal-scaffold": {
@@ -95,10 +96,9 @@
         "drupal-core-project-message": {
             "include-keys": ["homepage", "support"],
             "post-create-project-cmd-message": [
-                "<bg=blue;fg=white>                                                         </>",
-                "<bg=blue;fg=white>  Congratulations, you’ve installed the Drupal codebase  </>",
-                "<bg=blue;fg=white>  from the drupal/starshot-project template!          </>",
-                "<bg=blue;fg=white>                                                         </>",
+                "<bg=blue;fg=white>                                                 </>",
+                "<bg=blue;fg=white>  Congratulations, you’ve installed Drupal CMS!  </>",
+                "<bg=blue;fg=white>                                                 </>",
                 "",
                 "<bg=yellow;fg=black>Next steps</>:",
 
@@ -106,9 +106,7 @@
                 "  * Read the user guide: https://www.drupal.org/docs/user_guide/en/index.html",
                 "  * Get support: https://www.drupal.org/support",
                 "  * Get involved with the Drupal community:",
-                "      https://www.drupal.org/getting-involved",
-                "  * Remove the plugin that prints this message:",
-                "      composer remove drupal/core-project-message"
+                "      https://www.drupal.org/getting-involved"
             ]
         },
         "patches": {
@@ -122,8 +120,10 @@
     },
     "scripts": {
         "drupal:install": [
+            "@putenv SHELL_VERBOSITY=-1",
             "drush site-install minimal --yes --db-url sqlite://db.sqlite --account-pass admin --site-name 'Drupal CMS'",
             "cd web && php core/scripts/drupal recipe ../recipes/drupal_cms",
+            "drush theme:uninstall --yes stark",
             "drush cache:rebuild"
         ],
         "drupal:install-dev": [
@@ -133,7 +133,8 @@
         ],
         "post-create-project-cmd": [
             "@drupal:install",
-            "@php -d max_execution_time=0 web/core/scripts/drupal quick-start"
+            "Composer\\Config::disableProcessTimeout",
+            "@php web/core/scripts/drupal quick-start"
         ]
     },
     "scripts-descriptions": {
