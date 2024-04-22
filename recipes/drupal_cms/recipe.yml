@@ -15,6 +15,7 @@ recipes:
   - document_media_type
   - local_video_media_type
   - remote_video_media_type
+  - starshot_admin_theme
   - starshot_blog
   - starshot_basic_html_editor
   - starshot_event_content_type
@@ -23,11 +24,7 @@ recipes:
   - starshot_image_media_type
   - starshot_page_content_type
 install:
-  - coffee
-  - gin
-  - gin_toolbar
   - menu_link_content
-  - navigation
   - redirect
   # The rest of these are in Standard.
   - help
@@ -44,8 +41,6 @@ install:
   - views_ui
 config:
   import:
-    navigation: '*'
-    # Standard stuff starts here.
     help:
       - search.page.help_search
     image:
@@ -71,9 +66,6 @@ config:
       - views.view.who_s_new
       - views.view.who_s_online
   actions:
-    system.theme:
-      simple_config_update:
-        admin: gin
     user.role.content_editor:
       grantPermissionsForEachMediaType:
         - 'create %bundle media'
@@ -106,25 +98,3 @@ config:
         verify_mail: true
         register: visitors_admin_approval
         cancel_method: user_cancel_block
-    # Clean up blocks that are copied from Stark. This can all be removed
-    # when it's possible to install Drupal directly from a recipe.
-    block.block.olivero_branding:
-      delete: ~
-    block.block.olivero_tools:
-      delete: ~
-    block.block.olivero_admin:
-      delete: ~
-    block.block.olivero_primary_local_tasks:
-      delete: ~
-    block.block.gin_account_menu:
-      delete: ~
-    block.block.gin_admin:
-      delete: ~
-    block.block.gin_branding:
-      delete: ~
-    block.block.gin_powered:
-      delete: ~
-    block.block.gin_site_branding:
-      delete: ~
-    block.block.gin_tools:
-      delete: ~
