@@ -9,10 +9,12 @@ install:
   - metatag
   - pathauto
   - scheduler
+  - simple_sitemap
   - views
 config:
   import:
     language: '*'
+    simple_sitemap: '*'
     scheduler:
       - views.view.scheduler_scheduled_content
   actions:

@@ -15,6 +15,7 @@ install:
   - node
   - pathauto
   - scheduler
+  - simple_sitemap
   - smart_date
 config:
   import:
@@ -35,6 +36,7 @@ config:
       - system.action.node_save_action
       - system.action.node_unpromote_action
       - system.action.node_unpublish_action
+    simple_sitemap: '*'
     scheduler:
       - views.view.scheduler_scheduled_content
   actions:

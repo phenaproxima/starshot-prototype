@@ -43,6 +43,7 @@
         "drupal/pathauto": "^1.12",
         "drupal/redirect": "^1.9",
         "drupal/scheduler": "^2.0.2",
+        "drupal/simple_sitemap": "^4.1",
         "drupal/smart_date": "^4.0",
         "drupal/starshot": "dev-main",
         "drupal/starshot-core": "^10.3",
@@ -120,14 +121,23 @@
         }
     },
     "scripts": {
-        "install-drupal-cms": [
+        "drupal:install": [
             "drush site-install minimal --yes --db-url sqlite://db.sqlite --account-pass admin --site-name 'Drupal CMS'",
             "cd web && php core/scripts/drupal recipe ../recipes/drupal_cms",
             "drush cache:rebuild"
         ],
+        "drupal:install-dev": [
+            "@drupal:install",
+            "drush config:set --yes system.logging error_level verbose",
+            "drush pm:enable --yes default_content"
+        ],
         "post-create-project-cmd": [
-            "@install-drupal-cms",
+            "@drupal:install",
             "@php -d max_execution_time=0 web/core/scripts/drupal quick-start"
         ]
+    },
+    "scripts-descriptions": {
+        "drupal:install": "Installs Drupal CMS.",
+        "drupal:install-dev": "Installs Drupal CMS, with additional modules and configuration tweaks for development."
     }
 }

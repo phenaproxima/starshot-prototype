@@ -12,6 +12,7 @@ install:
   - node
   - pathauto
   - scheduler
+  - simple_sitemap
   - views
 config:
   import:
@@ -37,6 +38,7 @@ config:
       - system.action.node_unpublish_action
     scheduler:
       - views.view.scheduler_scheduled_content
+    simple_sitemap: '*'
     taxonomy:
       - views.view.taxonomy_term
   actions:
