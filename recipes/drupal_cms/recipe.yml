@@ -101,8 +101,10 @@ config:
         langcode: en
         use_admin_theme: true
     user.role.authenticated:
+      rename: 'Site visitor'
       grantPermission: 'delete own files'
     user.role.anonymous:
+      rename: 'Logged-in user'
       # This recipe assumes all published content should be publicly accessible.
       grantPermission: 'access content'
     user.settings:
