@@ -3,3 +3,6 @@ type: Starshot
 description: Provides a simple contact form, and tools for building more complex forms.
 install:
   - webform_ui
+config:
+  import:
+    webform: '*'

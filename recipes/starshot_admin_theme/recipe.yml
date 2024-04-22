@@ -32,6 +32,12 @@ config:
       delete: ~
     block.block.gin_powered:
       delete: ~
+    block.block.gin_primary_admin_actions:
+      delete: ~
+    block.block.gin_primary_local_tasks:
+      delete: ~
+    block.block.gin_secondary_local_tasks:
+      delete: ~
     block.block.gin_site_branding:
       delete: ~
     block.block.gin_tools:
