@@ -1,0 +1,1699 @@
+diff --git a/dist/css/base/gin.css b/dist/css/base/gin.css
+index e20f8508dda41502c6857d1f875cc70a542f297d..4dc5cdab9745ec2668bec7694b0b94ff674ea387 100644
+--- a/dist/css/base/gin.css
++++ b/dist/css/base/gin.css
+@@ -1486,7 +1486,7 @@ table td .group-label {
+ }
+ 
+ .sortable-heading > a::before {
+-  bottom: -1px;
++  bottom: -2px;
+ }
+ 
+ .sortable-heading > a::after {
+diff --git a/dist/css/layout/core_navigation.css b/dist/css/layout/core_navigation.css
+new file mode 100644
+index 0000000000000000000000000000000000000000..69310413c7d080b7119fe9efd322cfe7099d9fbd
+--- /dev/null
++++ b/dist/css/layout/core_navigation.css
+@@ -0,0 +1,349 @@
++:root {
++  --gin-toolbar-height: 39px;
++  --gin-toolbar-secondary-height: 48px;
++  --gin-scroll-offset: 72px;
++  --gin-toolbar-y-offset: var(--gin-toolbar-height);
++  --gin-toolbar-x-offset: 0px;
++  --gin-sticky-offset: 0px;
++  --gin-icon-size-toolbar: 20px;
++}
++
++@media (min-width: 61em) {
++  :root {
++    --gin-toolbar-height: 0px;
++    --gin-toolbar-secondary-height: 52px;
++    --gin-toolbar-x-offset: var(--drupal-displace-offset-left, 64px);
++    --gin-scroll-offset: 130px;
++    --gin-sticky-offset: var(--gin-height-sticky);
++  }
++}
++
++@media (min-width: 61em) {
++  html.admin-toolbar-expanded {
++    --gin-toolbar-x-offset: var(--drupal-displace-offset-left, 264px);
++  }
++}
++
++.admin-toolbar {
++  --admin-toolbar-sidebar-width: 4rem;
++  --admin-toolbar-font-family: var(--gin-font);
++  --admin-toolbar-color-white: var(--gin-bg-layer);
++  --admin-toolbar-color-gray-050: var(--gin-bg-layer2);
++  --admin-toolbar-color-gray-100: var(--gin-border-color-layer);
++  --admin-toolbar-color-gray-200: var(--gin-border-color-layer2);
++  --admin-toolbar-color-gray-800: var(--gin-color-text);
++  --admin-toolbar-color-gray-990: var(--gin-color-primary-active);
++}
++
++[data-admin-toolbar=expanded] .admin-toolbar {
++  --admin-toolbar-sidebar-width: 16.5rem;
++}
++
++@media (--admin-toolbar-tablet) {
++  [data-admin-toolbar=expanded] .admin-toolbar {
++    --admin-toolbar-sidebar-width: calc(16.5 * var(--admin-toolbar-rem));
++  }
++}
++
++.gin--core-navigation .gin-secondary-toolbar:not(.gin-secondary-toolbar--frontend) {
++  margin-bottom: var(--gin-spacing-xxs);
++}
++
++.gin--core-navigation .gin-secondary-toolbar--frontend {
++  z-index: 102;
++  -webkit-margin-start: var(--gin-toolbar-x-offset);
++          margin-inline-start: var(--gin-toolbar-x-offset);
++}
++
++.toolbar-menu__link:hover::before {
++  inline-size: var(--gin-spacing-xxs);
++}
++
++.admin-toolbar__content,
++.admin-toolbar__footer {
++  padding: var(--gin-spacing-s);
++}
++
++.admin-toolbar__footer,
++.admin-toolbar__content .toolbar-block:nth-last-child(n+2)::after {
++  border-block-start-color: var(--gin-border-color-secondary);
++}
++
++.toolbar-anti-flicker.toolbar-loading.toolbar-fixed body.gin--core-navigation,
++body.gin--core-navigation {
++  padding-top: unset !important;
++}
++
++.admin-toolbar__logo {
++  line-height: 0;
++  border-radius: 10px;
++}
++
++.admin-toolbar__logo svg rect {
++  fill: var(--gin-color-primary);
++}
++
++.admin-toolbar__logo svg path {
++  fill: var(--gin-bg-app);
++}
++
++.admin-toolbar__logo:hover svg rect {
++  fill: var(--gin-color-primary-hover);
++}
++
++.admin-toolbar__logo:active svg rect, .admin-toolbar__logo:focus svg rect {
++  fill: var(--gin-color-primary-active);
++}
++
++.toolbar-button,
++.toolbar-menu__link {
++  color: var(--gin-color-text);
++  font-weight: var(--gin-font-weight-normal);
++  font-variation-settings: unset;
++}
++
++.toolbar-button, .toolbar-button:hover, .toolbar-button:active,
++.toolbar-menu__link,
++.toolbar-menu__link:hover,
++.toolbar-menu__link:active {
++  outline: none;
++  box-shadow: none;
++}
++
++.toolbar-button:hover,
++.toolbar-menu__link:hover {
++  color: var(--gin-color-primary);
++  background-color: var(--gin-color-primary-light);
++}
++
++.toolbar-button:active, .toolbar-button:focus, .toolbar-button:hover:focus,
++.toolbar-menu__link:active,
++.toolbar-menu__link:focus,
++.toolbar-menu__link:hover:focus {
++  color: var(--gin-color-primary-hover);
++  background-color: var(--gin-color-primary-light-hover);
++}
++
++.toolbar-button[aria-expanded=true],
++.toolbar-button--large {
++  font-weight: var(--gin-font-weight-bold);
++}
++
++.admin-toolbar__logo:focus,
++.toolbar-button:focus,
++.admin-toolbar__expand-button:focus {
++  outline: none;
++  box-shadow: 0 0 0 1px var(--gin-color-focus-border), 0 0 0 4px var(--gin-color-focus);
++}
++
++.toolbar-menu__link:focus {
++  outline: none;
++  box-shadow: inset 0 0 0 1px var(--gin-color-focus-border), inset 0 0 0 3px var(--gin-color-focus);
++}
++
++.toolbar-button.current {
++  background-color: var(--gin-bg-item-hover);
++}
++
++.toolbar-button.current:hover {
++  background-color: var(--gin-color-primary-light);
++}
++
++.toolbar-button.current:active, .toolbar-button.current:focus, .toolbar-button.current:hover:focus {
++  background-color: var(--gin-color-primary-light-hover);
++}
++
++.toolbar-button.current.is-active,
++.toolbar-button:has(+ .toolbar-popover__wrapper .is-active) {
++  color: var(--gin-color-primary);
++  background-color: var(--gin-color-primary-light);
++}
++
++.toolbar-button.current.is-active::before,
++.toolbar-button:has(+ .toolbar-popover__wrapper .is-active)::before {
++  background: var(--gin-color-primary);
++}
++
++[class*=toolbar-button--icon] {
++  --icon: url("../../media/sprite.svg#fallback-view"); /* Default icon, aka --basic */
++}
++
++[class*=toolbar-button--icon]::before {
++  width: var(--gin-icon-size-toolbar);
++  height: var(--gin-icon-size-toolbar);
++  background-color: var(--gin-icon-color);
++  -webkit-mask-size: 100% 100%;
++          mask-size: 100% 100%;
++  -webkit-mask-image: var(--icon);
++          mask-image: var(--icon);
++}
++
++[class*=toolbar-button--icon]:hover::before, [class*=toolbar-button--icon]:focus::before {
++  background-color: var(--gin-color-primary);
++}
++
++.toolbar-button--icon--admin-toolbar-tools-help::before {
++  --icon: url("../../media/sprite.svg#tool-view");
++}
++
++.toolbar-button--icon--system-themes-page::before {
++  --icon: url("../../media/sprite.svg#appearance-view");
++}
++
++.toolbar-button--icon--navigation-blocks::before {
++  --icon: url("../../media/sprite.svg#blocks-view");
++}
++
++.toolbar-button--icon--shortcuts::before {
++  --icon: url("../../media/sprite.svg#shortcut-view");
++}
++
++.toolbar-button--icon--system-admin-config::before {
++  --icon: url("../../media/sprite.svg#config-view");
++}
++
++.toolbar-button--icon--navigation-content::before {
++  --icon: url("../../media/sprite.svg#content-view");
++}
++
++.toolbar-button--icon--navigation-create::before {
++  --icon: url("../../media/sprite.svg#create-view");
++}
++
++.toolbar-button--icon--system-modules-list::before {
++  --icon: url("../../media/sprite.svg#extend-new-view");
++}
++
++.toolbar-button--icon--navigation-files::before {
++  --icon: url("../../media/sprite.svg#files-view");
++}
++
++.toolbar-button--icon--help::before {
++  --icon: url("../../media/sprite.svg#help-view");
++}
++
++.toolbar-button--icon--navigation-media::before {
++  --icon: url("../../media/sprite.svg#media-view");
++}
++
++.toolbar-button--icon--entity-user-collection::before {
++  --icon: url("../../media/sprite.svg#people-new-view");
++}
++
++.toolbar-button--icon--system-admin-reports::before {
++  --icon: url("../../media/sprite.svg#reports-view");
++}
++
++.toolbar-button--icon--system-admin-structure::before {
++  --icon: url("../../media/sprite.svg#structure-view");
++}
++
++.toolbar-button--icon--announcements-feed-announcement::before {
++  --icon: url("../../media/sprite.svg#announcement-view");
++}
++
++.toolbar-link--sidebar-toggle[aria-expanded=false]::before,
++.toolbar-link--sidebar-toggle[aria-expanded=true]::before {
++  --icon: url("../../media/sprite.svg#chevron-down-view");
++}
++
++.toolbar-button--icon--user::before {
++  --icon: url("../../media/sprite.svg#user-view");
++}
++
++.toolbar-button--icon--burger::before {
++  --icon: url("../../media/sprite.svg#hamburger-view");
++}
++
++.toolbar-button--icon--back::before {
++  --icon: url("../../media/sprite.svg#nav-toggle-toleft-view");
++}
++
++.toolbar-button--icon--cross::before {
++  --icon: url("../../media/sprite.svg#close-view");
++}
++
++#navigation-link-navigationcreate:first-child {
++  -webkit-margin-after: var(--admin-toolbar-space-8);
++          margin-block-end: var(--admin-toolbar-space-8);
++}
++
++#navigation-link-navigationcreate:first-child::after {
++  content: "";
++  display: block;
++  -webkit-margin-before: var(--admin-toolbar-space-12);
++          margin-block-start: var(--admin-toolbar-space-12);
++  -webkit-border-after: 1px solid var(--gin-border-color-secondary);
++          border-block-end: 1px solid var(--gin-border-color-secondary);
++}
++
++.admin-toolbar__expand-button {
++  -webkit-margin-before: calc(var(--gin-spacing-xs) * -1);
++          margin-block-start: calc(var(--gin-spacing-xs) * -1);
++}
++
++.admin-toolbar__expand-button, .admin-toolbar__expand-button:hover {
++  color: var(--gin-color-text-light);
++  border-color: var(--gin-border-color);
++}
++
++.toolbar-popover--expanded {
++  background-color: transparent;
++}
++
++.toolbar-popover--expanded > .toolbar-button {
++  background-color: var(--gin-bg-item-hover);
++}
++
++.gin--dark-mode .toolbar-popover__wrapper {
++  -webkit-border-start: 2px solid var(--gin-border-color-secondary);
++          border-inline-start: 2px solid var(--gin-border-color-secondary);
++}
++
++.admin-toolbar__tooltip {
++  font-size: var(--gin-font-size-xs);
++  color: #fff;
++  background-color: var(--gin-tooltip-bg);
++}
++
++.toolbar-block__list-item[id*=navigation-link-admin-toolbar-toolsextra-links] {
++  display: none;
++}
++
++#navigation-block-shortcuts,
++#navigation-link-announcements-feedannouncement {
++  display: none;
++}
++
++.gin-secondary-toolbar .toolbar-id--toolbar-icon-user {
++  display: none !important;
++}
++
++.gin-secondary-toolbar .toolbar-menu {
++  gap: 0;
++}
++
++.gin-secondary-toolbar .toolbar-menu__trigger {
++  display: none;
++}
++
++[dir="ltr"] .gin-secondary-toolbar .toolbar-tray .menu-item + .menu-item {
++  border-left: none;
++}
++
++[dir="rtl"] .gin-secondary-toolbar .toolbar-tray .menu-item + .menu-item {
++  border-right: none;
++}
++
++[dir="ltr"] .gin-secondary-toolbar .toolbar-secondary .toolbar-bar .toolbar-id--toolbar-icon-user {
++  margin-right: -1em;
++}
++
++[dir="rtl"] .gin-secondary-toolbar .toolbar-secondary .toolbar-bar .toolbar-id--toolbar-icon-user {
++  margin-left: -1em;
++}
++
++.toolbar-loading #toolbar-item-shortcuts-tray {
++  visibility: hidden;
++}
++
+diff --git a/dist/css/layout/navigation.css b/dist/css/layout/navigation.css
+index da4cc4473f0ae8f22c850ef4a24aa8cf6c6eb6e5..07c84e357bb8a84735b0275c8a34bb804f6ac4a1 100644
+--- a/dist/css/layout/navigation.css
++++ b/dist/css/layout/navigation.css
+@@ -773,7 +773,7 @@ html:not(.admin-toolbar-expanded) .toolbar-menu__item--to-title > button.toolbar
+ .cloned-tooltip {
+   position: absolute;
+   top: var(--space-xs);
+-  background-color: var(--color-gray-950);
++  background-color: var(--gin-tooltip-bg);
+   color: white;
+   padding: .25rem var(--space-xs);
+   border-radius: var(--space-xs);
+@@ -894,6 +894,10 @@ html:not(.admin-toolbar-expanded) .toolbar-menu__item--level-1:not(.toolbar-menu
+   }
+ }
+ 
++.gin--navigation .admin-toolbar::after {
++  display: none;
++}
++
+ .gin--navigation .admin-toolbar__content {
+   padding-block: var(--gin-spacing-xxs);
+   padding-inline: var(--gin-spacing-xs);
+@@ -933,7 +937,11 @@ html:not(.admin-toolbar-expanded) .toolbar-menu__item--level-1:not(.toolbar-menu
+ }
+ 
+ .gin--navigation .admin-toolbar__header {
+-  margin-bottom: -4px;
++  margin-bottom: -0.5rem;
++}
++
++.gin--navigation .admin-toolbar__header:has(img) {
++  margin-bottom: -1.25rem;
+ }
+ 
+ .gin--navigation .toolbar-block__content.toolbar-block__content--content {
+@@ -960,6 +968,14 @@ html:not(.admin-toolbar-expanded) .toolbar-menu__item--level-1:not(.toolbar-menu
+   box-shadow: 0 0 0 1px var(--gin-color-focus-border), 0 0 0 4px var(--gin-color-focus);
+ }
+ 
++.gin--navigation .toolbar-menu__item--level-1 > .toolbar-link--create {
++  margin-top: var(--gin-spacing-l);
++}
++
++.gin--navigation .toolbar-menu__item--level-1 > .toolbar-link--sidebar-toggle {
++  margin-bottom: calc(var(--gin-spacing-xxs) * -1);
++}
++
+ .gin--navigation .navigation-menu-wrapper.menu--logo {
+   margin-bottom: -5px;
+ }
+@@ -1042,8 +1058,9 @@ html:not(.admin-toolbar-expanded) .toolbar-menu__item--level-1:not(.toolbar-menu
+ .gin--navigation .toolbar-menu__item--level-1 > .toolbar-link--manage-display,
+ .gin--navigation .toolbar-menu__item--level-1 > .toolbar-link--manage-permissions,
+ .gin--navigation .toolbar-menu__item--level-1 > .toolbar-link--delete,
+-.gin--navigation .toolbar-menu__item--level-1 > .toolbar-link[class*=toolbar-link--admin-toolbar-tools-extra-linksentity],
+-.gin--navigation .toolbar-menu__item--level-1 > .toolbar-link--announcements-feed-announcement {
++.gin--navigation .toolbar-menu__item--level-1 > .toolbar-link--announcements-feed-announcement,
++.gin--navigation .toolbar-menu__item--level-1 > .toolbar-link[class*=toolbar-link--admin-toolbar-tools-extra-],
++.gin--navigation .toolbar-menu__item--level-1[data-url*="/media/add/"] {
+   display: none;
+ }
+ 
+@@ -1072,6 +1089,16 @@ html:not(.admin-toolbar-expanded) .toolbar-menu__item--level-1:not(.toolbar-menu
+   color: var(--gin-color-text);
+ }
+ 
++.gin--navigation .admin-toolbar__item {
++  flex-basis: unset;
++  flex-grow: unset;
++}
++
++.gin--navigation .admin-toolbar__item > .toolbar-menu {
++  -webkit-margin-before: 0;
++          margin-block-start: 0;
++}
++
+ html:not(.admin-toolbar-expanded) .gin--navigation .cloned-flyout,
+ html:not(.admin-toolbar-expanded) .gin--navigation .cloned-flyout .toolbar-menu__arrow-ref::before,
+ html:not(.admin-toolbar-expanded) .gin--navigation .toolbar-menu__item--level-1 > .toolbar-menu-wrapper,
+@@ -1149,7 +1176,7 @@ button.toolbar-link--sidebar-toggle:hover::before, button.toolbar-link--sidebar-
+ }
+ 
+ .toolbar-link--has-icon {
+-  --icon: icon("fallback"); /* Default icon, aka --basic */
++  --icon: url("../../media/sprite.svg#fallback-view"); /* Default icon, aka --basic */
+ }
+ 
+ .toolbar-link--has-icon::before {
+@@ -1164,39 +1191,62 @@ button.toolbar-link--sidebar-toggle:hover::before, button.toolbar-link--sidebar-
+   background-color: var(--gin-color-primary);
+ }
+ 
+-.toolbar-link--gin-home {
++.admin-toolbar__logo {
++  margin: 0;
++  overflow: unset;
++}
++
++.admin-toolbar__logo img {
++  width: 40px;
++  height: auto;
++}
++
++.admin-toolbar__logo .toolbar-link:not(.toolbar-link--gin-home) {
++  padding: var(--gin-spacing-xxs) !important;
++  margin-top: var(--gin-spacing-xxs);
++}
++
++.admin-toolbar__logo .toolbar-link--gin-home {
+   color: var(--gin-bg-layer2);
+   box-sizing: border-box;
+   width: 40px;
+   height: 40px;
+   max-width: 40px;
+   padding: 10px !important;
+-  margin: 6px 4px 0 !important;
++  margin: 6px var(--gin-spacing-xxs) 0 !important;
+ }
+ 
+-.toolbar-link--gin-home, .toolbar-link--gin-home:hover, .toolbar-link--gin-home:focus {
++.admin-toolbar__logo .toolbar-link--gin-home, .admin-toolbar__logo .toolbar-link--gin-home:hover, .admin-toolbar__logo .toolbar-link--gin-home:focus {
+   background: var(--gin-color-primary) !important;
+ }
+ 
+-.toolbar-link--gin-home::before {
++.admin-toolbar__logo .toolbar-link--gin-home::before {
+   --icon: url("../../media/sprite.svg#drupal-view");
+   background: var(--gin-bg-layer2) !important;
+ }
+ 
+-.toolbar-link--gin-home span {
++.admin-toolbar__logo .toolbar-link--gin-home span {
+   display: none;
+ }
+ 
+-.admin-toolbar-expanded .toolbar-link--gin-home {
++.admin-toolbar-expanded .admin-toolbar__logo .toolbar-link--gin-home {
+   -webkit-margin-start: 0;
+           margin-inline-start: 0;
+ }
+ 
+-.admin-toolbar-expanded .toolbar-link--gin-home::before {
++.admin-toolbar-expanded .admin-toolbar__logo .toolbar-link--gin-home::before {
+   -webkit-margin-end: 0;
+           margin-inline-end: 0;
+ }
+ 
++.admin-toolbar__content .toolbar-block:nth-last-child(n+2)::after {
++  margin-top: calc(var(--gin-spacing-s) - var(--gin-spacing-xxs));
++  padding-top: calc(var(--gin-spacing-xs) + var(--gin-spacing-xxs));
++  content: "";
++  display: block;
++  border-top: 1px solid var(--gin-border-color-table);
++}
++
+ .toolbar-link--admin-toolbar-tools-help::before {
+   --icon: url("../../media/sprite.svg#tool-view");
+ }
+diff --git a/dist/css/theme/variables.css b/dist/css/theme/variables.css
+index a5be43fbd62f6900f04fea8892dc0521ec2b001d..4b5c3653199816d7bef93a88b772a76f6c2d8a3a 100644
+--- a/dist/css/theme/variables.css
++++ b/dist/css/theme/variables.css
+@@ -110,6 +110,7 @@
+   --input-line-height: var(--gin-spacing-l);
+   --input-padding-horizontal: var(--gin-spacing-s);
+   --input-padding-vertical: var(--gin-spacing-xs);
++  --gin-tooltip-bg: #232429;
+   --jui-dialog-z-index: 1260;
+ }
+ 
+diff --git a/gin.libraries.yml b/gin.libraries.yml
+index 750c97fc44d7a32cf0482730dd17887bf887a392..fd13cf67cc9c344181360ae2107fcc1849329ded 100644
+--- a/gin.libraries.yml
++++ b/gin.libraries.yml
+@@ -50,6 +50,22 @@ navigation:
+   - core/once
+   - core/drupal.displace
+ 
++core_navigation:
++  css:
++    component:
++      dist/css/components/toolbar.css: { minified: false }
++      dist/css/components/toolbar_secondary.css: { minified: false }
++    theme:
++      dist/css/layout/core_navigation.css: { minified: false }
++  dependencies:
++  - gin/coffee
++  - gin/node_preview
++  - gin/responsive_preview
++  - gin/contextual_links
++  - gin/breadcrumb
++  - gin/settings_tray
++  - gin/settings_tray_edit
++
+ gin_toolbar:
+   css:
+     component:
+diff --git a/includes/breadcrumb.theme b/includes/breadcrumb.theme
+index 9f8cc497bbea751644042dfaab839fc4f71af036..6e218043d1dc603bd7628030dab003ebe94d4e19 100644
+--- a/includes/breadcrumb.theme
++++ b/includes/breadcrumb.theme
+@@ -14,7 +14,7 @@ use Drupal\node\NodeInterface;
+  */
+ function gin_preprocess_breadcrumb(&$variables) {
+   // Alter node breadcrumb.
+-  if ($variables['breadcrumb']) {
++  if (isset($variables['breadcrumb'])) {
+     $entity = _gin_get_route_entity();
+     $entity_id = $entity ? $entity->getEntityTypeId() : NULL;
+     $url = $entity ? $entity->toUrl() : NULL;
+diff --git a/includes/form.theme b/includes/form.theme
+index f038902da58dc1f257e44c907e4107b8bf27975b..fd95ba2302ca492d490c2b42875a4ebfcaadce98 100644
+--- a/includes/form.theme
++++ b/includes/form.theme
+@@ -113,11 +113,7 @@ function gin_theme_suggestions_form_alter(array &$suggestions, array $variables)
+  */
+ function gin_theme_suggestions_input_alter(array &$suggestions, array $variables) {
+   if ($variables['element']['#type'] === 'checkbox') {
+-    // Way to identify if checkbox is in a checkboxes group
+-    // as Drupal doesn't provide one yet (see #2643012)
+-    if (!isset($variables['element']['#error_no_message'])) {
+-      $suggestions[] = 'input__checkbox__toggle';
+-    }
++    $suggestions[] = 'input__checkbox__toggle';
+   }
+ }
+ 
+diff --git a/includes/helper.theme b/includes/helper.theme
+index 3085434bbf839c7d7552d23a72a92511ce8683b0..2f556833f195bb44981f23eeddc7df8ebc6d2870 100644
+--- a/includes/helper.theme
++++ b/includes/helper.theme
+@@ -100,3 +100,19 @@ function _gin_is_active() {
+ 
+   return $gin_activated;
+ }
++
++/**
++ * Helper function for check if a module is active.
++ */
++function _gin_module_is_active($module) {
++  $module_handler = \Drupal::service('module_handler');
++
++  // Check if Navigation module is active.
++  $check_module = $module_handler->moduleExists($module);
++
++  if ($check_module) {
++    return TRUE;
++  }
++
++  return FALSE;
++}
+diff --git a/includes/html.theme b/includes/html.theme
+index c02c6423dc5e980c44a2678e172bb41921c97e1f..cfe49111afdbb74aa44ec7f783f5a679f1e1dfd3 100644
+--- a/includes/html.theme
++++ b/includes/html.theme
+@@ -46,24 +46,8 @@ function gin_preprocess_html(&$variables) {
+       return;
+     }
+ 
+-    // Check for new Drupal navigation.
+-    if ($toolbar === 'new') {
+-      /** @var \Drupal\gin\GinNavigaton $navigation */
+-      $navigation = \Drupal::classResolver(GinNavigation::class);
+-      // Get new navigation.
+-      $variables['page_top']['navigation'] = $navigation->getNavigationStructure();
+-      // Get active trail.
+-      $variables['#attached']['drupalSettings']['active_trail_paths'] = $navigation->getNavigationActiveTrail();
+-      // Set toolbar class.
+-      $variables['attributes']['class'][] = 'gin--navigation';
+-    }
+-    else {
+-      // Set toolbar class.
+-      $variables['attributes']['class'][] = 'gin--' . $toolbar . '-toolbar';
+-    }
+-
+     // Gin secondary toolbar.
+-    if ($toolbar !== 'classic') {
++    if ($toolbar !== 'classic' || _gin_module_is_active('navigation')) {
+       $variables['page']['gin_secondary_toolbar'] = [
+         '#type' => 'toolbar',
+         '#access' => \Drupal::currentUser()->hasPermission('access toolbar'),
+@@ -76,6 +60,25 @@ function gin_preprocess_html(&$variables) {
+         ],
+       ];
+     }
++
++    // Check if Navigation module is active.
++    if (_gin_module_is_active('navigation')) {
++      $variables['attributes']['class'][] = 'gin--core-navigation';
++    }
++    elseif ($toolbar === 'new') {
++      /** @var \Drupal\gin\GinNavigaton $navigation */
++      $navigation = \Drupal::classResolver(GinNavigation::class);
++      // Get new navigation.
++      $variables['page_top']['navigation'] = $navigation->getNavigationStructure();
++      // Get active trail.
++      $variables['#attached']['drupalSettings']['active_trail_paths'] = $navigation->getNavigationActiveTrail();
++      // Set toolbar class.
++      $variables['attributes']['class'][] = 'gin--navigation';
++    }
++    else {
++      // Set toolbar class.
++      $variables['attributes']['class'][] = 'gin--' . $toolbar . '-toolbar';
++    }
+   }
+ }
+ 
+diff --git a/includes/theme.theme b/includes/theme.theme
+index b3044260a6f0e26f9176cbd19384b6d7b771b0f2..de1901a7d334d8ae1e721a510e0ac5091e1c8005 100644
+--- a/includes/theme.theme
++++ b/includes/theme.theme
+@@ -5,66 +5,65 @@
+  * theme.theme
+  */
+ 
+-use Drupal\gin\GinSettings;
+-
+ /**
+  * Implements hook_theme().
+  */
+ function gin_theme() {
+-  // Get theme configs.
+-  /** @var \Drupal\gin\GinSettings $settings */
+-  $settings = \Drupal::classResolver(GinSettings::class);
+-  $logo_default = $settings->getDefault('logo.use_default');
+-  $icon_path = '';
+-
+-  if (!$logo_default) {
+-    $icon_path = $settings->getDefault('logo.path');
++  // Check if Navigation module is active.
++  if (_gin_module_is_active('navigation')) {
++    $items['navigation'] = [
++      'template' => 'navigation',
++      'preprocess functions' => ['gin_preprocess_navigation'],
++      'variables' => [
++        'icon_path' => NULL,
++        'path' => \Drupal::service('extension.list.theme')->getPath('gin'),
++      ],
++    ];
+   }
++  else {
++    $items['navigation'] = [
++      'template' => 'navigation--gin',
++      'preprocess functions' => ['gin_preprocess_navigation'],
++      'variables' => [
++        'icon_path' => NULL,
++        'path' => \Drupal::service('extension.list.theme')->getPath('gin'),
++        'menu_middle' => [],
++        'menu_top' => [],
++        'menu_bottom' => [],
++      ],
++    ];
+ 
+-  // Check if help is enabled.
+-  $help_enabled = FALSE;
+-  $module_handler = \Drupal::service('module_handler');
+-  if ($module_handler->moduleExists('help')) {
+-    $help_enabled = TRUE;
+-  }
++    $items['menu_region__top'] = [
++      'variables' => [
++        'links' => [],
++        'title' => NULL,
++        'menu_name' => NULL,
++      ],
++    ];
+ 
+-  $items['navigation'] = [
+-    'variables' => [
+-      'icon_path' => $icon_path,
+-      'path' => \Drupal::service('extension.list.theme')->getPath('gin'),
+-      'menu_middle' => [],
+-      'menu_top' => [],
+-      'menu_bottom' => [],
+-    ],
+-  ];
++    $items['menu_region__middle'] = [
++      'base hook' => 'menu',
++      'variables' => [
++        'menu_name' => NULL,
++        'items' => [],
++        'attributes' => [],
++        'title' => NULL,
++      ],
++    ];
+ 
+-  $items['menu_region__top'] = [
+-    'variables' => [
+-      'links' => [],
+-      'title' => NULL,
+-      'menu_name' => NULL,
+-    ],
+-  ];
++    // Check if help is enabled.
++    $help_enabled = _gin_module_is_active('help');
+ 
+-  $items['menu_region__middle'] = [
+-    'base hook' => 'menu',
+-    'variables' => [
+-      'menu_name' => NULL,
+-      'items' => [],
+-      'attributes' => [],
+-      'title' => NULL,
+-    ],
+-  ];
+-
+-  $items['menu_region__bottom'] = [
+-    'variables' => [
+-      'help_enabled' => $help_enabled,
+-      'items' => [],
+-      'title' => NULL,
+-      'menu_name' => NULL,
+-      'path' => \Drupal::service('extension.list.theme')->getPath('gin'),
+-    ],
+-  ];
++    $items['menu_region__bottom'] = [
++      'variables' => [
++        'help_enabled' => $help_enabled,
++        'items' => [],
++        'title' => NULL,
++        'menu_name' => NULL,
++        'path' => \Drupal::service('extension.list.theme')->getPath('gin'),
++      ],
++    ];
++  }
+ 
+   return $items;
+ }
+diff --git a/includes/toolbar.theme b/includes/toolbar.theme
+index f06240cdac6ae8e90c9664b75aea7fd9ec3bc2f3..0c7cad1e67143205811743716794f1f51b7893df 100644
+--- a/includes/toolbar.theme
++++ b/includes/toolbar.theme
+@@ -63,6 +63,13 @@ function gin_preprocess_toolbar(&$variables) {
+     '#create_placeholder' => TRUE,
+   ];
+ 
++  // Check if Navigation module is active.
++  if (_gin_module_is_active('navigation')) {
++    // Attach the new drupal navigation styles.
++    $variables['#attached']['library'][] = 'gin/core_navigation';
++    return;
++  }
++
+   // Expose Toolbar variant.
+   /** @var \Drupal\gin\GinSettings $settings */
+   $settings = \Drupal::classResolver(GinSettings::class);
+@@ -80,7 +87,7 @@ function gin_preprocess_toolbar(&$variables) {
+       break;
+ 
+     case 'new':
+-      // Attach the new drupal navigation styles.
++      // Attach the experimental drupal navigation styles.
+       $variables['#attached']['library'][] = 'gin/navigation';
+       break;
+ 
+@@ -100,7 +107,7 @@ function gin_preprocess_toolbar__gin__secondary(&$variables) {
+   $settings = \Drupal::classResolver(GinSettings::class);
+   $variables['toolbar_variant'] = $settings->get('classic_toolbar');
+ 
+-  if ($variables['toolbar_variant'] !== 'classic') {
++  if ($variables['toolbar_variant'] !== 'classic' || _gin_module_is_active('navigation')) {
+     // Move Admin Toolbar Search to start.
+     $toolbar_search = array_search('administration_search', array_keys($variables['tabs']));
+     if (is_numeric($toolbar_search)) {
+@@ -127,17 +134,29 @@ function gin_preprocess_toolbar__gin__secondary(&$variables) {
+ }
+ 
+ /**
+- * Toolbar alter().
++ * Navigation alter().
++ */
++function gin_preprocess_navigation(&$variables) {
++  // Get theme configs.
++  /** @var \Drupal\gin\GinSettings $settings */
++  $settings = \Drupal::classResolver(GinSettings::class);
++  $logo_default = $settings->getDefault('logo.use_default');
++  $variables['icon_path'] = !$logo_default ? $settings->getDefault('logo.path') : '';
++  $variables['toolbar_variant'] = $settings->get('classic_toolbar');
++  $variables['core_navigation'] = _gin_module_is_active('navigation');
++}
++
++/**
++ * Toolbar theme suggestions().
+  */
+ function gin_theme_suggestions_toolbar_alter(array &$suggestions, array $variables) {
+   /** @var \Drupal\gin\GinSettings $settings */
+   $settings = \Drupal::classResolver(GinSettings::class);
+-  $toolbar = $settings->get('classic_toolbar');
+ 
+   $suggestions[] = 'toolbar__gin';
+ 
+   // Only if Classic Toolbar is disabled.
+-  if ($toolbar !== 'classic') {
++  if ($settings->get('classic_toolbar') !== 'classic' || _gin_module_is_active('navigation')) {
+     if ($variables['element']['#attributes']['id'] === 'toolbar-administration-secondary') {
+       $suggestions[] = 'toolbar__gin__secondary';
+     }
+diff --git a/styles/base/_table.scss b/styles/base/_table.scss
+index a91dbc8bb071e2495d594735e63b9edfd2e9614f..d4b454ab5f694bccd989ef7c0a76ba568bbdb549 100644
+--- a/styles/base/_table.scss
++++ b/styles/base/_table.scss
+@@ -135,7 +135,7 @@ table {
+   padding: var(--gin-spacing-xs) var(--gin-spacing-m);
+ 
+   > a::before {
+-    bottom: -1px;
++    bottom: -2px;
+   }
+ 
+   > a::after {
+diff --git a/styles/layout/core_navigation.scss b/styles/layout/core_navigation.scss
+new file mode 100644
+index 0000000000000000000000000000000000000000..06f9052866450bef1af839c6aeab24659c790961
+--- /dev/null
++++ b/styles/layout/core_navigation.scss
+@@ -0,0 +1,384 @@
++// --------------------------------------------------
++// Toolbar Variables
++// --------------------------------------------------
++:root {
++  --gin-toolbar-height: 39px;
++  --gin-toolbar-secondary-height: 48px;
++  --gin-scroll-offset: 72px;
++  --gin-toolbar-y-offset: var(--gin-toolbar-height);
++  --gin-toolbar-x-offset: 0px; // Needs px to work in calc() functions.
++  --gin-sticky-offset: 0px; // Needs px to work in calc() functions.
++  --gin-icon-size-toolbar: 20px;
++
++  @include mq(medium) {
++    --gin-toolbar-height: 0px; // Needs px to work in calc() functions.
++    --gin-toolbar-secondary-height: 52px;
++    --gin-toolbar-x-offset: var(--drupal-displace-offset-left, 64px);
++    --gin-scroll-offset: 130px;
++    --gin-sticky-offset: var(--gin-height-sticky);
++  }
++}
++
++html.admin-toolbar-expanded {
++  @include mq(medium) {
++    --gin-toolbar-x-offset: var(--drupal-displace-offset-left, 264px);
++  }
++}
++
++// --------------------------------------------------
++// Map CSS3 variables
++// --------------------------------------------------
++.admin-toolbar {
++  --admin-toolbar-sidebar-width: #{rem(64px)};
++  --admin-toolbar-font-family: var(--gin-font);
++  --admin-toolbar-color-white: var(--gin-bg-layer);
++  --admin-toolbar-color-gray-050: var(--gin-bg-layer2);
++  --admin-toolbar-color-gray-100: var(--gin-border-color-layer);
++  --admin-toolbar-color-gray-200: var(--gin-border-color-layer2);
++  --admin-toolbar-color-gray-800: var(--gin-color-text);
++  --admin-toolbar-color-gray-990: var(--gin-color-primary-active);
++  //var(--gin-border-color-table)
++
++  [data-admin-toolbar='expanded'] & {
++    --admin-toolbar-sidebar-width: #{rem(264px)};
++
++    @media (--admin-toolbar-tablet) {
++      --admin-toolbar-sidebar-width: calc(16.5 * var(--admin-toolbar-rem));
++    }
++  }
++}
++
++// --------------------------------------------------
++// Custom overrides
++// --------------------------------------------------
++
++.gin--core-navigation .gin-secondary-toolbar:not(.gin-secondary-toolbar--frontend) {
++  margin-bottom: var(--gin-spacing-xxs);
++}
++
++.gin--core-navigation .gin-secondary-toolbar--frontend {
++  z-index: 102;
++  margin-inline-start: var(--gin-toolbar-x-offset);
++}
++
++.toolbar-menu__link:hover::before {
++  inline-size: var(--gin-spacing-xxs);
++}
++
++.admin-toolbar__content,
++.admin-toolbar__footer {
++  padding: var(--gin-spacing-s);
++}
++
++.admin-toolbar__footer,
++.admin-toolbar__content .toolbar-block:nth-last-child(n+2)::after {
++  border-block-start-color: var(--gin-border-color-secondary);
++}
++
++// --------------------------------------------------
++// Remove anti-flicker
++// --------------------------------------------------
++.toolbar-anti-flicker.toolbar-loading.toolbar-fixed body.gin--core-navigation,
++body.gin--core-navigation {
++  padding-top: unset !important;
++}
++
++// --------------------------------------------------
++// Logo override
++// --------------------------------------------------
++.admin-toolbar__logo {
++  line-height: 0;
++  border-radius: 10px;
++
++  svg rect {
++    fill: var(--gin-color-primary);
++  }
++
++  svg path {
++    fill: var(--gin-bg-app);
++  }
++
++  &:hover svg rect {
++    fill: var(--gin-color-primary-hover);
++  }
++
++  &:active svg rect,
++  &:focus svg rect {
++    fill: var(--gin-color-primary-active);
++  }
++}
++
++// --------------------------------------------------
++// Button style overrides
++// --------------------------------------------------
++.toolbar-button,
++.toolbar-menu__link {
++  color: var(--gin-color-text);
++  font-weight: var(--gin-font-weight-normal);
++  font-variation-settings: unset;
++
++  &,
++  &:hover,
++  &:active {
++    outline: none;
++    box-shadow: none;
++  }
++
++  &:hover {
++    color: var(--gin-color-primary);
++    background-color: var(--gin-color-primary-light);
++  }
++
++  &:active,
++  &:focus,
++  &:hover:focus {
++    color: var(--gin-color-primary-hover);
++    background-color: var(--gin-color-primary-light-hover);
++  }
++}
++
++.toolbar-button[aria-expanded="true"],
++.toolbar-button--large {
++  font-weight: var(--gin-font-weight-bold);
++}
++
++// --------------------------------------------------
++// Focus style overrides
++// --------------------------------------------------
++.admin-toolbar__logo:focus,
++.toolbar-button:focus,
++.admin-toolbar__expand-button:focus {
++  outline: none;
++  box-shadow: 0 0 0 1px var(--gin-color-focus-border), 0 0 0 4px var(--gin-color-focus);
++}
++
++.toolbar-menu__link:focus {
++  outline: none;
++  box-shadow: inset 0 0 0 1px var(--gin-color-focus-border), inset 0 0 0 3px var(--gin-color-focus);
++}
++
++// --------------------------------------------------
++// Active style overrides
++// --------------------------------------------------
++.toolbar-button.current {
++  background-color: var(--gin-bg-item-hover);
++
++  &:hover {
++    background-color: var(--gin-color-primary-light);
++  }
++
++  &:active,
++  &:focus,
++  &:hover:focus {
++    background-color: var(--gin-color-primary-light-hover);
++  }
++}
++
++.toolbar-button.current.is-active,
++.toolbar-button:has(+ .toolbar-popover__wrapper .is-active) {
++  color: var(--gin-color-primary);
++  background-color: var(--gin-color-primary-light);
++
++  &::before {
++    background: var(--gin-color-primary);
++  }
++}
++
++// --------------------------------------------------
++// Icon overrides
++// --------------------------------------------------
++[class*="toolbar-button--icon"] {
++  --icon: #{icon('fallback')}; /* Default icon, aka --basic */
++
++  &::before {
++    width: var(--gin-icon-size-toolbar);
++    height: var(--gin-icon-size-toolbar);
++    background-color: var(--gin-icon-color);
++    mask-size: 100% 100%;
++    mask-image: var(--icon);
++  }
++
++  &:hover::before,
++  &:focus::before {
++    background-color: var(--gin-color-primary);
++  }
++}
++
++.toolbar-button--icon--admin-toolbar-tools-help::before {
++  --icon: #{icon('tool')};
++}
++
++.toolbar-button--icon--system-themes-page::before {
++  --icon: #{icon('appearance')};
++}
++
++.toolbar-button--icon--navigation-blocks::before {
++  --icon: #{icon('blocks')};
++}
++
++.toolbar-button--icon--shortcuts::before {
++  --icon: #{icon('shortcut')};
++}
++
++.toolbar-button--icon--system-admin-config::before {
++  --icon: #{icon('config')};
++}
++
++.toolbar-button--icon--navigation-content::before {
++  --icon: #{icon('content')};
++}
++
++.toolbar-button--icon--navigation-create::before {
++  --icon: #{icon('create')};
++}
++
++.toolbar-button--icon--system-modules-list::before {
++  --icon: #{icon('extend-new')};
++}
++
++.toolbar-button--icon--navigation-files::before {
++  --icon: #{icon('files')};
++}
++
++.toolbar-button--icon--help::before {
++  --icon: #{icon('help')};
++}
++
++.toolbar-button--icon--navigation-media::before {
++  --icon: #{icon('media')};
++}
++
++.toolbar-button--icon--entity-user-collection::before {
++  --icon: #{icon('people-new')};
++}
++
++.toolbar-button--icon--system-admin-reports::before {
++  --icon: #{icon('reports')};
++}
++
++.toolbar-button--icon--system-admin-structure::before {
++  --icon: #{icon('structure')};
++}
++
++.toolbar-button--icon--announcements-feed-announcement::before {
++  --icon: #{icon('announcement')};
++}
++
++.toolbar-link--sidebar-toggle[aria-expanded=false]::before,
++.toolbar-link--sidebar-toggle[aria-expanded=true]::before {
++  --icon: #{icon('chevron-down')};
++}
++
++.toolbar-button--icon--user::before {
++  --icon: #{icon('user')};
++}
++
++.toolbar-button--icon--burger::before {
++  --icon: #{icon('hamburger')};
++}
++
++.toolbar-button--icon--back::before {
++  --icon: #{icon('nav-toggle-toleft')};
++}
++
++.toolbar-button--icon--cross::before {
++  --icon: #{icon('close')};
++}
++
++// --------------------------------------------------
++// Create menu: Separate if first item
++// --------------------------------------------------
++#navigation-link-navigationcreate:first-child {
++  margin-block-end: var(--admin-toolbar-space-8);
++
++  &::after {
++    content: "";
++    display: block;
++    margin-block-start: var(--admin-toolbar-space-12);
++    border-block-end: 1px solid var(--gin-border-color-secondary);
++  }
++}
++
++// --------------------------------------------------
++// Expand button
++// --------------------------------------------------
++.admin-toolbar__expand-button {
++  margin-block-start: calc(var(--gin-spacing-xs) * -1);
++
++  &,
++  &:hover {
++    color: var(--gin-color-text-light);
++    border-color: var(--gin-border-color);
++  }
++}
++
++// --------------------------------------------------
++// Popover
++// --------------------------------------------------
++.toolbar-popover--expanded {
++  background-color: transparent;
++
++  > .toolbar-button {
++    background-color: var(--gin-bg-item-hover);
++  }
++}
++
++.gin--dark-mode .toolbar-popover__wrapper {
++  border-inline-start: 2px solid var(--gin-border-color-secondary);
++}
++
++// --------------------------------------------------
++// Tooltips
++// --------------------------------------------------
++.admin-toolbar__tooltip {
++  font-size: var(--gin-font-size-xs);
++  color: #fff;
++  background-color: var(--gin-tooltip-bg);
++}
++
++// --------------------------------------------------
++// Hide links from Admin Toolbar Extra module
++// --------------------------------------------------
++.toolbar-block__list-item[id*="navigation-link-admin-toolbar-toolsextra-links"] {
++  display: none;
++}
++
++// --------------------------------------------------
++// Hide Shortcuts & Announcements in primary nav
++// --------------------------------------------------
++#navigation-block-shortcuts,
++#navigation-link-announcements-feedannouncement {
++  display: none;
++}
++
++// --------------------------------------------------
++// Hide duplicated Gin secondary items
++// --------------------------------------------------
++.gin-secondary-toolbar {
++  .toolbar-id--toolbar-icon-user {
++    display: none !important;
++  }
++
++  .toolbar-menu {
++    gap: 0;
++  }
++
++  // Fixes quirks when the toolbar
++  // module is still active
++  .toolbar-menu__trigger {
++    display: none;
++  }
++
++  .toolbar-tray .menu-item + .menu-item {
++    border-left: none;
++  }
++
++  .toolbar-secondary .toolbar-bar .toolbar-id--toolbar-icon-user {
++    margin-right: -1em;
++  }
++}
++
++// Fix weird shortcuts menu flickering.
++.toolbar-loading #toolbar-item-shortcuts-tray {
++  visibility: hidden;
++}
+diff --git a/styles/layout/navigation.scss b/styles/layout/navigation.scss
+index 3dfc011c6b952e44dc9c7d59e12630b714f2f703..fa0ecd3dd69cd93fd9af8ed3f9b134d7204377e5 100644
+--- a/styles/layout/navigation.scss
++++ b/styles/layout/navigation.scss
+@@ -74,6 +74,11 @@ body.gin--navigation {
+     @include mq($to: medium) {
+       display: none;
+     }
++
++    // Beta 1
++    &::after {
++      display: none;
++    }
+   }
+ 
+   .admin-toolbar__content {
+@@ -107,7 +112,11 @@ body.gin--navigation {
+ 
+   // Navigation header
+   .admin-toolbar__header {
+-    margin-bottom: -4px;
++    margin-bottom: -.5rem;
++
++    &:has(img) {
++      margin-bottom: -1.25rem;
++    }
+   }
+ 
+   // Content block
+@@ -137,6 +146,16 @@ body.gin--navigation {
+         box-shadow: 0 0 0 1px var(--gin-color-focus-border), 0 0 0 4px var(--gin-color-focus);
+       }
+     }
++
++    // Beta 1
++    > .toolbar-link--create {
++      margin-top: var(--gin-spacing-l);
++    }
++
++    // Beta 1
++    > .toolbar-link--sidebar-toggle {
++      margin-bottom: calc(var(--gin-spacing-xxs) * -1);
++    }
+   }
+ 
+   .navigation-menu-wrapper.menu--logo {
+@@ -202,8 +221,10 @@ body.gin--navigation {
+   .toolbar-menu__item--level-1 > .toolbar-link--manage-display,
+   .toolbar-menu__item--level-1 > .toolbar-link--manage-permissions,
+   .toolbar-menu__item--level-1 > .toolbar-link--delete,
+-  .toolbar-menu__item--level-1 > .toolbar-link[class*="toolbar-link--admin-toolbar-tools-extra-linksentity"],
+-  .toolbar-menu__item--level-1 > .toolbar-link--announcements-feed-announcement
++  .toolbar-menu__item--level-1 > .toolbar-link--announcements-feed-announcement,
++  .toolbar-menu__item--level-1 > .toolbar-link[class*="toolbar-link--admin-toolbar-tools-extra-"],
++  // Beta 1: Hide Admin Toolbar Extra links from Level 1
++  .toolbar-menu__item--level-1[data-url*="/media/add/"]
+   {
+     display: none;
+   }
+@@ -235,6 +256,16 @@ body.gin--navigation {
+   .toolbar .toolbar-menu .toolbar-menu a {
+     color: var(--gin-color-text);
+   }
++
++  // Beta 1
++  .admin-toolbar__item {
++    flex-basis: unset;
++    flex-grow: unset;
++  }
++
++  .admin-toolbar__item > .toolbar-menu {
++    margin-block-start: 0;
++  }
+ }
+ 
+ // Submenu
+@@ -321,7 +352,7 @@ button.toolbar-link--sidebar-toggle {
+ // --------------
+ 
+ .toolbar-link--has-icon {
+-  --icon: icon('fallback'); /* Default icon, aka --basic */
++  --icon: #{icon('fallback')}; /* Default icon, aka --basic */
+ 
+   &::before {
+     width: var(--gin-icon-size-toolbar);
+@@ -336,39 +367,64 @@ button.toolbar-link--sidebar-toggle {
+   }
+ }
+ 
+-// Custom Gin Home logo
+-.toolbar-link--gin-home {
+-  color: var(--gin-bg-layer2);
+-  box-sizing: border-box;
+-  width: 40px;
+-  height: 40px;
+-  max-width: 40px;
+-  padding: 10px !important; // make the logo 32px
+-  margin: 6px 4px 0 !important;
++// Beta 1: Logo
++.admin-toolbar__logo {
++  margin: 0;
++  overflow: unset;
+ 
+-  &, &:hover, &:focus {
+-    background: var(--gin-color-primary) !important;
++  img {
++    width: 40px;
++    height: auto;
+   }
+ 
+-  &::before {
+-    --icon: #{icon('drupal')};
+-    background: var(--gin-bg-layer2) !important;
++  .toolbar-link:not(.toolbar-link--gin-home) {
++    padding: var(--gin-spacing-xxs) !important;
++    margin-top: var(--gin-spacing-xxs);
+   }
+ 
+-  span {
+-    display: none;
+-  }
++  // Custom Gin Home logo
++  .toolbar-link--gin-home {
++    color: var(--gin-bg-layer2);
++    box-sizing: border-box;
++    width: 40px;
++    height: 40px;
++    max-width: 40px;
++    padding: 10px !important;
++    margin: 6px var(--gin-spacing-xxs) 0 !important;
+ 
+-  // Navigation expanded
+-  .admin-toolbar-expanded & {
+-    margin-inline-start: 0;
++    &, &:hover, &:focus {
++      background: var(--gin-color-primary) !important;
++    }
+ 
+     &::before {
+-      margin-inline-end: 0;
++      --icon: #{icon('drupal')};
++      background: var(--gin-bg-layer2) !important;
++    }
++
++    span {
++      display: none;
++    }
++
++    // Navigation expanded
++    .admin-toolbar-expanded & {
++      margin-inline-start: 0;
++
++      &::before {
++        margin-inline-end: 0;
++      }
+     }
+   }
+ }
+ 
++// Beta 1
++.admin-toolbar__content .toolbar-block:nth-last-child(n+2)::after {
++  margin-top: calc(var(--gin-spacing-s) - var(--gin-spacing-xxs));
++  padding-top: calc(var(--gin-spacing-xs) + var(--gin-spacing-xxs));
++  content: "";
++  display: block;
++  border-top: 1px solid var(--gin-border-color-table);
++}
++
+ .toolbar-link--admin-toolbar-tools-help::before {
+   --icon: #{icon('tool')};
+ }
+diff --git a/styles/navigation/tooltip.scss b/styles/navigation/tooltip.scss
+index 2af5870048e59cbd75dc873bf89ab1c100d548e5..932698339494644761b2fc8c326b7f3384942831 100644
+--- a/styles/navigation/tooltip.scss
++++ b/styles/navigation/tooltip.scss
+@@ -8,7 +8,7 @@
+    position: absolute;
+    top: var(--space-xs);
+    left: 100%;
+-   background-color: var(--color-gray-950);
++   background-color: var(--gin-tooltip-bg);
+    color: white;
+    padding: 0.25rem var(--space-xs);
+    border-radius: var(--space-xs);
+diff --git a/styles/theme/variables.scss b/styles/theme/variables.scss
+index d36e36a1ab5f8f863be87111af5098c2f896b4cf..37c76988104a25c86f6ee7213e0438988a880bec 100644
+--- a/styles/theme/variables.scss
++++ b/styles/theme/variables.scss
+@@ -185,6 +185,9 @@
+   --input-padding-horizontal: var(--gin-spacing-s);
+   --input-padding-vertical: var(--gin-spacing-xs);
+ 
++  // Tooltips
++  --gin-tooltip-bg: #232429;
++
+   // Claro
+   --jui-dialog-z-index: 1260;
+ }
+diff --git a/templates/html.html.twig b/templates/html.html.twig
+index 0afb6318e2e94880066070a47ae9aa258314062a..1a095770086cbfcde3cde417c44d58461d664071 100644
+--- a/templates/html.html.twig
++++ b/templates/html.html.twig
+@@ -48,6 +48,7 @@
+     <a href="#main-content" class="visually-hidden focusable skip-link">
+       {{ 'Skip to main content'|t }}
+     </a>
++
+     {{ page_top }}
+     {{ page }}
+     {{ page_bottom }}
+diff --git a/templates/navigation--gin.html.twig b/templates/navigation--gin.html.twig
+new file mode 100644
+index 0000000000000000000000000000000000000000..0c42c531131b525757852510045302225338432e
+--- /dev/null
++++ b/templates/navigation--gin.html.twig
+@@ -0,0 +1,49 @@
++{% include '@gin/navigation/fix-toolbar-js-error.html.twig' ignore missing with {
++  toolbar_variant,
++  core_navigation,
++} %}
++
++<aside class="admin-toolbar" id="admin-toolbar" data-drupal-admin-styles>
++  {# This lil' div will get the Drupal.displace() attributes added to it via JS. #}
++  <div class="admin-toolbar__displace-placeholder"></div>
++
++  {% set title_menu = 'admin-toolbar-title' %}
++
++  {# @todo - We should get rid of this ID below. #}
++  <nav id="menu-builder" class="admin-toolbar__content" aria-labelledby="{{ title_menu }}">
++    <h3 id="{{ title_menu }}" class="visually-hidden">{{ 'Administrative toolbar content'|t }}</h3>
++
++    <div class="admin-toolbar__header">
++      <div class="navigation-menu-wrapper menu--logo admin-toolbar__logo">
++        <ul class="toolbar-menu" data-once="toolbar-menu" aria-labelledby="menu--logo">
++          <li class="toolbar-menu__item toolbar-menu__item--level-1">
++            {% if icon_path %}
++              <a class="toolbar-link" href="/">
++                <img alt="{{ 'Home'|t }}" src="{{ file_url(icon_path) }}" loading="eager" />
++              </a>
++            {% else %}
++              <a href="/" class="toolbar-link toolbar-link--has-icon toolbar-link--gin-home">
++                <span>{{ 'Home'|t }}</span>
++              </a>
++            {% endif %}
++          </li>
++        </ul>
++      </div>
++    </div>
++
++    {{ menu_top }}
++    {% for section in menu_middle %}
++      {{ section }}
++    {% endfor %}
++  </nav>
++
++  {# @todo - This sticky menu should exist under the <nav> landmark element above. #}
++  <div class="admin-toolbar__sticky-section">
++    {{ menu_bottom }}
++  </div>
++</aside>
++<script>
++  if (localStorage.getItem('Drupal.navigation.sidebarExpanded') !== 'false') {
++    document.documentElement.classList.add('admin-toolbar-expanded');
++  }
++</script>
+diff --git a/templates/navigation.html.twig b/templates/navigation.html.twig
+index 87479048a76ad500a9f732914bc185c5a1598d9f..acc40d6b92e19b5eded48cb1706710eb0952a0ae 100644
+--- a/templates/navigation.html.twig
++++ b/templates/navigation.html.twig
+@@ -1,48 +1,64 @@
+-<aside class="admin-toolbar" id="admin-toolbar">
++{% include '@gin/navigation/fix-toolbar-js-error.html.twig' ignore missing with {
++  toolbar_variant,
++  core_navigation,
++} %}
++
++<aside
++  class="admin-toolbar" id="admin-toolbar" data-drupal-admin-styles>
+   {# This lil' div will get the Drupal.displace() attributes added to it via JS. #}
+   <div class="admin-toolbar__displace-placeholder"></div>
+-  {# ---- Start Gin Custom ---- #}
+-  {% if icon_path %}
+-  <div class="admin-toolbar__header">
+-    <a class="admin-toolbar__logo" href="/">
+-      <img alt="{{ 'Home'|t }}" src="{{ file_url(icon_path) }}" loading="eager" width=" 32" height=" 32">
+-    </a>
+-  </div>
+-  {% endif %}
+-  {# ---- End Gin Custom ---- #}
+ 
+-  {% set title_menu = 'admin-toolbar' %}
+-  <h2 id="{{ title_menu }}" class="visually-hidden">{{ 'Administrative toolbar'|t }}</h2>
++  <div class="admin-toolbar__scroll-wrapper">
++    {% set title_menu = 'admin-toolbar-title'|clean_unique_id %}
+ 
+-  {# @todo - We should get rid of this ID below. #}
+-  <nav id="menu-builder" class="admin-toolbar__content" aria-labelledby="{{ title_menu }}">
+-    {# ---- Start Gin Custom ---- #}
+-    {% if not icon_path %}
+-    <div class="navigation-menu-wrapper menu--logo">
+-      <h2 id="menu--logo" class="menu-title visually-hidden">{{ 'Home'|t }}</h2>
+-      <ul class="toolbar-menu" data-once="toolbar-menu" aria-labelledby="menu--logo">
+-        <li class="toolbar-menu__item toolbar-menu__item--level-1">
+-          <a href="/" class="toolbar-link toolbar-link--has-icon toolbar-link--gin-home">
+-            <span>{{ 'Home'|t }}</span>
++    {# @todo - We should get rid of this ID below. #}
++    <nav id="menu-builder" class="admin-toolbar__content" aria-labelledby="{{ title_menu }}">
++      <h3 id="{{ title_menu }}" class="visually-hidden">{{ 'Administrative toolbar content'|t }}</h3>
++      {# @todo - Needs to be placed here so we can have the header footer on mobile. #}
++      <div class="admin-toolbar__header">
++        {% if not hide_logo %}
++          <a class="admin-toolbar__logo" href="{{ path('<front>') }}">
++            {% if icon_path or logo_path %}
++              {% set logo = icon_path ? icon_path : logo_path %}
++              <img alt="{{ 'Home'|t }}" src="{{ file_url(logo) }}" loading="eager" />
++            {% else %}
++              {% include '@navigation/logo.svg.twig' ignore missing with {
++                label: 'Navigation logo'|t
++              } only %}
++            {% endif %}
+           </a>
+-        </li>
+-      </ul>
+-    </div>
+-    {% endif %}
+-    {# ---- End Gin Custom ---- #}
+-    {{ menu_top }}
+-    {% for section in menu_middle %}
+-      {{ section }}
+-    {% endfor %}
+-  </nav>
++        {% endif %}
++        {% include '@navigation/toolbar-button.html.twig' ignore missing with {
++          attributes: create_attribute({ 'data-toolbar-back-control': true, 'tabindex': '-1' }),
++          extra_classes: 'admin-toolbar__back-button',
++          icon: 'back',
++          text: 'Back'|t,
++        } only %}
++        {% include '@navigation/toolbar-button.html.twig' ignore missing with {
++          attributes: create_attribute({ 'aria-controls': 'admin-toolbar', 'tabindex': '-1' }),
++          extra_classes: 'admin-toolbar__close-button',
++          icon: 'cross',
++          label_classes: 'visually-hidden',
++          text: 'Collapse sidebar'|t,
++        } only %}
++      </div>
++
++      {{ menu_content }}
++    </nav>
+ 
+-  {# @todo - This sticky menu should exist under the <nav> landmark element above. #}
+-  <div class="admin-toolbar__sticky-section">
+-    {{ menu_bottom }}
++    {% set title_menu_footer = 'admin-toolbar-footer'|clean_unique_id %}
++    <nav id="menu-footer" class="admin-toolbar__footer" aria-labelledby="{{ title_menu_footer }}">
++      <h3 id="{{ title_menu_footer }}" class="visually-hidden">{{ 'Administrative toolbar footer'|t }}</h3>
++      {{ menu_footer }}
++      <button aria-controls="admin-toolbar" class="admin-toolbar__expand-button">
++        <span class="visually-hidden" data-text>{{ 'Collapse sidebar'|t }}</span>
++      </button>
++    </nav>
+   </div>
+ </aside>
++<div class="admin-toolbar-overlay" aria-controls="admin-toolbar"></div>
+ <script>
+-  if (localStorage.getItem('Drupal.navigation.sidebarExpanded') !== 'false') {
+-    document.documentElement.classList.add('admin-toolbar-expanded');
++  if (localStorage.getItem('Drupal.navigation.sidebarExpanded') !== 'false' && (window.matchMedia('(min-width: 1024px)').matches)) {
++    document.documentElement.setAttribute('data-admin-toolbar', 'expanded');
+   }
+ </script>
+diff --git a/templates/navigation/breadcrumb--navigation.html.twig b/templates/navigation/breadcrumb--navigation.html.twig
+new file mode 100644
+index 0000000000000000000000000000000000000000..1e34077825ef7aae3b710fa9dc9ae903b314d76b
+--- /dev/null
++++ b/templates/navigation/breadcrumb--navigation.html.twig
+@@ -0,0 +1 @@
++{% extends '@gin/navigation/breadcrumb.html.twig' %}
+diff --git a/templates/navigation/fix-toolbar-js-error.html.twig b/templates/navigation/fix-toolbar-js-error.html.twig
+new file mode 100644
+index 0000000000000000000000000000000000000000..b5b82a59f576c037593994c42c122331330e5dc6
+--- /dev/null
++++ b/templates/navigation/fix-toolbar-js-error.html.twig
+@@ -0,0 +1,20 @@
++{# @todo - Temporarily fix toolbar JS errors as toolbar is not present anymore. #}
++{% if toolbar_variant == 'new' or core_navigation %}
++  <div id="toolbar-administration" class="toolbar" height="0px" hidden>
++    <div class="toolbar-tab--toolbar-item-shortcuts" hidden>
++      <a id="toolbar-item-shortcuts" class="toolbar-item" data-toolbar-tray="toolbar-item-shortcuts-tray" hidden></a>
++      <div id="toolbar-item-shortcuts-tray" class="toolbar-tray" data-toolbar-tray="toolbar-item-shortcuts-tray" hidden></div>
++    </div>
++    <div class="toolbar-tab--toolbar-item-devel" hidden>
++      <a id="toolbar-item-devel" class="toolbar-item" data-toolbar-tray="toolbar-item-devel-tray" hidden></a>
++      <div id="toolbar-item-devel-tray" class="toolbar-tray" data-toolbar-tray="toolbar-item-devel-tray" hidden></div>
++    </div>
++    <div class="toolbar-tab--toolbar-item-user" hidden>
++      <a id="toolbar-item-user" class="toolbar-item" data-toolbar-tray="toolbar-item-user-tray" hidden></a>
++      <div id="toolbar-item-user-tray" class="toolbar-tray" data-toolbar-tray="toolbar-item-user-tray" hidden></div>
++    </div>
++    <div class="toolbar-toggle-orientation" hidden>
++      <button hidden></button>
++    </div>
++  </div>
++{% endif %}
+diff --git a/templates/navigation/toolbar--gin.html.twig b/templates/navigation/toolbar--gin.html.twig
+index 908d3eb15a69cbfb53b0e0825105ada840133681..90242928a980f35fea91cf60f40ffa7260c1783e 100644
+--- a/templates/navigation/toolbar--gin.html.twig
++++ b/templates/navigation/toolbar--gin.html.twig
+@@ -20,7 +20,7 @@
+  * @see template_preprocess_toolbar()
+  */
+ #}
+-{% set gin_toolbar_id = toolbar_variant != 'classic' ? 'gin-toolbar-bar' : 'toolbar-bar' %}
++{% set gin_toolbar_id = toolbar_variant != 'classic' or core_navigation ? 'gin-toolbar-bar' : 'toolbar-bar' %}
+ <div{{ attributes.addClass('toolbar') }}>
+   <nav{{ toolbar_attributes.addClass('toolbar-bar', 'clearfix').setAttribute('id', gin_toolbar_id) }}>
+     <h2 class="visually-hidden">{{ toolbar_heading }}</h2>
+diff --git a/webpack.config.js b/webpack.config.js
+index fec8ffd4c6e1078c5ee6f0bab1aa7e20c38daf81..bdeb6fbbbad3ef15fc7eb913106e45bc7fcd03a5 100644
+--- a/webpack.config.js
++++ b/webpack.config.js
+@@ -67,6 +67,7 @@ module.exports = {
+     'components/workbench': ['./styles/components/workbench.scss'],
+     'components/workspaces': ['./styles/components/workspaces.scss'],
+     // Layout
++    'layout/core_navigation': ['./styles/layout/core_navigation.scss'],
+     'layout/navigation': ['./styles/layout/navigation.scss'],
+     'layout/toolbar': ['./styles/layout/toolbar.scss'],
+     'layout/horizontal_toolbar': ['./styles/layout/horizontal_toolbar.scss'],

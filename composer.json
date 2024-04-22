@@ -35,6 +35,8 @@
         "drupal/core-recommended": "^10.3",
         "drupal/focal_point": "^2.0",
         "drupal/geolocation": "^3.12",
+        "drupal/gin": "3.x-dev",
+        "drupal/gin_toolbar": "1.x-dev",
         "drupal/linkit": "^6.1",
         "drupal/metatag": "^2.0",
         "drupal/navigation": "^1.0@beta",
@@ -106,6 +108,14 @@
                 "  * Remove the plugin that prints this message:",
                 "      composer remove drupal/core-project-message"
             ]
+        },
+        "patches": {
+            "drupal/gin": {
+                "#3441940: Add support for Navigation Beta 1+": "./patches/gin/407.patch"
+            },
+            "drupal/gin_toolbar": {
+                "#3442173: Add support for Navigation Beta 1+ (Gin Toolbar)": "./patches/gin_toolbar/45.patch"
+            }
         }
     },
     "scripts": {

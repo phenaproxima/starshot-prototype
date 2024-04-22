@@ -6,7 +6,6 @@ recipes:
   - content_search
   - core_recommended_performance
   - core_recommended_maintenance
-  - core_recommended_admin_theme
   - core_recommended_front_end_theme
   - user_picture
   # Provides a fallback text format which is available to all users.
@@ -25,6 +24,8 @@ recipes:
   - starshot_page_content_type
 install:
   - coffee
+  - gin
+  - gin_toolbar
   - menu_link_content
   - navigation
   - redirect
@@ -45,11 +46,8 @@ config:
   import:
     navigation: '*'
     # Standard stuff starts here.
-    claro:
-      - block.block.claro_help
     help:
       - search.page.help_search
-      - block.block.claro_help_search
     image:
       - image.style.large
       - image.style.thumbnail
@@ -73,6 +71,9 @@ config:
       - views.view.who_s_new
       - views.view.who_s_online
   actions:
+    system.theme:
+      simple_config_update:
+        admin: gin
     user.role.content_editor:
       grantPermissionsForEachMediaType:
         - 'create %bundle media'
@@ -115,13 +116,15 @@ config:
       delete: ~
     block.block.olivero_primary_local_tasks:
       delete: ~
-    block.block.claro_branding:
+    block.block.gin_account_menu:
       delete: ~
-    block.block.claro_tools:
+    block.block.gin_admin:
       delete: ~
-    block.block.claro_admin:
+    block.block.gin_branding:
       delete: ~
-    block.block.claro_primary_local_tasks:
+    block.block.gin_powered:
       delete: ~
-    block.block.claro_secondary_local_tasks:
+    block.block.gin_site_branding:
+      delete: ~
+    block.block.gin_tools:
       delete: ~

@@ -1,12 +1,36 @@
 {
-    "_hash": "048c24b9d411fe768742c7a69f4d00a7c66fdbbb6160db6847b781bfd55deaa7",
+    "_hash": "3c248d62dc95949f47a6e8dbb0947b0a73b161c46e327cbb305aba977fd0ed72",
     "patches": {
+        "drupal/gin": [
+            {
+                "package": "drupal/gin",
+                "description": "#3441940: Add support for Navigation Beta 1+",
+                "url": "./patches/gin/407.patch",
+                "sha256": "bb26692df770e7d8271c306ab95b7e8b2edbe844edb3daa833c7fcf843a0e0f6",
+                "depth": 1,
+                "extra": {
+                    "provenance": "root"
+                }
+            }
+        ],
+        "drupal/gin_toolbar": [
+            {
+                "package": "drupal/gin_toolbar",
+                "description": "#3442173: Add support for Navigation Beta 1+ (Gin Toolbar)",
+                "url": "./patches/gin_toolbar/45.patch",
+                "sha256": "4cb1a4b5b850310b478605d34dac17164e66b2f5cb94ec07f38beb75ed408fc0",
+                "depth": 1,
+                "extra": {
+                    "provenance": "root"
+                }
+            }
+        ],
         "drupal/core": [
             {
                 "package": "drupal/core",
                 "description": "Add support for recipes",
                 "url": "https://git.drupalcode.org/project/distributions_recipes/-/raw/patch/recipe-10.3.x.patch",
-                "sha256": "88d4e6e1d0006d143ee6c8e16e143b39f3b70f61dd4985c32aa0423b2473d066",
+                "sha256": "8f85e347a5066739f56c9304fe91086c140c14be97da8819673fa0904bba0b7f",
                 "depth": 2,
                 "extra": {
                     "provenance": "dependency:drupal/core"
