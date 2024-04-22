@@ -43,6 +43,7 @@
         "drupal/pathauto": "^1.12",
         "drupal/redirect": "^1.9",
         "drupal/scheduler": "^2.0.2",
+        "drupal/smart_date": "^4.0",
         "drupal/starshot": "dev-main",
         "drupal/starshot-core": "^10.3",
         "drupal/webform": "^6.2",

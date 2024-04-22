@@ -12,11 +12,11 @@ dependencies:
   module:
     - address
     - content_moderation
-    - datetime_range
     - media_library
     - metatag
     - path
     - scheduler
+    - smart_date
     - text
 id: node.event.default
 targetEntityType: node
@@ -40,10 +40,17 @@ content:
     settings: {  }
     third_party_settings: {  }
   field_date_time:
-    type: daterange_default
+    type: smartdate_default
     weight: 15
     region: content
-    settings: {  }
+    settings:
+      modal: false
+      default_duration: 60
+      default_duration_increments: "30\r\n60|1 hour\r\n90\r\n120|2 hours\r\ncustom"
+      show_extra: false
+      hide_date: false
+      allday: true
+      remove_seconds: true
     third_party_settings: {  }
   field_image:
     type: media_library_widget
