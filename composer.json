@@ -26,7 +26,6 @@
         }
     },
     "require": {
-        "ext-pdo_sqlite": "*",
         "composer/installers": "^2.0",
         "drupal/address": "^2.0",
         "drupal/coffee": "^1.4",
@@ -50,6 +49,7 @@
         "oomphinc/composer-installers-extender": "^2"
     },
     "require-dev": {
+        "ext-pdo_sqlite": "*",
         "drupal/core-dev": "^10.3",
         "drupal/default_content": "^2.0@alpha"
     },
