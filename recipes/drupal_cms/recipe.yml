@@ -66,6 +66,18 @@ config:
       - views.view.who_s_new
       - views.view.who_s_online
   actions:
+    node.type.blog:
+      # Don't allow blog posts to have menu links by default, since that's
+      # not normally what blog posts are for.
+      setThirdPartySettings:
+        -
+          module: menu_ui
+          key: available_menus
+          value: []
+        -
+          module: menu_ui
+          key: parent
+          value: ''
     user.role.content_editor:
       grantPermissionsForEachMediaType:
         - 'create %bundle media'
