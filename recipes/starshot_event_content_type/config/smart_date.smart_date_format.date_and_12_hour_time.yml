@@ -1,0 +1,14 @@
+langcode: en
+status: true
+dependencies: {  }
+id: date_and_12_hour_time
+label: 'Date & 12-hour Time'
+date_format: 'F j, Y'
+time_format: 'g:i A'
+time_hour_format: 'g A'
+allday_label: 'All day'
+separator: ' - '
+join: ', '
+ampm_reduce: '1'
+date_first: '1'
+site_time_toggle: '1'

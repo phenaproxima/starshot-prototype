@@ -96,17 +96,31 @@ third_party_settings:
             region: first
             configuration:
               id: 'field_block:node:event:field_date_time'
+              label: 'Date & Time'
               label_display: '0'
+              provider: layout_builder
               context_mapping:
                 entity: layout_builder.entity
+                view_mode: view_mode
               formatter:
-                type: daterange_default
+                type: smartdate_default
                 label: above
                 settings:
                   timezone_override: ''
-                  format_type: medium
-                  from_to: both
-                  separator: '-'
+                  format: date_and_12_hour_time
+                  force_chronological: false
+                  add_classes: false
+                  time_wrapper: false
+                  localize: false
+                  parts:
+                    start: start
+                    end: end
+                    duration: '0'
+                  duration:
+                    separator: ' | '
+                    unit: ''
+                    decimals: 2
+                    suffix: h
                 third_party_settings: {  }
             weight: 0
             additional: {  }
