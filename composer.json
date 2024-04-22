@@ -38,6 +38,8 @@
         "drupal/gin": "3.x-dev",
         "drupal/gin_toolbar": "1.x-dev",
         "drupal/linkit": "^6.1",
+        "drupal/media_entity_download": "^2.2",
+        "drupal/media_file_delete": "^1.3",
         "drupal/metatag": "^2.0",
         "drupal/navigation": "^1.0@beta",
         "drupal/pathauto": "^1.12",
