@@ -91,6 +91,9 @@ config:
         - module: scheduler
           key: unpublish_revision
           value: true
+    scheduler.settings:
+      simple_config_update:
+        hide_seconds: true
     workflows.workflow.editorial:
       addNodeTypes:
         - page
