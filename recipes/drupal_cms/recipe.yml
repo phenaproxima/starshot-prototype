@@ -3,7 +3,6 @@ description: Applies all the Drupal CMS recipes.
 type: Drupal CMS
 recipes:
   - basic_block_type
-  - feedback_contact_form
   - content_search
   - core_recommended_performance
   - core_recommended_maintenance
@@ -20,6 +19,7 @@ recipes:
   - starshot_blog
   - starshot_basic_html_editor
   - starshot_event_content_type
+  - starshot_forms
   - starshot_full_html_editor
   - starshot_image_media_type
   - starshot_page_content_type

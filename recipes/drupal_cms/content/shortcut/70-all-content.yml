@@ -1,18 +1,18 @@
 _meta:
   version: '1.0'
   entity_type: shortcut
-  uuid: 9619935f-4fc8-4ccf-b7b8-37f7bbb3b59d
+  uuid: 478b3170-1dfd-49d8-8eb3-f1b285445ab7
   bundle: default
   default_langcode: en
 default:
   title:
     -
-      value: 'Create an event'
+      value: 'See all content'
   weight:
     -
-      value: 2
+      value: 70
   link:
     -
-      uri: 'internal:/node/add/event'
+      uri: 'internal:/admin/content'
       title: ''
       options: {  }

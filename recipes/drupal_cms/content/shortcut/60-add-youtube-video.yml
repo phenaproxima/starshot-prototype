@@ -1,0 +1,18 @@
+_meta:
+  version: '1.0'
+  entity_type: shortcut
+  uuid: 6c37f8cc-255b-4c0b-a8f5-59c18229f067
+  bundle: default
+  default_langcode: en
+default:
+  title:
+    -
+      value: 'Add a YouTube video'
+  weight:
+    -
+      value: 60
+  link:
+    -
+      uri: 'internal:/media/add/remote_video'
+      title: ''
+      options: {  }

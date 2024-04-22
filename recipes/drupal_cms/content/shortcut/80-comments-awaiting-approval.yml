@@ -1,18 +1,18 @@
 _meta:
   version: '1.0'
   entity_type: shortcut
-  uuid: 240250ff-04dc-49c4-a325-6d63f3f4d8b6
+  uuid: 7aa7f3d0-d5f9-4226-b383-f40613326b36
   bundle: default
   default_langcode: en
 default:
   title:
     -
-      value: 'Upload a document'
+      value: See unapproved comments
   weight:
     -
-      value: 4
+      value: 80
   link:
     -
-      uri: 'internal:/media/add/document'
+      uri: 'internal:/admin/content/comment/approval'
       title: ''
       options: {  }

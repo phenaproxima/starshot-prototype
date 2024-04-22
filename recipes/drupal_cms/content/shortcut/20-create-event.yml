@@ -1,18 +1,18 @@
 _meta:
   version: '1.0'
   entity_type: shortcut
-  uuid: cf0b6257-db94-4c70-ac31-f24b95a0d24a
+  uuid: 9619935f-4fc8-4ccf-b7b8-37f7bbb3b59d
   bundle: default
   default_langcode: en
 default:
   title:
     -
-      value: 'Create a blog post'
+      value: 'Create an event'
   weight:
     -
-      value: 1
+      value: 20
   link:
     -
-      uri: 'internal:/node/add/blog'
+      uri: 'internal:/node/add/event'
       title: ''
       options: {  }

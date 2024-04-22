@@ -43,6 +43,7 @@
         "drupal/scheduler": "^2.0.2",
         "drupal/starshot": "dev-main",
         "drupal/starshot-core": "^10.3",
+        "drupal/webform": "^6.2",
         "drush/drush": "^12.5",
         "oomphinc/composer-installers-extender": "^2"
     },
@@ -115,7 +116,7 @@
         ],
         "post-create-project-cmd": [
             "@install-drupal-cms",
-            "@php web/core/scripts/drupal quick-start"
+            "@php -d max_execution_time=0 web/core/scripts/drupal quick-start"
         ]
     }
 }

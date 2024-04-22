@@ -1,18 +1,18 @@
 _meta:
   version: '1.0'
   entity_type: shortcut
-  uuid: 6c37f8cc-255b-4c0b-a8f5-59c18229f067
+  uuid: c9b8f161-a7f7-4751-8a3d-072cd75b364f
   bundle: default
   default_langcode: en
 default:
   title:
     -
-      value: 'Add a YouTube video'
+      value: 'Create a form'
   weight:
     -
-      value: 5
+      value: 30
   link:
     -
-      uri: 'internal:/media/add/remote_video'
+      uri: 'internal:/admin/structure/webform/add'
       title: ''
       options: {  }

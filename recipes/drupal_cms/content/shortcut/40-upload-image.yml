@@ -1,18 +1,18 @@
 _meta:
   version: '1.0'
   entity_type: shortcut
-  uuid: 7aa7f3d0-d5f9-4226-b383-f40613326b36
+  uuid: 74a865f5-84a1-4e0e-8e52-3328033f4695
   bundle: default
   default_langcode: en
 default:
   title:
     -
-      value: See unapproved comments
+      value: 'Upload an image'
   weight:
     -
-      value: 7
+      value: 40
   link:
     -
-      uri: 'internal:/admin/content/comment/approval'
+      uri: 'internal:/media/add/image'
       title: ''
       options: {  }

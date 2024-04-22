@@ -1,18 +1,18 @@
 _meta:
   version: '1.0'
   entity_type: shortcut
-  uuid: 478b3170-1dfd-49d8-8eb3-f1b285445ab7
+  uuid: cf0b6257-db94-4c70-ac31-f24b95a0d24a
   bundle: default
   default_langcode: en
 default:
   title:
     -
-      value: 'See all content'
+      value: 'Create a blog post'
   weight:
     -
-      value: 6
+      value: 10
   link:
     -
-      uri: 'internal:/admin/content'
+      uri: 'internal:/node/add/blog'
       title: ''
       options: {  }
