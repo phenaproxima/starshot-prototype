@@ -13,13 +13,6 @@
             "type": "vcs",
             "url": "https://github.com/phenaproxima/starshot-core.git"
         },
-        "starshot": {
-            "type": "path",
-            "url": "modules/starshot",
-            "options": {
-                "symlink": false
-            }
-        },
         "drupal": {
             "type": "composer",
             "url": "https://packages.drupal.org/8"
@@ -51,7 +44,6 @@
         "drupal/scheduler": "^2.0.2",
         "drupal/simple_sitemap": "^4.1",
         "drupal/smart_date": "^4.0",
-        "drupal/starshot": "dev-main",
         "drupal/starshot-core": "^10.3",
         "drupal/webform": "^6.2",
         "drush/drush": "^12.5",
@@ -116,6 +108,9 @@
             ]
         },
         "patches": {
+            "drupal/core": {
+                "Disable block_theme_initialize() to prevent duplicate blocks": "./patches/core/disable-block_theme_initialize.patch"
+            },
             "drupal/gin": {
                 "#3441940: Add support for Navigation Beta 1+": "./patches/gin/407.patch"
             },
@@ -130,6 +125,7 @@
             "drush site-install minimal --yes --db-url sqlite://db.sqlite --account-pass admin --site-name 'Drupal CMS'",
             "cd web && php core/scripts/drupal recipe ../recipes/drupal_cms",
             "drush theme:uninstall --yes stark",
+            "drush views:disable files --yes",
             "drush cache:rebuild"
         ],
         "drupal:install-dev": [

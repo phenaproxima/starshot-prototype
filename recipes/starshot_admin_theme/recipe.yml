@@ -6,39 +6,11 @@ install:
   - gin
   - gin_toolbar
   - navigation
-  - starshot
 config:
   import:
+    gin: '*'
     navigation: '*'
   actions:
     system.theme:
       simple_config_update:
         admin: gin
-    # Clean up blocks that are copied from Stark. This can all be removed
-    # when it's possible to install Drupal directly from a recipe.
-    block.block.olivero_branding:
-      delete: ~
-    block.block.olivero_tools:
-      delete: ~
-    block.block.olivero_admin:
-      delete: ~
-    block.block.olivero_primary_local_tasks:
-      delete: ~
-    block.block.gin_account_menu:
-      delete: ~
-    block.block.gin_admin:
-      delete: ~
-    block.block.gin_branding:
-      delete: ~
-    block.block.gin_powered:
-      delete: ~
-    block.block.gin_primary_admin_actions:
-      delete: ~
-    block.block.gin_primary_local_tasks:
-      delete: ~
-    block.block.gin_secondary_local_tasks:
-      delete: ~
-    block.block.gin_site_branding:
-      delete: ~
-    block.block.gin_tools:
-      delete: ~

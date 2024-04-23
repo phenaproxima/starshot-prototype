@@ -1,6 +1,28 @@
 {
-    "_hash": "3c248d62dc95949f47a6e8dbb0947b0a73b161c46e327cbb305aba977fd0ed72",
+    "_hash": "c20e380e8ce66574fbb01df2fc29d6273b3ec3f8293e840873d11286907e7fe8",
     "patches": {
+        "drupal/core": [
+            {
+                "package": "drupal/core",
+                "description": "Disable block_theme_initialize() to prevent duplicate blocks",
+                "url": "./patches/core/disable-block_theme_initialize.patch",
+                "sha256": "41b0bdfa15bf374e5b937a4fb2afcb15703956f0746cbe158b66efc564a33cc5",
+                "depth": 2,
+                "extra": {
+                    "provenance": "root"
+                }
+            },
+            {
+                "package": "drupal/core",
+                "description": "Add support for recipes",
+                "url": "https://git.drupalcode.org/project/distributions_recipes/-/raw/patch/recipe-10.3.x.patch",
+                "sha256": "8f85e347a5066739f56c9304fe91086c140c14be97da8819673fa0904bba0b7f",
+                "depth": 2,
+                "extra": {
+                    "provenance": "dependency:drupal/core"
+                }
+            }
+        ],
         "drupal/gin": [
             {
                 "package": "drupal/gin",
@@ -22,18 +44,6 @@
                 "depth": 1,
                 "extra": {
                     "provenance": "root"
-                }
-            }
-        ],
-        "drupal/core": [
-            {
-                "package": "drupal/core",
-                "description": "Add support for recipes",
-                "url": "https://git.drupalcode.org/project/distributions_recipes/-/raw/patch/recipe-10.3.x.patch",
-                "sha256": "8f85e347a5066739f56c9304fe91086c140c14be97da8819673fa0904bba0b7f",
-                "depth": 2,
-                "extra": {
-                    "provenance": "dependency:drupal/core"
                 }
             }
         ]
