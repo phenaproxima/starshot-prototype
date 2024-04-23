@@ -29,6 +29,7 @@
         "ext-pdo_sqlite": "*",
         "composer/installers": "^2.0",
         "drupal/address": "^2.0",
+        "drupal/captcha": "^2.0",
         "drupal/coffee": "^1.4",
         "drupal/core-composer-scaffold": "^10.3",
         "drupal/core-project-message": "^10.3",

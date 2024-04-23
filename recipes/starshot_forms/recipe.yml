@@ -2,7 +2,11 @@ name: Forms
 type: Starshot
 description: Provides a simple contact form, and tools for building more complex forms.
 install:
+  - captcha
   - webform_ui
 config:
   import:
     webform: '*'
+  actions:
+    user.role.authenticated:
+      grantPermission: 'skip CAPTCHA'
