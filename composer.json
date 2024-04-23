@@ -122,7 +122,7 @@
     "scripts": {
         "drupal:install": [
             "@putenv SHELL_VERBOSITY=-1",
-            "drush site-install minimal --yes --db-url sqlite://db.sqlite --account-pass admin --site-name 'Drupal CMS'",
+            "drush site-install minimal --yes",
             "cd web && php core/scripts/drupal recipe ../recipes/drupal_cms",
             "drush theme:uninstall --yes stark",
             "drush views:disable files --yes",
