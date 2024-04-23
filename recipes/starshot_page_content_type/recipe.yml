@@ -6,6 +6,7 @@ recipes:
   - page_content_type
 install:
   - content_translation
+  - diff
   - metatag
   - pathauto
   - quick_node_clone

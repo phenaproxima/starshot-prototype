@@ -8,6 +8,7 @@ recipes:
   - tags_taxonomy
 install:
   - content_translation
+  - diff
   - metatag
   - node
   - pathauto
