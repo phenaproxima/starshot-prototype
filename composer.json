@@ -45,6 +45,7 @@
         "drupal/metatag": "^2.0",
         "drupal/navigation": "^1.0@beta",
         "drupal/pathauto": "^1.12",
+        "drupal/quick_node_clone": "^1.18",
         "drupal/redirect": "^1.9",
         "drupal/scheduler": "^2.0.2",
         "drupal/simple_sitemap": "^4.1",

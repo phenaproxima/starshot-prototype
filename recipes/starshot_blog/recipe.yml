@@ -11,6 +11,7 @@ install:
   - metatag
   - node
   - pathauto
+  - quick_node_clone
   - scheduler
   - simple_sitemap
   - views
