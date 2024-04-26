@@ -1,0 +1,33 @@
+_meta:
+  version: '1.0'
+  entity_type: media
+  uuid: 7f3e5f12-aabf-4a66-89a0-82f82a5235c5
+  bundle: remote_video
+  default_langcode: en
+default:
+  revision_user:
+    -
+      target_id: 1
+  status:
+    -
+      value: true
+  uid:
+    -
+      target_id: 1
+  name:
+    -
+      value: 'NASA Live: Official Stream of NASA TV'
+  created:
+    -
+      value: 1714157611
+  revision_translation_affected:
+    -
+      value: true
+  path:
+    -
+      alias: ''
+      langcode: en
+      pathauto: 0
+  field_media_oembed_video:
+    -
+      value: 'https://www.youtube.com/watch?v=21X5lGlDOfg'

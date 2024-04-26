@@ -1,0 +1,52 @@
+_meta:
+  version: '1.0'
+  entity_type: node
+  uuid: 7d3f9670-0c0f-4582-8b45-900f509dfbd9
+  bundle: page
+  default_langcode: en
+  depends:
+    2ab91e70-eec4-4a78-810e-c2945408e251: user
+default:
+  revision_uid:
+    -
+      target_id: 1
+  status:
+    -
+      value: true
+  uid:
+    -
+      entity: 2ab91e70-eec4-4a78-810e-c2945408e251
+  title:
+    -
+      value: 'Starshot: a journey beyond the horizon'
+  created:
+    -
+      value: 1714156991
+  promote:
+    -
+      value: true
+  sticky:
+    -
+      value: false
+  revision_translation_affected:
+    -
+      value: true
+  moderation_state:
+    -
+      value: published
+  path:
+    -
+      alias: /starshot-journey-beyond-horizon
+      langcode: en
+      pathauto: 1
+  content_translation_source:
+    -
+      value: und
+  content_translation_outdated:
+    -
+      value: false
+  body:
+    -
+      value: "<drupal-media data-entity-type=\"media\" data-entity-uuid=\"bdabe8d1-d096-40a0-869a-bc06e595393d\" data-align=\"right\">&nbsp;</drupal-media><p>If this feels like it was written by AI, it's because it mostly was.</p><p>In the stories of humankind, there's something special about looking up at the sky and wondering what's out there. Space exploration is like a great adventure, where we learn new things about the universe.</p><p>Imagine traveling to a place no one has ever been before, far away from home. That's what space exploration is all about. We want to learn more about planets, moons, and stars, and see what secrets they hold.</p><p>But exploring space isn't easy. It's full of challenges that make us think hard and work together. When the journey seems long and tough, we must be brave and keep going.</p><p>But every time we explore a new part of space, it's like finding treasure. We learn amazing things about the universe and our place in it. And even though space is big and sometimes scary, it's also full of wonder and excitement.</p><p>This is why space exploration is so important. It helps us learn more about the world around us and inspires us to dream big. It's a reminder that even when things seem hard, there's always a way to reach for the stars.</p>"
+      format: basic_html
+      summary: "Imagine traveling to a place no one has ever been before, far away from home. That's what space exploration is all about. We want to learn more about planets, moons, and stars, and see what secrets they hold."

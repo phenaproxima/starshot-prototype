@@ -78,6 +78,9 @@ config:
           module: menu_ui
           key: parent
           value: ''
+    system.site:
+      simple_config_update:
+        page.front: '/node'
     user.role.content_editor:
       grantPermissionsForEachMediaType:
         - 'create %bundle media'
