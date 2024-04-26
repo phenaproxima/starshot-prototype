@@ -1,0 +1,18 @@
+langcode: en
+status: true
+dependencies: {  }
+id: node__event
+label: 'Content: Event'
+tags:
+  description: '[node:summary]'
+  image_src: '[node:field_image]'
+  og_country_name: '[node:field_location:country_name]'
+  og_description: '[node:summary]'
+  og_image: '[node:field_image]'
+  og_locality: '[node:field_location:locality]'
+  og_postal_code: '[node:field_location:postal_code]'
+  og_region: '[node:field_location:administrative_area]'
+  og_street_address: '[node:field_location:address_line1] [node:field_location:address_line2]'
+  og_title: '[node:title]'
+  og_type: '[node:content-type]'
+  title: '[node:title]'

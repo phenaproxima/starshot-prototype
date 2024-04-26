@@ -1,0 +1,13 @@
+langcode: en
+status: true
+dependencies: {  }
+id: node__blog
+label: 'Content: Blog post'
+tags:
+  description: '[node:summary]'
+  image_src: '[node:field_image]'
+  og_description: '[node:summary]'
+  og_image: '[node:field_image]'
+  og_title: '[node:title]'
+  og_type: '[node:content-type]'
+  title: '[node:title]'

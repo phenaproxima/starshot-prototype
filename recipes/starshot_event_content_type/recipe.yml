@@ -44,7 +44,10 @@ config:
   actions:
     metatag.settings:
       simple_config_update:
-        entity_type_groups.node.event.basic: basic
+        entity_type_groups.node.event:
+          - basic
+          - advanced
+          - open_graph
     scheduler.settings:
       simple_config_update:
         hide_seconds: true

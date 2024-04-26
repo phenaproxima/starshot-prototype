@@ -1,0 +1,8 @@
+langcode: en
+status: true
+dependencies: {  }
+id: node__page
+label: 'Content: Basic page'
+tags:
+  description: '[node:summary]'
+  title: '[node:title]'

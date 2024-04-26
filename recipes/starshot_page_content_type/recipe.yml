@@ -56,7 +56,8 @@ config:
           region: content
     metatag.settings:
       simple_config_update:
-        entity_type_groups.node.page.basic: basic
+        entity_type_groups.node.page:
+          - basic
     node.type.page:
       setThirdPartySettings:
         - module: scheduler
