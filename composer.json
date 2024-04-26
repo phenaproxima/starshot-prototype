@@ -136,7 +136,7 @@
         "post-create-project-cmd": [
             "@drupal:install",
             "Composer\\Config::disableProcessTimeout",
-            "@php web/core/scripts/drupal quick-start"
+            "test -n \"$CI\" || php -d max_execution_time=0 web/core/scripts/drupal quick-start"
         ]
     },
     "scripts-descriptions": {
