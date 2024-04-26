@@ -1,5 +1,5 @@
 {
-    "_hash": "cb5832325ed165a2f2ba2544ca3bab62fe51d3a3d5c68c547123d44c26cecabe",
+    "_hash": "4f70442a547451f603e97e2479125745dc21e7cee9d58ebe7bd2740a383e67b0",
     "patches": {
         "drupal/core": [
             {
@@ -16,7 +16,7 @@
                 "package": "drupal/core",
                 "description": "Add support for recipes",
                 "url": "https://git.drupalcode.org/project/distributions_recipes/-/raw/patch/recipe-10.3.x.patch",
-                "sha256": "abc43322c17bbab0a174a7eaa10ca182bfb66067682a5705be9a053ab36a1df5",
+                "sha256": "cd1875cd19913079e1786c0d8ee014f1360cb1d76723e231dee13de977c21394",
                 "depth": 2,
                 "extra": {
                     "provenance": "dependency:drupal/core"
