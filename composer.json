@@ -125,28 +125,14 @@
             "drush config:set --yes system.logging error_level verbose",
             "drush pm:enable --yes default_content"
         ],
-        "drupal:run-server": [
-            "Composer\\Config::disableProcessTimeout",
-            "@php web/core/scripts/drupal quick-start"
-        ],
         "post-create-project-cmd": [
             "@drupal:install",
-            "test -n \"$CI\" || @drupal:run-server"
+            "Composer\\Config::disableProcessTimeout",
+            "test -n \"$CI\" || php -d max_execution_time=0 web/core/scripts/drupal quick-start"
         ]
     },
     "scripts-descriptions": {
         "drupal:install": "Installs Drupal CMS.",
-        "drupal:install-dev": "Installs Drupal CMS, with additional modules and configuration tweaks for development.",
-        "drupal:run-server": "Runs Drupal CMS using the PHP webserver and opens it in the default browser."
-    },
-    "scripts-aliases": {
-        "drupal:install": [
-            "si",
-            "sin"
-        ],
-        "drupal:run-server": [
-            "rs",
-            "serve"
-        ]
+        "drupal:install-dev": "Installs Drupal CMS, with additional modules and configuration tweaks for development."
     }
 }
