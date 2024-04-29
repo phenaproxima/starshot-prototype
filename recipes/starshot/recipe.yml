@@ -1,6 +1,6 @@
-name: Drupal CMS
-description: Applies all the Drupal CMS recipes.
-type: Drupal CMS
+name: Starshot
+description: Applies all the Starshot recipes.
+type: Site
 recipes:
   - basic_block_type
   - content_search

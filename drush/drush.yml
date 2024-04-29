@@ -4,4 +4,4 @@ command:
       options:
         account-pass: admin
         db-url: sqlite://db.sqlite
-        site-name: 'Drupal CMS'
+        site-name: 'Starshot'
