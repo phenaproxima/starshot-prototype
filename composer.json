@@ -131,7 +131,7 @@
         ],
         "post-create-project-cmd": [
             "@drupal:install",
-            "test -n \"$CI\" || @drupal:run-server"
+            "test -n \"$CI\" || composer drupal:run-server"
         ]
     },
     "scripts-descriptions": {
