@@ -2,6 +2,9 @@ name: Starshot
 description: Applies all the Starshot recipes.
 type: Site
 recipes:
+  # This line is a tiny workaround for a bug where prerequisite recipes'
+  # configuration is not installed before the current recipe.
+  - image_media_type
   - basic_block_type
   - content_search
   - core_recommended_performance
