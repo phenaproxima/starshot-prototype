@@ -39,7 +39,8 @@ jobs:
           sudo chmod 777 /var/www
 
           # Create the project.
-          git checkout -b main
+          git branch -f main
+          git checkout main
           composer create-project \
             --stability=dev \
             --repository='{"type":"vcs","url":"'"$(pwd)"'"}' \
