@@ -1,5 +1,5 @@
 {
-    "_hash": "31fc4f970b672bb7812f0ead307b380508726efaa516f5aa1ad59c49bb1d4c3d",
+    "_hash": "eeb343844a0bca7ad60452539ab8145dcb8e22ccf523bd9d7aa5c111d8e26516",
     "patches": {
         "drupal/core": [
             {
@@ -20,18 +20,6 @@
                 "depth": 2,
                 "extra": {
                     "provenance": "dependency:drupal/core"
-                }
-            }
-        ],
-        "drupal/gin": [
-            {
-                "package": "drupal/gin",
-                "description": "#3441940: Add support for Navigation Beta 1+",
-                "url": "./patches/gin/407.patch",
-                "sha256": "bb26692df770e7d8271c306ab95b7e8b2edbe844edb3daa833c7fcf843a0e0f6",
-                "depth": 1,
-                "extra": {
-                    "provenance": "root"
                 }
             }
         ]
