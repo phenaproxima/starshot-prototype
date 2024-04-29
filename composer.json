@@ -116,7 +116,6 @@
             "drush site-install minimal --yes --quiet",
             "cd web && php core/scripts/drupal recipe ../recipes/starshot",
             "drush theme:uninstall --yes --quiet stark",
-            "drush views:disable files --quiet --yes",
             "drush cache:rebuild"
         ],
         "drupal:install-dev": [

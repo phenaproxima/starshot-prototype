@@ -93,6 +93,8 @@ config:
         - 'delete %bundle revisions'
         - 'delete own %bundle content'
         - 'edit own %bundle content'
+    views.view.files:
+      setStatus: false
     # This is all in Standard.
     node.settings:
       simple_config_update:

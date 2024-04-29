@@ -1,5 +1,5 @@
 {
-    "_hash": "7f6c32c40d0a9ffaa92ad93e4b59798d437aa5bfa6725ae6e6449c356f208355",
+    "_hash": "0fa2817605ae47957aa33d5567d1c8f59684e6bb9f0dd85102ac5ac5bfd345f3",
     "patches": {
         "drupal/core": [
             {
@@ -27,6 +27,16 @@
                 "description": "#3444241: RecipeRunner::toBatchOperations() should disambiguate recipes by path, not by human-readable name",
                 "url": "https://git.drupalcode.org/project/distributions_recipes/-/merge_requests/133.diff",
                 "sha256": "2b8c1930e5667778ad4008748a366fde2bcec00d1eeaf730077d7711854d8f14",
+                "depth": 2,
+                "extra": {
+                    "provenance": "dependency:drupal/core"
+                }
+            },
+            {
+                "package": "drupal/core",
+                "description": "3444246: Create a config action to set the status of the entity",
+                "url": "https://git.drupalcode.org/project/distributions_recipes/-/merge_requests/134.diff",
+                "sha256": "82926264cd3a329d7424cdcb158156f8e97c2a82e62f91d158d8244f51e706d1",
                 "depth": 2,
                 "extra": {
                     "provenance": "dependency:drupal/core"
