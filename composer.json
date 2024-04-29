@@ -113,9 +113,6 @@
             },
             "drupal/gin": {
                 "#3441940: Add support for Navigation Beta 1+": "./patches/gin/407.patch"
-            },
-            "drupal/gin_toolbar": {
-                "#3442173: Add support for Navigation Beta 1+ (Gin Toolbar)": "./patches/gin_toolbar/45.patch"
             }
         }
     },
