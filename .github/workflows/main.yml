@@ -39,7 +39,7 @@ jobs:
           sudo chmod 777 /var/www
 
           # Create the project.
-          git branch -f main
+          git branch -f main || true
           git checkout main
           composer create-project \
             --stability=dev \
