@@ -1,5 +1,5 @@
 {
-    "_hash": "4cc00701e1836558692890a43b586eabe1ae056ae44f42ba90eb7f7b85b26917",
+    "_hash": "7f6c32c40d0a9ffaa92ad93e4b59798d437aa5bfa6725ae6e6449c356f208355",
     "patches": {
         "drupal/core": [
             {
@@ -17,6 +17,16 @@
                 "description": "Add support for recipes",
                 "url": "https://git.drupalcode.org/project/distributions_recipes/-/raw/patch/recipe-10.3.x.patch",
                 "sha256": "f259ae179dca4ec9318e7931d5ba4f13f5bb903ac4a57baa0d09c801f6c0d414",
+                "depth": 2,
+                "extra": {
+                    "provenance": "dependency:drupal/core"
+                }
+            },
+            {
+                "package": "drupal/core",
+                "description": "#3444241: RecipeRunner::toBatchOperations() should disambiguate recipes by path, not by human-readable name",
+                "url": "https://git.drupalcode.org/project/distributions_recipes/-/merge_requests/133.diff",
+                "sha256": "2b8c1930e5667778ad4008748a366fde2bcec00d1eeaf730077d7711854d8f14",
                 "depth": 2,
                 "extra": {
                     "provenance": "dependency:drupal/core"

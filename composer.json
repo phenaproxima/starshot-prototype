@@ -113,11 +113,10 @@
     },
     "scripts": {
         "drupal:install": [
-            "@putenv SHELL_VERBOSITY=-1",
-            "drush site-install minimal --yes",
+            "drush site-install minimal --yes --quiet",
             "cd web && php core/scripts/drupal recipe ../recipes/starshot",
-            "drush theme:uninstall --yes stark",
-            "drush views:disable files --yes",
+            "drush theme:uninstall --yes --quiet stark",
+            "drush views:disable files --quiet --yes",
             "drush cache:rebuild"
         ],
         "drupal:install-dev": [
