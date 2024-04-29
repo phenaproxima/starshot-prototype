@@ -95,7 +95,7 @@
             "include-keys": ["homepage", "support"],
             "post-create-project-cmd-message": [
                 "<bg=blue;fg=white>                                                 </>",
-                "<bg=blue;fg=white>  Congratulations, you’ve installed Drupal CMS!  </>",
+                "<bg=blue;fg=white>  Congratulations, you’ve installed Starshot!    </>",
                 "<bg=blue;fg=white>                                                 </>",
                 "",
                 "<bg=yellow;fg=black>Next steps</>:",
@@ -115,7 +115,7 @@
         "drupal:install": [
             "@putenv SHELL_VERBOSITY=-1",
             "drush site-install minimal --yes",
-            "cd web && php core/scripts/drupal recipe ../recipes/drupal_cms",
+            "cd web && php core/scripts/drupal recipe ../recipes/starshot",
             "drush theme:uninstall --yes stark",
             "drush views:disable files --yes",
             "drush cache:rebuild"
