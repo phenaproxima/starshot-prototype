@@ -135,9 +135,9 @@
         ]
     },
     "scripts-descriptions": {
-        "drupal:install": "Installs Drupal CMS.",
-        "drupal:install-dev": "Installs Drupal CMS, with additional modules and configuration tweaks for development.",
-        "drupal:run-server": "Runs Drupal CMS using the PHP webserver and opens it in the default browser."
+        "drupal:install": "Installs Starshot.",
+        "drupal:install-dev": "Installs Starshot, with additional modules and configuration tweaks for development.",
+        "drupal:run-server": "Runs Starshot using the PHP webserver and opens it in the default browser."
     },
     "scripts-aliases": {
         "drupal:install": [
