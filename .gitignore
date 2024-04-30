@@ -1,3 +1,4 @@
 /composer.lock
+/patches.lock.json
 /vendor
 /web

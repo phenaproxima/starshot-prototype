@@ -1,0 +1,18 @@
+_meta:
+  version: '1.0'
+  entity_type: shortcut
+  uuid: 9684939c-5445-4802-8b88-c0ad5eb92a91
+  bundle: default
+  default_langcode: en
+default:
+  title:
+    -
+      value: 'Create a sidebar block'
+  weight:
+    -
+      value: 35
+  link:
+    -
+      uri: 'internal:/block/add'
+      title: ''
+      options: {  }
