@@ -1,0 +1,36 @@
+_meta:
+  version: '1.0'
+  entity_type: media
+  uuid: 5b1245d1-4916-4c20-bdf8-27f3fd155918
+  bundle: image
+  default_langcode: en
+  depends:
+    b8a036c4-311c-4699-85f7-f0503917d1ee: file
+default:
+  status:
+    -
+      value: true
+  uid:
+    -
+      target_id: 1
+  name:
+    -
+      value: starshotdrupalicon.jpg
+  created:
+    -
+      value: 1714488910
+  revision_translation_affected:
+    -
+      value: true
+  path:
+    -
+      alias: ''
+      langcode: en
+      pathauto: 0
+  field_media_image:
+    -
+      entity: b8a036c4-311c-4699-85f7-f0503917d1ee
+      alt: "A Druplicon, heavily stylized to look like it's wearing an astronaut helmet, against a yellow background."
+      title: ''
+      width: 1069
+      height: 1069

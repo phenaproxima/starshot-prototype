@@ -1,0 +1,27 @@
+_meta:
+  version: '1.0'
+  entity_type: file
+  uuid: b8a036c4-311c-4699-85f7-f0503917d1ee
+  default_langcode: en
+default:
+  uid:
+    -
+      target_id: 1
+  filename:
+    -
+      value: starshotdrupalicon.jpg
+  uri:
+    -
+      value: 'public://2024-04/starshotdrupalicon.jpg'
+  filemime:
+    -
+      value: image/jpeg
+  filesize:
+    -
+      value: 357234
+  status:
+    -
+      value: true
+  created:
+    -
+      value: 1714488910

@@ -19,6 +19,6 @@ default:
       value: true
   body:
     -
-      value: '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla euismod quam orci, vitae suscipit erat hendrerit et. Aliquam nec volutpat turpis, nec ornare sem.</p><p><a href="/">Find out more</a></p>'
+      value: '<drupal-media data-entity-type="media" data-entity-uuid="5b1245d1-4916-4c20-bdf8-27f3fd155918">&nbsp;</drupal-media><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla euismod quam orci, vitae suscipit erat hendrerit et. Aliquam nec volutpat turpis, nec ornare sem.</p><p><a href="/">Find out more</a></p>'
       format: basic_html
       summary: ''
