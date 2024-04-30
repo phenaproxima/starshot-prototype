@@ -1,0 +1,38 @@
+_meta:
+  version: '1.0'
+  entity_type: menu_link_content
+  uuid: f975f17f-bf2a-4a9f-bb11-d3406a150f94
+  bundle: menu_link_content
+  default_langcode: en
+  depends:
+    6fd2cf66-d399-44d4-8ad5-4b7d00d47296: node
+default:
+  enabled:
+    -
+      value: true
+  title:
+    -
+      value: 'The Launch'
+  menu_name:
+    -
+      value: main
+  link:
+    -
+      target_uuid: 6fd2cf66-d399-44d4-8ad5-4b7d00d47296
+      title: ''
+      options: {  }
+  external:
+    -
+      value: false
+  rediscover:
+    -
+      value: false
+  weight:
+    -
+      value: -10
+  expanded:
+    -
+      value: false
+  revision_translation_affected:
+    -
+      value: true
