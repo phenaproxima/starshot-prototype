@@ -49,6 +49,11 @@ This one command will install Starshot and open it in a web browser for you to p
   * Comparing different versions of content
 * Some sample content, so you're not starting from nothing.
 
+## Who this is for
+Anyone who wants to create a website with Drupal, but doesn't want to build it -- including the authoring experience -- from the ground up using the relatively bare-bones tools provided by Drupal core. You need extra modules to get the most out of Drupal, but it can be hard to know how to start.
+
+Starshot's purpose is to get you going with the most useful tools favored by the Drupal community, as quickly and easily as possible.
+
 ## How is this different from a distribution?
 Distributions are based on install profiles, and therefore have a lock-in effect. If you start a site on a distribution, you can't really stop using that distribution -- at least, not easily. Starshot uses recipes to give you a strong starting point, but there is no lock-in.
 
