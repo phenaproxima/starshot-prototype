@@ -1,0 +1,70 @@
+_meta:
+  version: '1.0'
+  entity_type: node
+  uuid: 6fd2cf66-d399-44d4-8ad5-4b7d00d47296
+  bundle: event
+  default_langcode: en
+  depends:
+    cd1035e9-1c18-48cd-ba12-455641b0b102: media
+default:
+  revision_uid:
+    -
+      target_id: 1
+  status:
+    -
+      value: true
+  uid:
+    -
+      target_id: 1
+  title:
+    -
+      value: "NASA's Boeing Crew Flight Test Launch"
+  created:
+    -
+      value: 1714489368
+  promote:
+    -
+      value: true
+  sticky:
+    -
+      value: false
+  revision_translation_affected:
+    -
+      value: true
+  moderation_state:
+    -
+      value: published
+  path:
+    -
+      alias: /event/2024/nasas-boeing-crew-flight-test-launch
+      langcode: en
+      pathauto: 1
+  content_translation_source:
+    -
+      value: und
+  content_translation_outdated:
+    -
+      value: false
+  body:
+    -
+      value: '<p>Pellentesque turpis leo, viverra nec egestas semper, euismod venenatis diam. Nulla porta turpis ac sapien tincidunt, a luctus ligula scelerisque. Maecenas auctor vestibulum tristique. Curabitur ligula nibh, ultricies vitae aliquet vel, vehicula sed nisl. Cras nisl dolor, gravida a ornare sit amet, viverra et nisi.</p>'
+      format: basic_html
+      summary: ''
+  field_date_time:
+    -
+      value: '2024-05-06T18:30:00'
+      end_value: '2024-05-06T20:30:00'
+  field_image:
+    -
+      entity: cd1035e9-1c18-48cd-ba12-455641b0b102
+  field_location:
+    -
+      langcode: ''
+      country_code: US
+      administrative_area: FL
+      locality: 'Merritt Island'
+      dependent_locality: ''
+      postal_code: '32953'
+      sorting_code: ''
+      address_line1: 'Kennedy Space Center Visitor Complex'
+      address_line2: 'Space Commerce Way'

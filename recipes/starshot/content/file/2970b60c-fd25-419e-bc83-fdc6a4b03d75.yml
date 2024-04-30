@@ -1,0 +1,27 @@
+_meta:
+  version: '1.0'
+  entity_type: file
+  uuid: 2970b60c-fd25-419e-bc83-fdc6a4b03d75
+  default_langcode: en
+default:
+  uid:
+    -
+      target_id: 1
+  filename:
+    -
+      value: nasas-boeing-cft-launch-key-art-op-b-horizontal-hero-16-9-without-title.webp
+  uri:
+    -
+      value: 'public://2024-04/nasas-boeing-cft-launch-key-art-op-b-horizontal-hero-16-9-without-title.webp'
+  filemime:
+    -
+      value: image/webp
+  filesize:
+    -
+      value: 34598
+  status:
+    -
+      value: true
+  created:
+    -
+      value: 1714489407

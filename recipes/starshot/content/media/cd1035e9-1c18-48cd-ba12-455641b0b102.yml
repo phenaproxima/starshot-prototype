@@ -1,0 +1,36 @@
+_meta:
+  version: '1.0'
+  entity_type: media
+  uuid: cd1035e9-1c18-48cd-ba12-455641b0b102
+  bundle: image
+  default_langcode: en
+  depends:
+    2970b60c-fd25-419e-bc83-fdc6a4b03d75: file
+default:
+  status:
+    -
+      value: true
+  uid:
+    -
+      target_id: 1
+  name:
+    -
+      value: nasas-boeing-cft-launch-key-art-op-b-horizontal-hero-16-9-without-title.webp
+  created:
+    -
+      value: 1714489407
+  revision_translation_affected:
+    -
+      value: true
+  path:
+    -
+      alias: ''
+      langcode: en
+      pathauto: 0
+  field_media_image:
+    -
+      entity: 2970b60c-fd25-419e-bc83-fdc6a4b03d75
+      alt: 'A rocket being launched, with a huge plume of smoke and fire shooting out of it.'
+      title: ''
+      width: 1024
+      height: 576
