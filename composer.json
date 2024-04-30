@@ -116,13 +116,14 @@
             "drush site-install minimal --yes --quiet",
             "cd web && php core/scripts/drupal recipe ../recipes/starshot",
             "drush theme:uninstall --yes --quiet stark",
-            "drush user:password editor editor --quiet",
             "drush cache:rebuild"
         ],
         "drupal:install-dev": [
             "@drupal:install",
             "drush config:set --yes system.logging error_level verbose",
-            "drush pm:enable --yes default_content"
+            "drush pm:enable --yes default_content",
+            "drush user:password editor editor --quiet",
+            "drush user:unblock editor --quiet"
         ],
         "drupal:run-server": [
             "Composer\\Config::disableProcessTimeout",
