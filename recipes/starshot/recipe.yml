@@ -78,6 +78,9 @@ config:
           module: menu_ui
           key: parent
           value: ''
+    olivero.settings:
+      simple_config_update:
+        base_primary_color: '#0a205a'
     system.site:
       simple_config_update:
         page.front: '/node'
