@@ -19,7 +19,6 @@ composer create-project drupal/starshot-project --repository='{"type": "vcs", "u
 * [Media Entity Download](https://drupal.org/project/media_entity_download)
 * [Media File Delete](https://drupal.org/project/media_file_delete)
 * [Metatag](https://drupal.org/project/metatag)
-* [Navigation](https://drupal.org/project/navigation)
 * [Pathauto](https://drupal.org/project/pathauto)
 * [Quick Node Clone](https://drupal.org/project/quick_node_clone)
 * [Redirect](https://drupal.org/project/redirect)
