@@ -121,8 +121,8 @@
             "@drupal:install",
             "drush config:set --yes system.logging error_level verbose",
             "drush pm:enable --yes default_content",
-            "drush user:password editor editor --quiet",
-            "drush user:unblock editor --quiet"
+            "drush user:password --quiet editor editor",
+            "drush user:unblock --quiet editor"
         ],
         "drupal:run-server": [
             "Composer\\Config::disableProcessTimeout",

@@ -12,7 +12,7 @@ services:
         - ln -snf "${TUGBOAT_ROOT}/web" "${DOCROOT}"
       build:
         - composer install
-        - composer run drupal:install
+        - composer run drupal:install-dev
 
         # Make sure files and translations folders exist and are writable.
         - mkdir -p "${DOCROOT}/sites/default/files/translations"
@@ -20,13 +20,9 @@ services:
         - find "${DOCROOT}/sites/default/files" -type d -exec chmod 2775 {} \;
         - find "${DOCROOT}/sites/default/files" -type f -exec chmod 0664 {} \;
 
-        # Enable verbose error logging (debug mode).
-        - ./vendor/bin/drush config:set --yes system.logging error_level verbose
-        - ./vendor/bin/drush config:get system.logging error_level
-
-        # @todo The above Drush command doesn't ultimately take effect
-        #   for some reason. Manually change the settings until it can
-        #   be debugged.
+        # @todo For some reason the Drush "config:set" command run by composer
+        #   run drupal:install-dev to enable verbose logging doesn't ultimately
+        #   take effect. Manually change the settings until it can be debugged.
         - |
           echo "if (file_exists(__DIR__ . '/settings.local.php')) {
             include __DIR__ . '/settings.local.php';

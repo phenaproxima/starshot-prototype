@@ -44,13 +44,9 @@ jobs:
             /var/www
           cd /var/www
 
-          # Enable verbose error logging (debug mode).
-          ./vendor/bin/drush config:set --yes system.logging error_level verbose
-          ./vendor/bin/drush config:get system.logging error_level
-
-          # @todo The above Drush command doesn't ultimately take effect
-          #   for some reason. Manually change the settings until it can
-          #   be debugged.
+          # @todo For some reason the Drush "config:set" command run by composer
+          #   create-project to enable verbose logging doesn't ultimately take
+          #   effect. Manually change the settings until it can be debugged.
           echo "if (file_exists(__DIR__ . '/settings.local.php')) {
             include __DIR__ . '/settings.local.php';
           }" | sudo tee -a web/sites/default/settings.php
