@@ -125,7 +125,7 @@
         ],
         "drupal:run-server": [
             "Composer\\Config::disableProcessTimeout",
-            "@php web/core/scripts/drupal quick-start"
+            "@php -d max_execution_time=0 web/core/scripts/drupal quick-start"
         ],
         "post-create-project-cmd": [
             "@drupal:install",
