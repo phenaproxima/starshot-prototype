@@ -39,6 +39,8 @@ install:
   - toolbar
   - field_ui
   - views_ui
+  # Contrib.
+  - metatag
 config:
   import:
     help:
@@ -46,6 +48,7 @@ config:
     image:
       - image.style.large
       - image.style.thumbnail
+    metatag: '*'
     node:
       - views.view.archive
       - views.view.content
