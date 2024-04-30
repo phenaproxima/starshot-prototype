@@ -18,19 +18,11 @@ jobs:
       fail-fast: false
       matrix:
         os: [ ubuntu ]
-        # Temporarily disable the PHP 8.3 job while an APT issue debugged.
-        # @see https://github.com/phenaproxima/starshot-prototype/issues/19
-        # php: [ 8.1, 8.2, 8.3 ]
-        php: [ 8.1, 8.2 ]
+        php: [ 8.1, 8.2, 8.3 ]
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4 # https://github.com/marketplace/actions/checkout
-
-      - name: Set up PHP CLI
-        uses: shivammathur/setup-php@v2 # https://github.com/marketplace/actions/setup-php-action
-        with:
-          php-version: "${{ matrix.php }}"
 
       - name: Create project
         run: |
@@ -80,6 +72,13 @@ jobs:
           sudo apt install \
             apache2 \
             php${{ matrix.php }} \
+            php${{ matrix.php }}-dom \
+            php${{ matrix.php }}-gd \
+            php${{ matrix.php }}-pdo \
+            php${{ matrix.php }}-simplexml \
+            php${{ matrix.php }}-sqlite3 \
+            php${{ matrix.php }}-tokenizer \
+            php${{ matrix.php }}-xml \
             libapache2-mod-php${{ matrix.php }}
           sudo a2enmod php${{ matrix.php }}
 
@@ -90,14 +89,11 @@ jobs:
           sudo service apache2 start
 
       - name: Debugging
-        if: runner.os == 'macOS'
         run: |
           php -v | head -1
-          php --ini
+          echo
+          php /var/www/vendor/bin/drush core:status
 
       - name: Test
         run: |
-          set -o xtrace
-
-          php /var/www/vendor/bin/drush core:status
           curl http://localhost/ 2>/dev/null
