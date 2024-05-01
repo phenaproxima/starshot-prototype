@@ -21,6 +21,7 @@
     "require": {
         "ext-pdo_sqlite": "*",
         "composer/installers": "^2.0",
+        "cweagans/composer-patches": "^2",
         "drupal/address": "^2.0",
         "drupal/antibot": "^2.0",
         "drupal/coffee": "^1.4",
