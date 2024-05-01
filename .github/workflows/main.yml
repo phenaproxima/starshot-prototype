@@ -70,6 +70,7 @@ jobs:
             php${{ matrix.php }} \
             php${{ matrix.php }}-dom \
             php${{ matrix.php }}-gd \
+            php${{ matrix.php }}-mbstring \
             php${{ matrix.php }}-pdo \
             php${{ matrix.php }}-simplexml \
             php${{ matrix.php }}-sqlite3 \
