@@ -35,3 +35,6 @@ services:
 
         # Make everything writable.
         - sudo chmod -R 777 "${DOCROOT}"
+
+        # Run cron to populate the search index, etc.
+        - php vendor/bin/drush core:cron

@@ -92,4 +92,8 @@ jobs:
 
       - name: Test
         run: |
+          # Run cron to populate the search index, etc.
+          php /var/www/vendor/bin/drush core:cron
+          echo
+
           curl http://localhost/ 2>/dev/null
