@@ -89,28 +89,37 @@ config:
     user.role.content_editor:
       grantPermissionsForEachMediaType:
         - 'create %bundle media'
-        - 'delete own %bundle media'
-        - 'edit own %bundle media'
+        - 'delete any %bundle media'
+        - 'edit any %bundle media'
       grantPermissionsForEachNodeType:
+        - 'clone %bundle content'
         - 'translate %bundle node'
-        # These are in Standard.
         - 'create %bundle content'
         - 'delete %bundle revisions'
-        - 'delete own %bundle content'
-        - 'edit own %bundle content'
+        - 'delete any %bundle content'
+        - 'edit any %bundle content'
+      grantPermissionsForEachTaxonomyVocabulary:
+        - 'create terms in %bundle'
+        - 'edit terms in %bundle'
     views.view.files:
       setStatus: false
-    # This is all in Standard.
     node.settings:
       simple_config_update:
         # @todo Remove `langcode` once https://drupal.org/i/3427564 lands.
         langcode: en
         use_admin_theme: true
     user.role.authenticated:
-      grantPermission: 'delete own files'
+      grantPermissions:
+        - 'access shortcuts'
+        - 'access user profiles'
+        - 'delete own files'
+        - 'use advanced search'
+        - 'view own unpublished content'
     user.role.anonymous:
-      # This recipe assumes all published content should be publicly accessible.
-      grantPermission: 'access content'
+      grantPermissions:
+        # We assume all published content should be accessible and searchable.
+        - 'access content'
+        - 'use advanced search'
     user.settings:
       simple_config_update:
         verify_mail: true

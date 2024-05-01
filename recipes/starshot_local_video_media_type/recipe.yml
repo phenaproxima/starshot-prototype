@@ -11,5 +11,7 @@ config:
     media_file_delete.settings:
       simple_config_update:
         delete_file_default: true
+    user.role.anonymous:
+      grantPermission: 'download media'
     user.role.authenticated:
       grantPermission: 'download media'
