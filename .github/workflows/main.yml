@@ -96,4 +96,4 @@ jobs:
           php /var/www/vendor/bin/drush core:cron
           echo
 
-          curl http://localhost/ 2>/dev/null
+          ./vendor/bin/phpunit
