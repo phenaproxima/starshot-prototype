@@ -2,27 +2,22 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.node.blog.body
-    - field.field.node.blog.comment
-    - field.field.node.blog.field_image
-    - field.field.node.blog.field_meta_tags
-    - field.field.node.blog.field_tags
-    - node.type.blog
+    - field.field.node.page.body
+    - node.type.page
   module:
-    - comment
-    - media_library
+    - content_moderation
     - metatag
     - path
     - scheduler
     - text
-id: node.blog.default
+id: node.page.default
 targetEntityType: node
-bundle: blog
+bundle: page
 mode: default
 content:
   body:
     type: text_textarea_with_summary
-    weight: 2
+    weight: 31
     region: content
     settings:
       rows: 9
@@ -30,34 +25,11 @@ content:
       placeholder: ''
       show_summary: false
     third_party_settings: {  }
-  comment:
-    type: comment_default
-    weight: 20
-    region: content
-    settings: {  }
-    third_party_settings: {  }
   created:
     type: datetime_timestamp
     weight: 10
     region: content
     settings: {  }
-    third_party_settings: {  }
-  field_image:
-    type: media_library_widget
-    weight: 1
-    region: content
-    settings:
-      media_types: {  }
-    third_party_settings: {  }
-  field_tags:
-    type: entity_reference_autocomplete_tags
-    weight: 3
-    region: content
-    settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
     third_party_settings: {  }
   langcode:
     type: language_select
@@ -65,6 +37,12 @@ content:
     region: content
     settings:
       include_locked: true
+    third_party_settings: {  }
+  moderation_state:
+    type: moderation_state_default
+    weight: 100
+    region: content
+    settings: {  }
     third_party_settings: {  }
   path:
     type: path
@@ -106,16 +84,11 @@ content:
     third_party_settings: {  }
   title:
     type: string_textfield
-    weight: 0
+    weight: -5
     region: content
     settings:
       size: 60
       placeholder: ''
-    third_party_settings: {  }
-  translation:
-    weight: 10
-    region: content
-    settings: {  }
     third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete

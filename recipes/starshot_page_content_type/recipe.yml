@@ -1,107 +1,16 @@
 name: Basic Page
 type: Starshot
-description: 'Adds pretty URLs, moderation, scheduling, translation, and meta tags to the basic Page content type.'
+description: 'Provides a basic Page content type with pretty URLs, moderation, scheduling, translation, and meta tags.'
 recipes:
-  - editorial_workflow
-  - page_content_type
-install:
-  - content_translation
-  - diff
-  - metatag
-  - pathauto
-  - quick_node_clone
-  - scheduler
-  - simple_sitemap
-  - views
+  - starshot_content_type_base
 config:
-  import:
-    language: '*'
-    metatag:
-      - metatag.metatag_defaults.global
-      - metatag.metatag_defaults.node
-    simple_sitemap: '*'
-    scheduler:
-      - views.view.scheduler_scheduled_content
   actions:
-    core.entity_form_display.node.page.default:
-      setComponents:
-        - name: field_meta_tags
-          options:
-            type: metatag_firehose
-            weight: 121
-            region: content
-            settings:
-              sidebar: true
-              use_details: true
-        - name: scheduler_settings
-          options:
-            weight: 13
-            region: content
-        - name: publish_on
-          options:
-            type: datetime_timestamp_no_default
-            weight: 14
-            region: content
-        - name: unpublish_on
-          options:
-            type: datetime_timestamp_no_default
-            weight: 15
-            region: content
-    core.entity_view_display.node.page.default:
-      setComponent:
-        name: field_meta_tags
-        options:
-          type: metatag_empty_formatter
-          label: above
-          settings: { }
-          third_party_settings: { }
-          weight: 111
-          region: content
     metatag.settings:
       simple_config_update:
         entity_type_groups.node.page:
           - basic
-    node.type.page:
-      setThirdPartySettings:
-        - module: scheduler
-          key: expand_fieldset
-          value: when_required
-        - module: scheduler
-          key: fields_display_mode
-          value: vertical_tab
-        - module: scheduler
-          key: publish_enable
-          value: true
-        - module: scheduler
-          key: publish_past_date
-          value: error
-        - module: scheduler
-          key: publish_past_date_created
-          value: false
-        - module: scheduler
-          key: publish_required
-          value: false
-        - module: scheduler
-          key: publish_revision
-          value: true
-        - module: scheduler
-          key: publish_touch
-          value: true
-        - module: scheduler
-          key: show_message_after_update
-          value: true
-        - module: scheduler
-          key: unpublish_enable
-          value: true
-        - module: scheduler
-          key: unpublish_required
-          value: false
-        - module: scheduler
-          key: unpublish_revision
-          value: true
-    scheduler.settings:
-      simple_config_update:
-        hide_seconds: true
+          - advanced
+          - open_graph
     workflows.workflow.editorial:
       addNodeTypes:
         - page

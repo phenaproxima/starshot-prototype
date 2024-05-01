@@ -1,49 +1,19 @@
 name: Event content type
 type: Starshot
 recipes:
-  - editorial_workflow
+  - starshot_content_type_base
   - starshot_image_media_type
 install:
   - address
-  - content_translation
   - datetime_range
-  - diff
-  - filter
   - geolocation_address
   - geolocation_leaflet
   - layout_builder
-  - metatag
-  - node
-  - pathauto
-  - quick_node_clone
-  - scheduler
-  - simple_sitemap
   - smart_date
 config:
   import:
     filter:
       - filter.format.plain_text
-    language: '*'
-    metatag:
-      - metatag.metatag_defaults.global
-      - metatag.metatag_defaults.node
-    node:
-      # Only import config which is also imported by the Standard profile.
-      - core.entity_view_mode.node.full
-      - core.entity_view_mode.node.rss
-      - core.entity_view_mode.node.teaser
-      - field.storage.node.body
-      - system.action.node_delete_action
-      - system.action.node_make_sticky_action
-      - system.action.node_make_unsticky_action
-      - system.action.node_promote_action
-      - system.action.node_publish_action
-      - system.action.node_save_action
-      - system.action.node_unpromote_action
-      - system.action.node_unpublish_action
-    simple_sitemap: '*'
-    scheduler:
-      - views.view.scheduler_scheduled_content
   actions:
     metatag.settings:
       simple_config_update:
@@ -51,9 +21,6 @@ config:
           - basic
           - advanced
           - open_graph
-    scheduler.settings:
-      simple_config_update:
-        hide_seconds: true
     workflows.workflow.editorial:
       addNodeTypes:
         - event
