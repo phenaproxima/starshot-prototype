@@ -16,7 +16,10 @@ class BasicExpectationsTest extends ExistingSiteBase {
    */
   public function testBasicExpectations(): void {
     $this->drupalGet('/');
-    $this->assertSession()->statusCodeEquals(200);
+
+    $assert_session = $this->assertSession();
+    $assert_session->statusCodeEquals(200);
+    $assert_session->elementAttributeContains('css', 'meta[name="Generator"]', 'content', 'Drupal');
   }
 
 }
