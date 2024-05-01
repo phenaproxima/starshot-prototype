@@ -2,7 +2,7 @@ name: Audio media type
 type: Starshot
 description: 'Adds a few enhancements to the audio file media type.'
 recipes:
-  - audio_media_type
+  - core/recipes/audio_media_type
 install:
   - media_entity_download
   - media_file_delete

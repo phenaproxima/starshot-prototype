@@ -2,7 +2,7 @@ name: Document media type
 type: Starshot
 description: 'Adds a few enhancements to the document media type.'
 recipes:
-  - document_media_type
+  - core/recipes/document_media_type
 install:
   - media_entity_download
   - media_file_delete

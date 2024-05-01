@@ -2,7 +2,7 @@ name: Image media type
 type: Starshot
 description: 'Adds focal point-based cropping to the image media type.'
 recipes:
-  - image_media_type
+  - core/recipes/image_media_type
 install:
   - focal_point
   - media_file_delete

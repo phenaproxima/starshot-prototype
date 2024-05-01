@@ -2,7 +2,7 @@ name: Video file media type
 type: Starshot
 description: 'Adds a few enhancements to the video file media type.'
 recipes:
-  - local_video_media_type
+  - core/recipes/local_video_media_type
 install:
   - media_entity_download
   - media_file_delete

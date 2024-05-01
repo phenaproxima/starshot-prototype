@@ -2,16 +2,16 @@ name: Starshot
 description: Applies all the Starshot recipes.
 type: Site
 recipes:
-  - basic_block_type
-  - content_search
-  - core_recommended_performance
-  - core_recommended_maintenance
-  - core_recommended_front_end_theme
-  - user_picture
+  - core/recipes/basic_block_type
+  - core/recipes/content_search
+  - core/recipes/core_recommended_performance
+  - core/recipes/core_recommended_maintenance
+  - core/recipes/core_recommended_front_end_theme
+  - core/recipes/user_picture
   # Provides a fallback text format which is available to all users.
-  - restricted_html_format
+  - core/recipes/restricted_html_format
   # Not in Standard...
-  - remote_video_media_type
+  - core/recipes/remote_video_media_type
   - starshot_admin_theme
   - starshot_audio_media_type
   - starshot_blog

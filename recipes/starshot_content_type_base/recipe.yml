@@ -2,7 +2,7 @@ name: 'Content type basics'
 type: 'Starshot'
 description: 'Provides basic infrastructure for translation, moderation, meta tags, cloning, and scheduled publishing of content.'
 recipes:
-  - editorial_workflow
+  - core/recipes/editorial_workflow
 install:
   - content_translation
   - diff

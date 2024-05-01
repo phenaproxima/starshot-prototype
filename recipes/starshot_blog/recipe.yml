@@ -2,10 +2,10 @@ name: Blog
 type: Starshot
 description: 'Sets up a basic blog, with tagging and commenting.'
 recipes:
-  - comment_base
+  - core/recipes/comment_base
   - starshot_content_type_base
   - starshot_image_media_type
-  - tags_taxonomy
+  - core/recipes/tags_taxonomy
 config:
   import:
     image:
