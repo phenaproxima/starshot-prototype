@@ -65,6 +65,7 @@ class MetatagsTest extends ExistingSiteBase {
 
     if ($has_image) {
       $this->assertMetaTag('og:image', $file_url);
+      $this->assertMetaTag('og:image:alt', $media->field_media_image->alt);
     }
   }
 
