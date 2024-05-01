@@ -24,6 +24,7 @@ recipes:
   - starshot_local_video_media_type
   - starshot_page_content_type
 install:
+  - metatag
   - menu_link_content
   - redirect
   # The rest of these are in Standard.
@@ -46,6 +47,7 @@ config:
     image:
       - image.style.large
       - image.style.thumbnail
+    metatag: '*'
     node:
       - views.view.archive
       - views.view.content
