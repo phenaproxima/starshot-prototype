@@ -16,6 +16,9 @@ install:
 config:
   import:
     language: '*'
+    metatag:
+      - metatag.metatag_defaults.global
+      - metatag.metatag_defaults.node
     simple_sitemap: '*'
     scheduler:
       - views.view.scheduler_scheduled_content

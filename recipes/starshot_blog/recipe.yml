@@ -25,6 +25,9 @@ config:
       - image.style.thumbnail
       - image.style.wide
     language: '*'
+    metatag:
+      - metatag.metatag_defaults.global
+      - metatag.metatag_defaults.node
     node:
       # Only import config which is also imported by the Standard profile.
       - core.entity_view_mode.node.full
