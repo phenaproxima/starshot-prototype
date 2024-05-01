@@ -91,9 +91,10 @@ jobs:
           php /var/www/vendor/bin/drush core:status
 
       - name: Test
+        working-directory: /var/www
         run: |
           # Run cron to populate the search index, etc.
-          php /var/www/vendor/bin/drush core:cron
+          php ./vendor/bin/drush core:cron
           echo
 
           ./vendor/bin/phpunit
