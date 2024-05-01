@@ -110,6 +110,7 @@ config:
         use_admin_theme: true
     user.role.authenticated:
       grantPermissions:
+        - 'access help pages'
         - 'access shortcuts'
         - 'access user profiles'
         - 'delete own files'
