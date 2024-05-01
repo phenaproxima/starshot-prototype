@@ -70,6 +70,7 @@ jobs:
             php${{ matrix.php }} \
             php${{ matrix.php }}-dom \
             php${{ matrix.php }}-gd \
+            php${{ matrix.php }}-mbstring \
             php${{ matrix.php }}-pdo \
             php${{ matrix.php }}-simplexml \
             php${{ matrix.php }}-sqlite3 \
@@ -91,9 +92,10 @@ jobs:
           php /var/www/vendor/bin/drush core:status
 
       - name: Test
+        working-directory: /var/www
         run: |
           # Run cron to populate the search index, etc.
-          php /var/www/vendor/bin/drush core:cron
+          php ./vendor/bin/drush core:cron
           echo
 
-          curl http://localhost/ 2>/dev/null
+          ./vendor/bin/phpunit
