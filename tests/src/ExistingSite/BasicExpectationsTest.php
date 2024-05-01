@@ -22,7 +22,7 @@ class BasicExpectationsTest extends ExistingSiteBase {
 
     $assert_session = $this->assertSession();
     $assert_session->statusCodeEquals(200);
-    $assert_session->elementAttributeContains('css', 'meta[name="Generator"]', 'content', 'Drupal');
+    $this->assertMetaTag('Generator', 'Drupal', exact: FALSE);
 
     $random = $this->getRandomGenerator();
 
@@ -115,7 +115,7 @@ class BasicExpectationsTest extends ExistingSiteBase {
     $this->assertMetaTag('og:type', 'Event');
   }
 
-  private function assertMetaTag(string $name, string $expected_value, string $tag_name = 'meta'): void {
+  private function assertMetaTag(string $name, string $expected_value, string $tag_name = 'meta', bool $exact = TRUE): void {
     $name_attribute = match ($tag_name) {
       'meta' => str_contains($name, ':') ? 'property' : 'name',
       'link' => 'rel',
@@ -128,7 +128,9 @@ class BasicExpectationsTest extends ExistingSiteBase {
         'link' => 'href',
       });
 
-    $this->assertSame($expected_value, $actual_value);
+    $exact
+      ? $this->assertSame($expected_value, $actual_value)
+      : $this->assertStringContainsString($expected_value, $actual_value);
   }
 
 }
