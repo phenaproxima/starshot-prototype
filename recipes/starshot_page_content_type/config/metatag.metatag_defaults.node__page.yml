@@ -5,4 +5,7 @@ id: node__page
 label: 'Content: Basic page'
 tags:
   description: '[node:summary]'
+  og_description: '[node:summary]'
+  og_title: '[node:title]'
+  og_type: '[node:content-type]'
   title: '[node:title]'
