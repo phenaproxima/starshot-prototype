@@ -1,0 +1,12 @@
+diff --git a/core/lib/Drupal/Core/Config/Entity/ConfigEntityBase.php b/core/lib/Drupal/Core/Config/Entity/ConfigEntityBase.php
+index 2ea3c04f1da063e9fe3bfebdc79d1b5617b26d33..0626f5e42e6caf02b42bdcfe8e4eb09088320946 100644
+--- a/core/lib/Drupal/Core/Config/Entity/ConfigEntityBase.php
++++ b/core/lib/Drupal/Core/Config/Entity/ConfigEntityBase.php
+@@ -190,6 +190,7 @@ public function disable() {
+   /**
+    * {@inheritdoc}
+    */
++  #[ActionMethod(adminLabel: new TranslatableMarkup('Enable or disable'), pluralize: FALSE)]
+   public function setStatus($status) {
+     $this->status = (bool) $status;
+     return $this;
