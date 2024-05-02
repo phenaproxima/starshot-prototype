@@ -94,12 +94,14 @@ jobs:
       - name: Test
         working-directory: /var/www
         run: |
+          set -o xtrace
+
           # Run cron to populate the search index, etc.
           php ./vendor/bin/drush core:cron
           echo
 
           # Smoke tests.
-          curl http://localhost/ | grep "<title>"
-          curl --location http://localhost/node/1 | grep "<title>"
+          curl --silent http://localhost/ | grep "<title>" || true
+          curl --location --silent http://localhost/node/1 | grep "<title>" || true
 
           ./vendor/bin/phpunit

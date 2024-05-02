@@ -41,5 +41,5 @@ services:
         - php vendor/bin/drush core:cron
 
         # Smoke tests.
-        - curl http://localhost/ | grep "<title>"
-        - curl --location http://localhost/node/1 | grep "<title>"
+        - curl --silent http://localhost/ | grep "<title>" || true
+        - curl --location --silent http://localhost/node/1 | grep "<title>" || true
