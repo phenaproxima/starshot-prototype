@@ -90,19 +90,16 @@ jobs:
           set -o xtrace
 
           php -v | head -1
-          echo
-          php /var/www/vendor/bin/drush core:status
+          echo; php /var/www/vendor/bin/drush core:status
 
           # Smoke tests.
-          curl --silent http://localhost/ | grep "<title>" || true
-          echo
-          curl --location --silent http://localhost/node/1 | grep "<title>" || true
+          echo; curl --silent http://localhost/ | grep "<title>" || true
+          echo; curl --location --silent http://localhost/node/1 | grep "<title>" || true
 
       - name: Test
         working-directory: /var/www
         run: |
           # Run cron to populate the search index, etc.
           php ./vendor/bin/drush core:cron
-          echo
 
-          ./vendor/bin/phpunit
+          echo; ./vendor/bin/phpunit
