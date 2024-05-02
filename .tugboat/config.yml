@@ -14,6 +14,7 @@ services:
         - sudo apt update
         - sudo apt install sqlite3
       build:
+        - rm composer.lock | true
         - composer install
         - composer run drupal:install-dev
 
