@@ -31,6 +31,7 @@ This one command will install Starshot and open it in a web browser for you to p
 * [Scheduler](https://drupal.org/project/scheduler)
 * [Simple Sitemap](https://drupal.org/project/simple_sitemap)
 * [Smart Date](https://drupal.org/project/smart_date)
+* [ULI Custom Workflow](https://drupal.org/project/uli_custom_workflow)
 * [Webform](https://drupal.org/project/webform)
 
 ...and, of course, [Drush](https://www.drush.org).

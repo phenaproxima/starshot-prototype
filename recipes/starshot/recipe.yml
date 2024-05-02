@@ -27,6 +27,7 @@ install:
   - metatag
   - menu_link_content
   - redirect
+  - uli_custom_workflow
   # The rest of these are in Standard.
   - help
   - history
