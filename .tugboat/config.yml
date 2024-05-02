@@ -43,14 +43,14 @@ services:
 
       debugging:
         # Current commit.
-        echo; git show -s HEAD
+        - echo; git show -s HEAD
 
         # PHP version.
-        echo; php -v | head -1
+        - echo; php -v | head -1
 
         # Drush status.
-        echo; php /var/www/vendor/bin/drush core:status || true
+        - echo; php /var/www/vendor/bin/drush core:status || true
 
         # Apache smoke tests.
-        echo; curl --silent http://localhost/ | grep "<title>" || true
-        echo; curl --location --silent http://localhost/node/1 | grep "<title>" || true
+        - echo; curl --silent http://localhost/ | grep "<title>" || true
+        - echo; curl --location --silent http://localhost/node/1 | grep "<title>" || true
