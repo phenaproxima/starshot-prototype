@@ -39,3 +39,7 @@ services:
 
         # Run cron to populate the search index, etc.
         - php vendor/bin/drush core:cron
+
+        # Smoke tests.
+        - curl http://localhost/ | grep "<title>"
+        - curl --location http://localhost/node/1 | grep "<title>"
