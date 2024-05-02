@@ -35,7 +35,7 @@ class BasicExpectationsTest extends ExistingSiteBase {
       ],
       'moderation_state' => 'published',
     ]);
-    $this->drupalGet('/?q=node/' . $node->id());
+    $this->drupalGet('/index.php?q=node/' . $node->id());
     $this->assertSame(200, $this->getSession()->getStatusCode(), $this->getSession()->getPage()->getContent());
     $assert_session->statusCodeEquals(200);
     $this->assertMetaTag('description', 'Not a random summary...');
