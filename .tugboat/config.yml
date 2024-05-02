@@ -13,6 +13,7 @@ services:
 
         - sudo apt update
         - sudo apt install sqlite3
+
       build:
         - rm composer.lock || true
         - composer install
@@ -40,6 +41,16 @@ services:
         # Run cron to populate the search index, etc.
         - php vendor/bin/drush core:cron
 
-        # Smoke tests.
-        - curl --silent http://localhost/ | grep "<title>" || true
-        - curl --location --silent http://localhost/node/1 | grep "<title>" || true
+      debugging:
+        # Current commit.
+        echo; git show -s HEAD
+
+        # PHP version.
+        echo; php -v | head -1
+
+        # Drush status.
+        echo; php /var/www/vendor/bin/drush core:status || true
+
+        # Apache smoke tests.
+        echo; curl --silent http://localhost/ | grep "<title>" || true
+        echo; curl --location --silent http://localhost/node/1 | grep "<title>" || true

@@ -89,10 +89,16 @@ jobs:
         run: |
           set -o xtrace
 
-          php -v | head -1
-          echo; php /var/www/vendor/bin/drush core:status
+          # Current commit.
+          echo; git show -s HEAD
 
-          # Smoke tests.
+          # PHP version.
+          echo; php -v | head -1
+
+          # Drush status.
+          echo; php /var/www/vendor/bin/drush core:status || true
+
+          # Apache smoke tests.
           echo; curl --silent http://localhost/ | grep "<title>" || true
           echo; curl --location --silent http://localhost/node/1 | grep "<title>" || true
 
