@@ -22,7 +22,7 @@ class BasicExpectationsTest extends ExistingSiteBase {
 
     $assert_session = $this->assertSession();
     $assert_session->statusCodeEquals(200);
-    $this->assertMetaTag('Generator', 'Drupal', exact: FALSE);
+    $this->assertMetaTag('Generator', 'Drupal', exact_match: FALSE);
 
     $random = $this->getRandomGenerator();
 
@@ -36,6 +36,7 @@ class BasicExpectationsTest extends ExistingSiteBase {
       'moderation_state' => 'published',
     ]);
     $this->drupalGet('/node/' . $node->id());
+    $this->assertMetaTag('Generator', 'Drupal', exact_match: FALSE);
     $assert_session->statusCodeEquals(200);
     $this->assertMetaTag('description', 'Not a random summary...');
     $this->assertMetaTag('og:description', 'Not a random summary...');
@@ -115,7 +116,7 @@ class BasicExpectationsTest extends ExistingSiteBase {
     $this->assertMetaTag('og:type', 'Event');
   }
 
-  private function assertMetaTag(string $name, string $expected_value, string $tag_name = 'meta', bool $exact = TRUE): void {
+  private function assertMetaTag(string $name, string $expected_value, string $tag_name = 'meta', bool $exact_match = TRUE): void {
     $name_attribute = match ($tag_name) {
       'meta' => str_contains($name, ':') ? 'property' : 'name',
       'link' => 'rel',
@@ -127,10 +128,12 @@ class BasicExpectationsTest extends ExistingSiteBase {
         'meta' => 'content',
         'link' => 'href',
       });
-
-    $exact
-      ? $this->assertSame($expected_value, $actual_value)
-      : $this->assertStringContainsString($expected_value, $actual_value);
+    if ($exact_match) {
+      $this->assertSame($expected_value, $actual_value);
+    }
+    else {
+      $this->assertStringContainsString($expected_value, $actual_value);
+    }
   }
 
 }
