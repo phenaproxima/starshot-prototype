@@ -41,7 +41,8 @@ services:
         # Run cron to populate the search index, etc.
         - php vendor/bin/drush core:cron
 
-      debugging:
+        # DEBUGGING:
+
         # Current commit.
         - echo; git show -s HEAD
 

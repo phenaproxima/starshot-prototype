@@ -12,8 +12,12 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
-    runs-on: "${{ matrix.os }}-latest"
+  ubuntu:
+    runs-on: ubuntu-latest
+    container:
+      image: tugboatqa/php:8.3-apache
+      volumes:
+        - ${{ github.workspace }}:/var/lib/tugboat
     strategy:
       fail-fast: false
       matrix:
@@ -24,9 +28,20 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4 # https://github.com/marketplace/actions/checkout
 
+      - name: Configure image
+        run: |
+          git config --global --add safe.directory /__w/starshot-prototype/starshot-prototype
+          docker-php-ext-install opcache
+          a2enmod headers rewrite
+          echo "memory_limit = -1" >> /usr/local/etc/php/conf.d/my-php.ini
+          sudo service apache2 start
+
       - name: Create project
         run: |
           set -o xtrace
+
+          sudo apt update
+          sudo apt install sqlite3
 
           # Prepare the target directory.
           sudo mkdir -p /var/www
@@ -56,56 +71,29 @@ jobs:
           # Make everything writable.
           sudo chmod -R 777 /var/www/web
 
-      - name: Set up Apache on Linux
-        if: runner.os == 'Linux'
-        run: |
-          set -o xtrace
+          # Symlink docroot.
+          ln -snf /var/www/web "${DOCROOT}"
 
-          # Install Apache w/ PHP.
-          sudo add-apt-repository ppa:ondrej/php
-          sudo add-apt-repository ppa:ondrej/apache2
-          sudo apt update
-          sudo apt install \
-            apache2 \
-            php${{ matrix.php }} \
-            php${{ matrix.php }}-dom \
-            php${{ matrix.php }}-gd \
-            php${{ matrix.php }}-mbstring \
-            php${{ matrix.php }}-pdo \
-            php${{ matrix.php }}-simplexml \
-            php${{ matrix.php }}-sqlite3 \
-            php${{ matrix.php }}-tokenizer \
-            php${{ matrix.php }}-xml \
-            libapache2-mod-php${{ matrix.php }}
-          sudo a2enmod php${{ matrix.php }}
-
-          # Change the default site web directory.
-          sudo sed -i 's/\/var\/www\/html/\/var\/www\/web/g' /etc/apache2/sites-enabled/000-default.conf
-
-          # Start the service.
-          sudo service apache2 start
+          # Run cron to populate the search index, etc.
+          php ./vendor/bin/drush core:cron
 
       - name: Debugging
         run: |
           set -o xtrace
 
           # Current commit.
-          echo; git show -s HEAD
+          git log -s -1 | head -2
 
           # PHP version.
-          echo; php -v | head -1
+          php -v || head -1
 
           # Drush status.
-          echo; php /var/www/vendor/bin/drush core:status || true
+          php /var/www/vendor/bin/drush core:status || true
 
           # Apache smoke tests.
-          echo; curl --silent http://localhost/ | grep "<title>" || true
-          echo; curl --location --silent http://localhost/node/1 | grep "<title>" || true
+          curl --silent http://localhost/ | grep "<title>" || true
+          curl --location --silent http://localhost/node/1 | grep "<title>" || true
 
       - name: Test
         working-directory: /var/www
-        run: |
-          # Run cron to populate the search index, etc.
-          php ./vendor/bin/drush core:cron
-
-          echo; ./vendor/bin/phpunit
+        run: ./vendor/bin/phpunit
