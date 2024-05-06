@@ -5,6 +5,8 @@
 ## Drupal Starshot
 Starshot is Drupal 10, but supercharged with some of the best modules and themes out there, set up in useful ways to help you get started building a site right away. Starshot is built on the [Drupal recipe system](https://drupal.org/project/distributions_recipes) (soon to be in core), so it doesn't lock you in like a normal distribution would.
 
+[![button.png](.tugboat%2Fbutton.png)](https://main-fw6eaiqwuojqnlnerzwoc8rf2ca8t4qq.tugboatqa.com/)
+
 ## Installation
 ```
 composer create-project drupal/starshot-project --repository='{"type":"vcs","url":"https://github.com/phenaproxima/starshot-prototype"}' --stability=dev
