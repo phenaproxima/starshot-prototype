@@ -23,6 +23,9 @@ recipes:
   - starshot_image_media_type
   - starshot_local_video_media_type
   - starshot_page_content_type
+  # Multilingual support must be applied after all content types have been
+  # created.
+  - starshot_multilingual
 install:
   - metatag
   - menu_link_content
