@@ -7,6 +7,8 @@ Starshot is Drupal 10, but supercharged with some of the best modules and themes
 
 [![button.png](.tugboat%2Fbutton.png)](https://main-fw6eaiqwuojqnlnerzwoc8rf2ca8t4qq.tugboatqa.com/)
 
+[You can learn more about Starshot on drupal.org.](https://drupal.org/starshot)
+
 ## Installation
 ```
 composer create-project drupal/starshot-project --repository='{"type":"vcs","url":"https://github.com/phenaproxima/starshot-prototype"}' --stability=dev
