@@ -16,7 +16,7 @@ composer create-project drupal/starshot-project --repository='{"type":"vcs","url
 This one command will install Starshot and open it in a web browser for you to play with. You'll get all the modules and themes listed below, pre-configured.
 
 ### DDEV installation
-If you don't have PHP and Composer installed in your host machine, you can try in DDEV:
+If you don't have PHP and Composer installed on your host machine, you can try in DDEV:
 ```
 mkdir starshot && cd starshot
 ddev config --project-type=drupal --docroot=web
