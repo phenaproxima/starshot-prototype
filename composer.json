@@ -113,7 +113,7 @@
     "scripts": {
         "drupal:install": [
             "drush site-install minimal --yes --quiet",
-            "cd web && php core/scripts/drupal recipe ../recipes/starshot",
+            "cd web && php -d memory_limit=512M core/scripts/drupal recipe ../recipes/starshot",
             "drush theme:uninstall --yes --quiet stark",
             "drush cache:rebuild"
         ],
