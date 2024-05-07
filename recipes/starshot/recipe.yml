@@ -89,6 +89,7 @@ config:
         base_primary_color: '#0a205a'
     system.site:
       simple_config_update:
+        name: 'Starshot'
         page.front: '/node'
     user.role.content_editor:
       grantPermissionsForEachMediaType:
