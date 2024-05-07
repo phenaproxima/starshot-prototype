@@ -4,6 +4,7 @@ description: Adds support for translations to all content types.
 install:
   - content_translation
   - language
+  - node
 config:
   actions:
     node.type.*:
