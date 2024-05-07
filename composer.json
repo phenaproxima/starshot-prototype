@@ -9,10 +9,6 @@
         "chat": "https://www.drupal.org/node/314178"
     },
     "repositories": {
-        "starshot-core": {
-            "type": "vcs",
-            "url": "https://github.com/phenaproxima/starshot-core.git"
-        },
         "drupal": {
             "type": "composer",
             "url": "https://packages.drupal.org/8"
