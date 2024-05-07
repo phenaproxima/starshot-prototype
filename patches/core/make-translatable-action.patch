@@ -1,0 +1,97 @@
+diff --git a/core/modules/language/src/Plugin/ConfigAction/MakeBundleTranslatable.php b/core/modules/language/src/Plugin/ConfigAction/MakeBundleTranslatable.php
+new file mode 100644
+index 0000000000..78805b9af6
+--- /dev/null
++++ b/core/modules/language/src/Plugin/ConfigAction/MakeBundleTranslatable.php
+@@ -0,0 +1,46 @@
++<?php
++
++namespace Drupal\language\Plugin\ConfigAction;
++
++use Drupal\Core\Config\Action\Attribute\ConfigAction;
++use Drupal\Core\Config\Action\ConfigActionPluginInterface;
++use Drupal\Core\Config\ConfigManagerInterface;
++use Drupal\Core\Config\Entity\ConfigEntityInterface;
++use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
++use Drupal\Core\StringTranslation\TranslatableMarkup;
++use Drupal\language\Entity\ContentLanguageSettings;
++use Symfony\Component\DependencyInjection\ContainerInterface;
++
++#[ConfigAction(
++  id: 'makeTranslatable',
++  admin_label: new TranslatableMarkup('Enable translations'),
++)]
++final class MakeBundleTranslatable implements ConfigActionPluginInterface, ContainerFactoryPluginInterface {
++
++  public function __construct(
++    private readonly ConfigManagerInterface $configManager,
++  ) {}
++
++  /**
++   * {@inheritdoc}
++   */
++  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
++    return new static(
++      $container->get(ConfigManagerInterface::class),
++    );
++  }
++
++  /**
++   * {@inheritdoc}
++   */
++  public function apply(string $configName, mixed $value): void {
++    /** @var \Drupal\Core\Config\Entity\ConfigEntityInterface $bundle */
++    $bundle = $this->configManager->loadConfigEntityByName($configName);
++
++    ContentLanguageSettings::loadByEntityTypeBundle(
++      $bundle->getEntityType()->getBundleOf(),
++      $bundle->id(),
++    )->setLanguageAlterable(TRUE)->save();
++  }
++
++}
+diff --git a/core/modules/language/src/Plugin/ConfigAction/MakeBundleTranslatableDeriver.php b/core/modules/language/src/Plugin/ConfigAction/MakeBundleTranslatableDeriver.php
+new file mode 100644
+index 0000000000..2411cdd8fb
+--- /dev/null
++++ b/core/modules/language/src/Plugin/ConfigAction/MakeBundleTranslatableDeriver.php
+@@ -0,0 +1,39 @@
++<?php
++
++namespace Drupal\language\Plugin\ConfigAction;
++
++use Drupal\Component\Plugin\Derivative\DeriverBase;
++use Drupal\Core\Entity\EntityTypeManagerInterface;
++use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
++use Symfony\Component\DependencyInjection\ContainerInterface;
++
++final class MakeBundleTranslatableDeriver extends DeriverBase implements ContainerDeriverInterface {
++
++  public function __construct(
++    private readonly EntityTypeManagerInterface $entityTypeManager,
++  ) {}
++
++  /**
++   * {@inheritdoc}
++   */
++  public static function create(ContainerInterface $container, $base_plugin_id) {
++    return new static(
++      $container->get(EntityTypeManagerInterface::class),
++    );
++  }
++
++  /**
++   * {@inheritdoc}
++   */
++  public function getDerivativeDefinitions($base_plugin_definition) {
++    foreach ($this->entityTypeManager->getDefinitions() as $id => $definition) {
++      if ($definition->getBundleOf()) {
++        $this->derivatives[$id] = [
++          'entity_types' => [$id],
++        ] + $base_plugin_definition;
++      }
++    }
++    return parent::getDerivativeDefinitions($base_plugin_definition);
++  }
++
++}

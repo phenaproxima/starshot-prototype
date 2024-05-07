@@ -105,7 +105,8 @@
         "patches": {
             "drupal/core": {
                 "Disable block_theme_initialize() to prevent duplicate blocks": "./patches/core/disable-block_theme_initialize.patch",
-                "#3444246: Create a config action to set the status of the entity": "./patches/core/recipes-103.patch"
+                "#3444246: Create a config action to set the status of the entity": "./patches/core/recipes-103.patch",
+                "Add config actions to make a bundle of an entity type translatable": "./patches/core/make-translatable-action.patch"
             }
         }
     },
