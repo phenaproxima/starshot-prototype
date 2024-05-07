@@ -66,3 +66,18 @@ We don't _quite_ support this yet, but you'll also be able to use Starshot's com
 
 ## How we choose which modules and themes to include
 Right now it's pretty much "let's add whatever we think is useful for most people". [We're working on defining a policy and process for this.](https://github.com/phenaproxima/starshot-prototype/issues/11) If you have an idea for a module to include, by all means [open an issue](https://github.com/phenaproxima/starshot-prototype/issues/new/choose)!
+
+## Known Issues and Workarounds
+
+### Server Timeout Issue
+Some users might experience a timeout after logging into Starshot, particularly when the PHP web server remains idle for some time.
+
+You may see an error like this:
+```
+The process "test -n "$CI" || composer drupal:run-server" exceeded the timeout of 300 seconds.
+```
+
+If you encounter this, you can restart the server using the following command:
+```
+composer drupal:run-server
+```
