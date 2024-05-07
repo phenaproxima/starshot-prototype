@@ -15,6 +15,19 @@ composer create-project drupal/starshot-project --repository='{"type":"vcs","url
 ```
 This one command will install Starshot and open it in a web browser for you to play with. You'll get all the modules and themes listed below, pre-configured.
 
+### DDEV installation
+If you don't have PHP and Composer installed in your host machine, you can try in DDEV:
+```
+mkdir starshot && cd starshot
+ddev config --project-type=drupal --docroot=web
+ddev start
+ddev composer create drupal/starshot-project --repository='{"type":"vcs","url":"https://github.com/phenaproxima/starshot-prototype"}' --stability=dev
+```
+After the download completes, you probably get an error since `drupal quick-start` doesn't work in DDEV. Stop the server with Ctrl-C, and create login link:
+```
+ddev drush uli -l https://starshot.ddev.site
+```
+
 ## Included modules and themes
 * [Address](https://drupal.org/project/address)
 * [Antibot](https://drupal.org/project/antibot)
