@@ -50,7 +50,7 @@ services:
         - echo; php -v | head -1
 
         # Drush status.
-        - echo; php /var/www/vendor/bin/drush core:status || true
+        - echo; php vendor/bin/drush core:status || true
 
         # Apache smoke tests.
         - echo; curl --silent http://localhost/ | grep "<title>" || true
