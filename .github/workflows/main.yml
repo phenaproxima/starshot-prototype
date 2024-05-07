@@ -96,4 +96,4 @@ jobs:
 
       - name: Test
         working-directory: /var/www
-        run: ./vendor/bin/phpunit --testdox
+        run: composer drupal:run-tests -- --testdox
