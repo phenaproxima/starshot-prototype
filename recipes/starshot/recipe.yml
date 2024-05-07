@@ -23,13 +23,12 @@ recipes:
   - starshot_image_media_type
   - starshot_local_video_media_type
   - starshot_page_content_type
-  # Multilingual support must be applied after all content types have been
-  # created.
-  - starshot_multilingual
 install:
   - metatag
   - menu_link_content
+  - project_browser
   - redirect
+  - starshot_project_browser
   - uli_custom_workflow
   # The rest of these are in Standard.
   - help
@@ -87,6 +86,10 @@ config:
     olivero.settings:
       simple_config_update:
         base_primary_color: '#0a205a'
+    project_browser.admin_settings:
+      simple_config_update:
+        enabled_sources:
+          - local_recipes
     system.site:
       simple_config_update:
         page.front: '/node'
