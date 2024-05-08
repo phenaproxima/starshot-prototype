@@ -20,6 +20,9 @@ If you use [DDEV](https://ddev.com), you can get Starshot up and running with th
 git clone https://github.com/phenaproxima/starshot-prototype.git starshot
 cd starshot && ddev install
 ```
+
+If you are having an error when opening the page after starting with ```ddev```, change the line ```disable_settings_management``` from ```true``` to ```false```. on ```.ddev/config.yaml``` file, save and run ```ddev stop && ddev start```.
+
 You'll need DDEV 1.23.0 or later. [See the documentation](https://ddev.readthedocs.io/en/stable/users/install/ddev-upgrade/) if you need to upgrade.
 
 ## Included modules and themes
