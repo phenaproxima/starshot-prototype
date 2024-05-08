@@ -3,7 +3,7 @@
 **This is an experimental prototype. Don't use it for production sites!**
 
 ## Drupal Starshot
-Starshot is Drupal 10, but supercharged with some of the best modules and themes out there, set up in useful ways to help you get started building a site right away. Starshot is built on the [Drupal recipe system](https://drupal.org/project/distributions_recipes) (soon to be in core), so it doesn't lock you in like a normal distribution would.
+Starshot is Drupal 10, but supercharged with some of the best modules and themes out there, set up in useful ways to help you get started building a site right away. Starshot is built on the [Drupal recipe system](https://drupal.org/project/distributions_recipes), so it doesn't lock you in like a normal distribution would.
 
 [![button.png](.tugboat%2Fbutton.png)](https://main-fw6eaiqwuojqnlnerzwoc8rf2ca8t4qq.tugboatqa.com/)
 
@@ -51,7 +51,7 @@ cd starshot && ddev install
 * Useful content types, already set up for translation, meta tags, pretty URLs, moderation, and scheduling.
 * A standard set of media types, with some enhancements (setting an image's focal point, for example, or better linking to uploaded documents).
 * An amazingly full-featured platform for building web forms with anti-spam protection.
-* A much nicer administrative experience than you'd get with plain Drupal, based on the Gin theme, plus the Navigation (now in core!) and Coffee modules.
+* A much nicer administrative experience than you'd get with plain Drupal, based on the Gin theme, plus the Navigation and Coffee modules.
 * Basic niceties:
   * An XML site map
   * Better date and time fields
@@ -74,9 +74,9 @@ We don't _quite_ support this yet, but you'll also be able to use Starshot's com
 ## How we choose which modules and themes to include
 Right now it's pretty much "let's add whatever we think is useful for most people". [We're working on defining a policy and process for this.](https://github.com/phenaproxima/starshot-prototype/issues/11) If you have an idea for a module to include, by all means [open an issue](https://github.com/phenaproxima/starshot-prototype/issues/new/choose)!
 
-## Known Issues and Workarounds
+## Known issues & workarounds
 
-### Server Timeout Issue
+### Server timeout
 Some users might experience a timeout after logging into Starshot, particularly when the PHP web server remains idle for some time.
 
 You may see an error like this:
