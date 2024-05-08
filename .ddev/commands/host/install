@@ -5,4 +5,4 @@
 ddev start
 ddev composer install
 ddev composer drupal:install
-open `ddev drush user:login --name=admin --uri=$DDEV_PRIMARY_URL`
+open $DDEV_PRIMARY_URL
