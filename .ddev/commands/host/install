@@ -1,5 +1,8 @@
 #!/bin/bash
 
+## Description: Installs Starshot and opens it in a browser.
+
 ddev start
 ddev composer install
 ddev composer drupal:install
+open `ddev drush user:login --name=admin --uri=$DDEV_PRIMARY_URL`

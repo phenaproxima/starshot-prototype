@@ -15,6 +15,13 @@ composer create-project drupal/starshot-project --repository='{"type":"vcs","url
 ```
 This one command will install Starshot and open it in a web browser for you to play with. You'll get all the modules and themes listed below, pre-configured.
 
+If you use [DDEV](https://ddev.com), you can get Starshot up and running with this:
+
+```
+git clone https://github.com/phenaproxima/starshot-prototype.git starshot
+cd starshot && ddev install
+```
+
 ## Included modules and themes
 * [Address](https://drupal.org/project/address)
 * [Antibot](https://drupal.org/project/antibot)
