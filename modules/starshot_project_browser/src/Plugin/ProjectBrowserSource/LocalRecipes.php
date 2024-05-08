@@ -10,6 +10,7 @@ use Drupal\project_browser\ProjectBrowser\Project;
 use Drupal\project_browser\ProjectBrowser\ProjectsResultsPage;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\Finder\SplFileInfo;
 
 /**
  * @ProjectBrowserSource(
@@ -77,10 +78,21 @@ final class LocalRecipes extends ProjectBrowserSourceBase {
           created: 0,
           author: [],
           composerNamespace: 'drupal/' . $id,
+          type: 'drupal-recipe',
+          commands: $this->createCommands($file),
         );
       }
     }
     return new ProjectsResultsPage(0, $list, 'Recipes', $this->getPluginId(), FALSE);
+  }
+
+  private function createCommands(SplFileInfo $file): string {
+    $message = '<p>' . $this->t('To apply this recipe, run the following at the command line:') . '</p>';
+    $message .= '<code>';
+    $message .= sprintf('php %s/core/scripts/drupal recipe %s', $this->appRoot, $file->getRealPath());
+    $message .= '</code>';
+
+    return (string) $message;
   }
 
   /**
