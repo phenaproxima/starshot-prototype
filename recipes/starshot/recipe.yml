@@ -92,6 +92,7 @@ config:
           - local_recipes
     system.site:
       simple_config_update:
+        name: 'Starshot'
         page.front: '/node'
     user.role.content_editor:
       grantPermissionsForEachMediaType:
