@@ -1,0 +1,5 @@
+#!/bin/bash
+
+ddev start
+ddev composer install
+ddev composer drupal:install
