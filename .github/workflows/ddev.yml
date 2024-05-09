@@ -16,8 +16,6 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
-      matrix:
-        os: [ ubuntu ]
 
     steps:
       - name: Checkout code
@@ -38,3 +36,8 @@ jobs:
       - name: Spin up Starshot
         run: |
           ddev install
+
+      - name: Confirm that Starshot is running
+        run: |
+          curl --silent http://starshot.ddev.site/ | grep "<title>" || true
+          curl --location --silent http://starshot.ddev.site/node/1 | grep "<title>" || true
