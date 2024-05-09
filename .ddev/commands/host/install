@@ -5,4 +5,4 @@
 ddev start
 ddev composer install
 ddev composer drupal:install
-open $DDEV_PRIMARY_URL
+test -n "$CI" || open $DDEV_PRIMARY_URL

@@ -1,27 +1,40 @@
 name: DDEV
 
 on:
-  workflow_run:
-    workflows: [ Main ]
-    types: [ completed ]
+  push:
+    branches: [ main, wip ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    # Every twelve (12) hours.
+    # @see https://crontab.guru/every-12-hours
+    - cron: 0 */12 * * *
+  workflow_dispatch:
 
 jobs:
-  debug:
+  build:
     runs-on: ubuntu-latest
-    steps:
-      - name: Print event context
-        run: echo "$JSON"
-        env:
-          JSON: ${{ toJSON(github) }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu ]
 
-  on-success:
-    runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
-      - run: echo 'The triggering workflow passed'
+      - name: Checkout code
+        uses: actions/checkout@v4 # https://github.com/marketplace/actions/checkout
 
-  on-failure:
-    runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
-    steps:
-      - run: echo 'The triggering workflow failed'
+      # See https://ddev.readthedocs.io/en/stable/users/install/ddev-installation/#debianubuntu
+      - name: Install DDEV
+        run: |
+          sudo sh -c 'echo ""'
+          sudo install -m 0755 -d /etc/apt/keyrings
+          curl -fsSL https://pkg.ddev.com/apt/gpg.key | gpg --dearmor | sudo tee /etc/apt/keyrings/ddev.gpg > /dev/null
+          sudo chmod a+r /etc/apt/keyrings/ddev.gpg
+          sudo sh -c 'echo ""'
+          echo "deb [signed-by=/etc/apt/keyrings/ddev.gpg] https://pkg.ddev.com/apt/ * *" | sudo tee /etc/apt/sources.list.d/ddev.list >/dev/null
+          sudo sh -c 'echo ""'
+          sudo apt update && sudo apt install -y ddev
+
+      - name: Spin up Starshot
+        run: |
+          ddev install
