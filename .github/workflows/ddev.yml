@@ -16,6 +16,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
+    needs:
+      - main
 
     steps:
       - name: Checkout code
