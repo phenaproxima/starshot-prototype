@@ -9,6 +9,11 @@ on:
     # Every twelve (12) hours.
     # @see https://crontab.guru/every-12-hours
     - cron: 0 */12 * * *
+  workflow_run:
+    workflows:
+      - Main
+    types:
+      - completed
   workflow_dispatch:
 
 jobs:
@@ -16,8 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
-    needs:
-      - main
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
 
     steps:
       - name: Checkout code
