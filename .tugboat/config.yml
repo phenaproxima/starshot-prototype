@@ -25,14 +25,6 @@ services:
         - find "${DOCROOT}/sites/default/files" -type d -exec chmod 2775 {} \;
         - find "${DOCROOT}/sites/default/files" -type f -exec chmod 0664 {} \;
 
-        # Set trusted_host_patterns configuration.
-        - |
-          echo "
-          \$settings['trusted_host_patterns'] = [
-            '^.*tugboatqa.com\$',
-          ];" \
-            | sudo tee -a web/sites/default/settings.php
-
         # @todo For some reason the Drush "config:set" command run by composer
         #   run drupal:install-dev to enable verbose logging doesn't ultimately
         #   take effect. Manually change the settings until it can be debugged.
@@ -42,6 +34,14 @@ services:
           }" | sudo tee -a web/sites/default/settings.php
           sudo cp web/sites/example.settings.local.php \
             web/sites/default/settings.local.php
+
+        # Set trusted_host_patterns configuration.
+        - |
+          echo "
+          \$settings['trusted_host_patterns'] = [
+            '^.*tugboatqa.com\$',
+          ];" \
+            | sudo tee -a web/sites/default/settings.local.php
 
         # Make everything writable.
         - sudo chmod -R 777 "${DOCROOT}"
