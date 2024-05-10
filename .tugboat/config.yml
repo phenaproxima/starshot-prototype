@@ -43,6 +43,12 @@ services:
           ];" \
             | sudo tee -a web/sites/default/settings.local.php
 
+        # Disable rebuild access.
+        - |
+          echo "
+          \$settings['rebuild_access'] = TRUE;" \
+            | sudo tee -a web/sites/default/settings.local.php
+
         # Make everything writable.
         - sudo chmod -R 777 "${DOCROOT}"
 
