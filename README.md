@@ -25,7 +25,7 @@ You'll need DDEV 1.23.0 or later. [See the documentation](https://ddev.readthedo
 If you use [Lando](https://lando.dev/), you can get Starshot up and running with this:
 ```
 git clone https://github.com/phenaproxima/starshot-prototype.git starshot
-cd starshot && lando start && lando install && lando login
+cd starshot && lando start && lando drupal:install
 ```
 
 ## Included modules and themes
