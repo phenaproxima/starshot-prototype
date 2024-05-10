@@ -46,7 +46,7 @@ services:
         # Disable rebuild access.
         - |
           echo "
-          \$settings['rebuild_access'] = TRUE;" \
+          \$settings['rebuild_access'] = FALSE;" \
             | sudo tee -a web/sites/default/settings.local.php
 
         # Make everything writable.
