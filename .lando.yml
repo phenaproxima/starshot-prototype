@@ -2,24 +2,14 @@ name: starshot
 recipe: drupal10
 config:
   webroot: web
-services:
-  appserver:
-    overrides:
-      environment:
-        DRUSH_OPTIONS_URI: "https://starshot.lndo.site"
 tooling:
-  install:
+  drupal:install:
     service: appserver
-    cmd:
-      - composer drupal:install
-  login:
-    service: appserver
-    cmd:
-      - echo "🚀 Board the spaceship! Click on the link below to login 👇"
-      - |
-        echo "
-        # Tell Drush about your website.
-        options:
-          uri: 'https://starshot.lndo.site'
-        " > drush/drush.yml
-      - drush uli
+    cmd: |
+      composer install
+      composer drupal:install
+      echo ""
+      echo "🚀 Board the spaceship!"
+      echo "👇 Click on the link below to login 👇"
+      drush uli -l 'https://starshot.lndo.site'
+      echo ""
