@@ -35,6 +35,20 @@ services:
           sudo cp web/sites/example.settings.local.php \
             web/sites/default/settings.local.php
 
+        # Set trusted_host_patterns configuration.
+        - |
+          echo "
+          \$settings['trusted_host_patterns'] = [
+            '^.*tugboatqa.com\$',
+          ];" \
+            | sudo tee -a web/sites/default/settings.local.php
+
+        # Disable rebuild access.
+        - |
+          echo "
+          \$settings['rebuild_access'] = FALSE;" \
+            | sudo tee -a web/sites/default/settings.local.php
+
         # Make everything writable.
         - sudo chmod -R 777 "${DOCROOT}"
 

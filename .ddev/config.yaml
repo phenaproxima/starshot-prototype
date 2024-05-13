@@ -1,5 +1,6 @@
 name: starshot
 type: drupal
+ddev_version_constraint: '>=1.23.0'
 docroot: web
 php_version: "8.3"
 webserver_type: nginx-fpm
