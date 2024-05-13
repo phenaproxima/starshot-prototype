@@ -100,7 +100,7 @@ composer drupal:run-server
 ```
 
 ### Error: SQLSTATE[HY000]: General error: 11 database disk image is malformed
-If you're using **ddev with Docker Desktop on a Mac**, you might see the following error:
+If you're using **DDEV with Docker Desktop on a Mac**, you might see the following error:
 
 `SQLSTATE[HY000]: General error: 11 database disk image is malformed`
 
