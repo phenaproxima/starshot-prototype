@@ -88,3 +88,10 @@ If you encounter this, you can restart the server using the following command:
 ```
 composer drupal:run-server
 ```
+### DDEV database disk image issue
+Some users might experience that after clicking through a few links, the site breaks with "The website encountered an unexpected error. Try again later."
+The `ddev logs` might show something like:
+```
+SQLSTATE[HY000]: General error: 11 database disk image is malformed 
+```
+If you are having this issue, try switching file sharing implementation to either gRPC FUSE or osxfs (Legacy) in your docker settings. Delete the site, restart docker, and reinstall. 
