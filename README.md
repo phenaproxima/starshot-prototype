@@ -98,3 +98,19 @@ If you encounter this, you can restart the server using the following command:
 ```
 composer drupal:run-server
 ```
+
+### Error: SQLSTATE[HY000]: General error: 11 database disk image is malformed
+If you're using **DDEV with Docker Desktop on a Mac**, you might see the following error:
+
+`SQLSTATE[HY000]: General error: 11 database disk image is malformed`
+
+This error usually happens because of the way files are shared between your Mac and Docker, which is set to `VirtioFS`.
+
+To fix this error, you need to change the file sharing method to either `gRPC FUSE` or `osxfs (Legacy)`.
+
+Here's how you can change the file sharing method:
+
+- Open the Docker Desktop settings: [Docker Desktop settings for Mac](https://docs.docker.com/desktop/settings/mac/)
+- Look for the "General" tab, and find the option for file sharing implementation.
+- Choose either `gRPC FUSE` or `osxfs (Legacy)` from the options available.
+- After making the change, click on **Apply & Restart** Docker.
