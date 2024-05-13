@@ -107,7 +107,7 @@ third_party_settings:
                 label: above
                 settings:
                   timezone_override: ''
-                  format: default
+                  format: date_and_12_hour_time
                   force_chronological: false
                   add_classes: false
                   time_wrapper: true
