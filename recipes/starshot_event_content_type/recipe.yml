@@ -9,7 +9,6 @@ install:
   - geolocation_address
   - geolocation_leaflet
   - layout_builder
-  - menu_ui
   - smart_date
 config:
   import:
