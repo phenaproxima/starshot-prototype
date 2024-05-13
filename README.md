@@ -113,4 +113,4 @@ Here's how you can change the file sharing method:
 - Open the Docker Desktop settings: [Docker Desktop settings for Mac](https://docs.docker.com/desktop/settings/mac/)
 - Look for the "General" tab, and find the option for file sharing implementation.
 - Choose either `gRPC FUSE` or `osxfs (Legacy)` from the options available.
-- After making the change, click on **Apply & Restart** docker.
+- After making the change, click on **Apply & Restart** Docker.
