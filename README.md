@@ -11,13 +11,13 @@ Starshot is Drupal 10, but supercharged with some of the best modules and themes
 
 <hr/>
 
-- [Installation](#installation)
-- [Whom this is for](#whom-this-is-for)
-- [What this gets you](#what-this-gets-you)
-- [How this is different from a distribution](#how-this-is-different-from-a-distribution)
-- [Included modules and themes](#included-modules-and-themes)
-- [How we choose which modules and themes to include](#how-we-choose-which-modules-and-themes-to-include)
-- [Known issues & workarounds](#known-issues--workarounds)
+* [Installation](#installation)
+* [Whom this is for](#whom-this-is-for)
+* [What this gets you](#what-this-gets-you)
+* [How this is different from a distribution](#how-this-is-different-from-a-distribution)
+* [Included modules and themes](#included-modules-and-themes)
+* [How we choose which modules and themes to include](#how-we-choose-which-modules-and-themes-to-include)
+* [Known issues & workarounds](#known-issues--workarounds)
 
 ## Installation
 ```
