@@ -28,7 +28,6 @@ install:
   - menu_link_content
   - project_browser
   - redirect
-  - starshot_project_browser
   - uli_custom_workflow
   # The rest of these are in Standard.
   - help
@@ -101,7 +100,6 @@ config:
         - 'edit any %bundle media'
       grantPermissionsForEachNodeType:
         - 'clone %bundle content'
-        - 'translate %bundle node'
         - 'create %bundle content'
         - 'delete %bundle revisions'
         - 'delete any %bundle content'

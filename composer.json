@@ -9,14 +9,6 @@
         "chat": "https://www.drupal.org/node/314178"
     },
     "repositories": {
-        "project-browser-integration": {
-            "type": "path",
-            "url": "modules/starshot_project_browser"
-        },
-        "project-browser-3446092": {
-            "type": "vcs",
-            "url": "https://git.drupalcode.org/issue/project_browser-3446092.git"
-        },
         "drupal": {
             "type": "composer",
             "url": "https://packages.drupal.org/8"
@@ -49,7 +41,6 @@
         "drupal/scheduler": "^2.0.2",
         "drupal/simple_sitemap": "^4.1",
         "drupal/smart_date": "^4.0",
-        "drupal/starshot_project_browser": "dev-main",
         "drupal/uli_custom_workflow": "^1.0",
         "drupal/webform": "^6.2",
         "drush/drush": "^12.5",
@@ -126,7 +117,8 @@
         "drupal:install": [
             "Composer\\Config::disableProcessTimeout",
             "cd web && php -d memory_limit=512M core/scripts/drupal install ../recipes/starshot",
-            "drush webform-libraries-download"
+            "drush webform-libraries-download",
+            "drush "
         ],
         "drupal:install-dev": [
             "cd web/sites/default && chmod +w . && rm -rf settings.php files",

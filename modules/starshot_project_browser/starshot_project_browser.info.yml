@@ -1,7 +1,0 @@
-name: Project Browser integration
-type: module
-package: Starshot
-description: Provides integration between Starshot, the Drupal recipe system, and Project Browser.
-core_version_requirement: ^10
-dependencies:
-  - project_browser:project_browser
