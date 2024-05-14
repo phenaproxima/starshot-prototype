@@ -109,7 +109,7 @@
                 "Add config actions to make a bundle of an entity type translatable": "./patches/core/make-translatable-action.patch"
             },
             "drupal/project_browser": {
-                "#3446257: Create a source plugin that exposes recipes in the file system": "./patches/project_browser/473-746a8aa0.patch"
+                "#3446257: Create a source plugin that exposes recipes in the file system": "./patches/project_browser/473-8b99badb.patch"
             }
         }
     },
@@ -118,7 +118,7 @@
             "Composer\\Config::disableProcessTimeout",
             "cd web && php -d memory_limit=512M core/scripts/drupal install ../recipes/starshot",
             "drush webform-libraries-download",
-            "drush "
+            "drush state:set project_browser.allowed_recipes '[starshot_multilingual]' --input-format=yaml --yes"
         ],
         "drupal:install-dev": [
             "cd web/sites/default && chmod +w . && rm -rf settings.php files",

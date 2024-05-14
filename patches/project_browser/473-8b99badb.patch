@@ -9,16 +9,15 @@ index 522694b6552ed0389383c085ba799bc51603d7f4..4cfd3c4ec9adf54dd77392b307ff5470
  allow_ui_install: false
  disable_add_new_module: true
 diff --git a/project_browser.services.yml b/project_browser.services.yml
-index 8bc2ee93243d39a97496d8e1e569b690566fdf06..afae05e9aadeb97ba7842a3053dd65611440119f 100644
+index 8bc2ee93243d39a97496d8e1e569b690566fdf06..ba600d9d6a33e9798df3c5639cc56c1bf9153389 100644
 --- a/project_browser.services.yml
 +++ b/project_browser.services.yml
-@@ -30,3 +30,8 @@ services:
+@@ -30,3 +30,7 @@ services:
      arguments: ['@config.factory']
      tags:
        - { name: event_subscriber }
 +  Drupal\project_browser\RecipeTracker:
 +    autowire: true
-+    public: false
 +    tags:
 +      - { name: event_subscriber }
 diff --git a/src/Plugin/ProjectBrowserSource/LocalRecipes.php b/src/Plugin/ProjectBrowserSource/LocalRecipes.php
