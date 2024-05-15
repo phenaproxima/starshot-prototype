@@ -8,3 +8,10 @@ recipes:
 install:
   - block_content
   - link
+  - views
+config:
+  import:
+    block_content:
+      - field.storage.block_content.body
+      - core.entity_view_mode.block_content.full
+      - views.view.block_content

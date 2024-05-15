@@ -93,6 +93,15 @@ config:
         name: 'Starshot'
         page.front: '/node'
     user.role.content_editor:
+      grantPermissions:
+        # These block type-specific permissions must be granted statically because
+        # block content entities' permission granularity isn't "bundle".
+        - 'create basic block content'
+        - 'create card block content'
+        - 'delete any basic block content'
+        - 'delete any card block content'
+        - 'edit any basic block content'
+        - 'edit any card block content'
       grantPermissionsForEachMediaType:
         - 'create %bundle media'
         - 'delete any %bundle media'
