@@ -294,15 +294,16 @@ index 238e22920bbaeec618df3e60eeffc8c314dcd1ae..ae45044682c5f775c0d6a77639ed8524
  }
 diff --git a/src/RecipeTracker.php b/src/RecipeTracker.php
 new file mode 100644
-index 0000000000000000000000000000000000000000..8427e19e5e90182b0951f67ee407c6a9c7657b4b
+index 0000000000000000000000000000000000000000..0702c7d0ed702653fcf51fcde80ab3e7511b81ff
 --- /dev/null
 +++ b/src/RecipeTracker.php
-@@ -0,0 +1,43 @@
+@@ -0,0 +1,49 @@
 +<?php
 +
 +namespace Drupal\project_browser;
 +
 +use Drupal\Component\Datetime\TimeInterface;
++use Drupal\Core\Plugin\CachedDiscoveryClearerInterface;
 +use Drupal\Core\Recipe\RecipeAppliedEvent;
 +use Drupal\Core\State\StateInterface;
 +use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -314,6 +315,7 @@ index 0000000000000000000000000000000000000000..8427e19e5e90182b0951f67ee407c6a9
 +  public function __construct(
 +    private readonly StateInterface $state,
 +    private readonly TimeInterface $time,
++    private readonly CachedDiscoveryClearerInterface $cachedDiscoveryClearer,
 +  ) {}
 +
 +  /**
@@ -323,9 +325,13 @@ index 0000000000000000000000000000000000000000..8427e19e5e90182b0951f67ee407c6a9
 +   *   The recipe that was applied.
 +   */
 +  public function onApplyRecipe(RecipeAppliedEvent $event): void {
++    // This should be done by the recipe system, but it's okay to polyfill it
++    // for now.
++    $this->cachedDiscoveryClearer->clearCachedDefinitions();
++
 +    $list = $this->state->get(static::STATE_KEY, []);
 +    $list[] = [
-+      $event->recipe->path,
++      realpath($event->recipe->path),
 +      $this->time->getRequestTime(),
 +    ];
 +    $this->state->set(static::STATE_KEY, $list);

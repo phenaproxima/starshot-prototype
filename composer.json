@@ -109,7 +109,7 @@
                 "Add config actions to make a bundle of an entity type translatable": "./patches/core/make-translatable-action.patch"
             },
             "drupal/project_browser": {
-                "#3446257: Create a source plugin that exposes recipes in the file system": "./patches/project_browser/473-80c6cb09.patch"
+                "#3446257: Create a source plugin that exposes recipes in the file system": "./patches/project_browser/473-9fb69df1.patch"
             }
         }
     },
