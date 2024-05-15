@@ -73,9 +73,11 @@ We don't _quite_ support this yet, but you'll also be able to use Starshot's com
 * [Pathauto](https://drupal.org/project/pathauto)
 * [Quick Node Clone](https://drupal.org/project/quick_node_clone)
 * [Redirect](https://drupal.org/project/redirect)
+* [Simple Add More](https://drupal.org/project/sam)
 * [Scheduler](https://drupal.org/project/scheduler)
 * [Simple Sitemap](https://drupal.org/project/simple_sitemap)
 * [Smart Date](https://drupal.org/project/smart_date)
+* [Type Tray](https://drupal.org/project/type_tray)
 * [ULI Custom Workflow](https://drupal.org/project/uli_custom_workflow)
 * [Webform](https://drupal.org/project/webform)
 
