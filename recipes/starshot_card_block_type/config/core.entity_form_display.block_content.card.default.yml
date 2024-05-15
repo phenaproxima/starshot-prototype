@@ -20,7 +20,7 @@ content:
     weight: 26
     region: content
     settings:
-      rows: 9
+      rows: 3
       summary_rows: 3
       placeholder: ''
       show_summary: false
