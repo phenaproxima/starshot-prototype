@@ -41,6 +41,7 @@
         "drupal/scheduler": "^2.0.2",
         "drupal/simple_sitemap": "^4.1",
         "drupal/smart_date": "^4.0",
+        "drupal/type_tray": "^1.2",
         "drupal/uli_custom_workflow": "^1.0",
         "drupal/webform": "^6.2",
         "drush/drush": "^12.5",
