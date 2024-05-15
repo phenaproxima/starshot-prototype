@@ -22,7 +22,7 @@ index 8bc2ee93243d39a97496d8e1e569b690566fdf06..ba600d9d6a33e9798df3c5639cc56c1b
 +      - { name: event_subscriber }
 diff --git a/src/Plugin/ProjectBrowserSource/LocalRecipes.php b/src/Plugin/ProjectBrowserSource/LocalRecipes.php
 new file mode 100644
-index 0000000000000000000000000000000000000000..be383e2aebb3a9d87e1e28287afda433bed15337
+index 0000000000000000000000000000000000000000..b47eeaabf72667180b1f726e517765907d7377b0
 --- /dev/null
 +++ b/src/Plugin/ProjectBrowserSource/LocalRecipes.php
 @@ -0,0 +1,219 @@
@@ -127,7 +127,7 @@ index 0000000000000000000000000000000000000000..be383e2aebb3a9d87e1e28287afda433
 +    /** @var \Symfony\Component\Finder\SplFileInfo $file */
 +    foreach ($finder as $file) {
 +      $recipe = Yaml::decode($file->getContents());
-+      $path = $file->getPath();
++      $path = dirname($file->getRealPath());
 +      $id = basename($path);
 +
 +      if ($allowed_recipes && !in_array($id, $allowed_recipes, TRUE) || $id === 'example') {
