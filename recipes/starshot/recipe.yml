@@ -16,6 +16,7 @@ recipes:
   - starshot_audio_media_type
   - starshot_blog
   - starshot_basic_html_editor
+  - starshot_card_block_type
   - starshot_document_media_type
   - starshot_event_content_type
   - starshot_forms
