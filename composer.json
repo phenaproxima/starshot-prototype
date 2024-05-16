@@ -47,6 +47,7 @@
         "oomphinc/composer-installers-extender": "^2"
     },
     "require-dev": {
+        "drupal/base_field_override_ui": "^1.1",
         "drupal/core-dev": "^10.3",
         "drupal/default_content": "^2.0@alpha",
         "weitzman/drupal-test-traits": "^2.2"
@@ -121,7 +122,7 @@
             "cd web/sites/default && chmod +w . && rm -rf settings.php files",
             "@drupal:install",
             "drush config:set --yes system.logging error_level verbose",
-            "drush pm:enable --yes default_content",
+            "drush pm:enable --yes base_field_override_ui default_content",
             "drush user:password admin admin",
             "drush user:password editor editor",
             "drush user:unblock editor"
