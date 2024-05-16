@@ -6,6 +6,7 @@ dependencies:
     - field.field.block_content.card.body
     - field.field.block_content.card.field_card_link
     - field.field.block_content.card.field_card_media
+    - field.field.block_content.card.field_card_title
   module:
     - link
     - text
@@ -19,7 +20,7 @@ content:
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    weight: 0
+    weight: 1
     region: content
   field_card_link:
     type: link
@@ -31,7 +32,7 @@ content:
       rel: ''
       target: ''
     third_party_settings: {  }
-    weight: 2
+    weight: 3
     region: content
   field_card_media:
     type: entity_reference_entity_view
@@ -40,7 +41,15 @@ content:
       view_mode: card
       link: false
     third_party_settings: {  }
-    weight: 1
+    weight: 2
+    region: content
+  field_card_title:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 0
     region: content
 hidden:
   langcode: true
