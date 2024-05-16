@@ -23,7 +23,7 @@ content:
     region: content
   field_card_link:
     type: link
-    label: above
+    label: hidden
     settings:
       trim_length: 80
       url_only: false
@@ -35,7 +35,7 @@ content:
     region: content
   field_card_media:
     type: entity_reference_entity_view
-    label: above
+    label: visually_hidden
     settings:
       view_mode: default
       link: false
