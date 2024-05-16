@@ -88,6 +88,7 @@ config:
     project_browser.admin_settings:
       simple_config_update:
         enabled_sources:
+          - drupalorg_mockapi
           - local_recipes
     system.site:
       simple_config_update:
