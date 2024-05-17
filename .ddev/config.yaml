@@ -17,6 +17,8 @@ web_environment:
   - DRUSH_OPTIONS_URI=$DDEV_PRIMARY_URL
 nodejs_version: "16"
 corepack_enable: false
+working_dir:
+  web: /var/www/html/web
 
 # Key features of DDEV's config.yaml:
 

@@ -111,4 +111,4 @@ This is caused by the way files are shared between your Mac and Docker, which is
 - Click on **Apply & Restart** Docker.
 
 ### Using Project Browser with DDEV
-If you're using DDEV, you'll need to SSH into the web server's container (run `ddev ssh`) before running terminal commands suggested by Project Browser.
+If you're using DDEV, prefix the terminal commands suggested by Project Browser with `ddev exec`.
