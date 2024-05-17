@@ -94,7 +94,6 @@ You may see an error like this:
 ```
 The process "test -n "$CI" || composer drupal:run-server" exceeded the timeout of 300 seconds.
 ```
-
 If you encounter this, you can restart the server using the following command:
 ```
 composer drupal:run-server
@@ -102,13 +101,15 @@ composer drupal:run-server
 
 ### Error: SQLSTATE[HY000]: General error: 11 database disk image is malformed
 If you're using **DDEV with Docker Desktop on a Mac**, you might see the following error:
-
 ```
 SQLSTATE[HY000]: General error: 11 database disk image is malformed`
 ```
-This error is caused by the way files are shared between your Mac and Docker, which is set to `VirtioFS`. To fix it, change the file sharing method to either `gRPC FUSE` or `osxfs (Legacy)`:
+This is caused by the way files are shared between your Mac and Docker, which is set to `VirtioFS`. To fix it, change the file sharing method to either `gRPC FUSE` or `osxfs (Legacy)`:
 
 - [Open the Docker Desktop settings](https://docs.docker.com/desktop/settings/mac/).
 - Look for the "General" tab, and find the option for file sharing implementation.
 - Choose either `gRPC FUSE` or `osxfs (Legacy)` from the available options.
 - Click on **Apply & Restart** Docker.
+
+### Using Project Browser with DDEV
+If you're using DDEV, prefix the terminal commands suggested by Project Browser with `ddev exec`.

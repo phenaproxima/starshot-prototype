@@ -27,3 +27,10 @@ config:
           key: bundle_settings
           value:
             untranslatable_fields_hide: '1'
+    user.role.content_editor:
+      grantPermissions:
+        - 'create content translations'
+        - 'delete content translations'
+        - 'update content translations'
+      grantPermissionsForEachNodeType:
+        - 'translate %bundle node'

@@ -1,0 +1,349 @@
+diff --git a/config/install/project_browser.admin_settings.yml b/config/install/project_browser.admin_settings.yml
+index 522694b6552ed0389383c085ba799bc51603d7f4..4cfd3c4ec9adf54dd77392b307ff547031ca2573 100644
+--- a/config/install/project_browser.admin_settings.yml
++++ b/config/install/project_browser.admin_settings.yml
+@@ -1,4 +1,5 @@
+ enabled_sources:
+   - drupalorg_mockapi
++  - local_recipes
+ allow_ui_install: false
+ disable_add_new_module: true
+diff --git a/project_browser.services.yml b/project_browser.services.yml
+index 8bc2ee93243d39a97496d8e1e569b690566fdf06..ba600d9d6a33e9798df3c5639cc56c1bf9153389 100644
+--- a/project_browser.services.yml
++++ b/project_browser.services.yml
+@@ -30,3 +30,7 @@ services:
+     arguments: ['@config.factory']
+     tags:
+       - { name: event_subscriber }
++  Drupal\project_browser\RecipeTracker:
++    autowire: true
++    tags:
++      - { name: event_subscriber }
+diff --git a/src/Plugin/ProjectBrowserSource/LocalRecipes.php b/src/Plugin/ProjectBrowserSource/LocalRecipes.php
+new file mode 100644
+index 0000000000000000000000000000000000000000..b47eeaabf72667180b1f726e517765907d7377b0
+--- /dev/null
++++ b/src/Plugin/ProjectBrowserSource/LocalRecipes.php
+@@ -0,0 +1,219 @@
++<?php
++
++declare(strict_types=1);
++
++namespace Drupal\project_browser\Plugin\ProjectBrowserSource;
++
++use Composer\InstalledVersions;
++use Drupal\Component\Serialization\Yaml;
++use Drupal\Core\Extension\ModuleExtensionList;
++use Drupal\Core\File\FileUrlGeneratorInterface;
++use Drupal\Core\State\StateInterface;
++use Drupal\project_browser\Plugin\ProjectBrowserSourceBase;
++use Drupal\project_browser\ProjectBrowser\Project;
++use Drupal\project_browser\ProjectBrowser\ProjectsResultsPage;
++use Drupal\project_browser\RecipeTracker;
++use Symfony\Component\DependencyInjection\ContainerInterface;
++use Symfony\Component\Finder\Finder;
++
++/**
++ * Exposes recipes in the local file system to Project Browser.
++ *
++ * @ProjectBrowserSource(
++ *   id = "local_recipes",
++ *   label = @Translation("Recipes"),
++ *   description = @Translation("Shows available recipes"),
++ * )
++ */
++final class LocalRecipes extends ProjectBrowserSourceBase {
++
++  public function __construct(
++    private readonly string $drupalRoot,
++    private readonly FileUrlGeneratorInterface $fileUrlGenerator,
++    private readonly StateInterface $state,
++    private readonly ModuleExtensionList $moduleList,
++    mixed ...$arguments,
++  ) {
++    parent::__construct(...$arguments);
++  }
++
++  /**
++   * {@inheritdoc}
++   */
++  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
++    return new static(
++      $container->getParameter('app.root'),
++      $container->get(FileUrlGeneratorInterface::class),
++      $container->get(StateInterface::class),
++      $container->get(ModuleExtensionList::class),
++      $configuration,
++      $plugin_id,
++      $plugin_definition,
++    );
++  }
++
++  /**
++   * Determines the path to search for recipes.
++   *
++   * If any recipes have been previously applied (recorded in state), this will
++   * search in the same places as the first of those recipes. Otherwise, this
++   * will search wherever Composer has installed the first package it has of the
++   * `drupal-recipe` type.
++   *
++   * @return string|null
++   *   The search path, or NULL if it could not be determined.
++   */
++  private function getSearchPath(): ?string {
++    $applied_recipes = $this->state->get(RecipeTracker::STATE_KEY);
++    if ($applied_recipes) {
++      [$path] = $applied_recipes[0];
++    }
++    $installed_recipes = InstalledVersions::getInstalledPackagesByType('drupal-recipe');
++    if ($installed_recipes) {
++      $path = InstalledVersions::getInstallPath($installed_recipes[0]);
++    }
++    return isset($path) ? dirname($path) : NULL;
++  }
++
++  /**
++   * {@inheritdoc}
++   */
++  public function getProjects(array $query = []): ProjectsResultsPage {
++    $list = [];
++
++    $finder = Finder::create()
++      ->files()
++      ->name('recipe.yml')
++      ->depth(1)
++      // Always expose core recipes.
++      ->in($this->drupalRoot . '/core/recipes');
++
++    $dir = $this->getSearchPath();
++    if ($dir && is_dir($dir)) {
++      $finder->in($dir);
++    }
++
++    // For now, allow external code to set an specific list of recipes to show.
++    $allowed_recipes = $this->state->get('project_browser.allowed_recipes');
++
++    /** @var \Symfony\Component\Finder\SplFileInfo $file */
++    foreach ($finder as $file) {
++      $recipe = Yaml::decode($file->getContents());
++      $path = dirname($file->getRealPath());
++      $id = basename($path);
++
++      if ($allowed_recipes && !in_array($id, $allowed_recipes, TRUE) || $id === 'example') {
++        continue;
++      }
++
++      $list[] = new Project(
++        id: $id,
++        logo: $this->getRecipeLogo($path, $recipe['name']),
++        // These next six items are just default values; it's not yet clear
++        // how to determine them for real.
++        isCompatible: TRUE,
++        isMaintained: TRUE,
++        isCovered: TRUE,
++        isActive: TRUE,
++        starUserCount: 0,
++        projectUsageTotal: 0,
++        machineName: $id,
++        body: $this->getRecipeDescription($recipe['description'] ?? ''),
++        title: $recipe['name'],
++        // I have absolutely no idea what "status" means in this context.
++        status: 1,
++        // These next four should really come from `composer.json`, but this
++        // will do for now.
++        changed: $file->getMTime(),
++        created: $file->getCTime(),
++        author: [],
++        composerNamespace: 'drupal/' . $id,
++        type: 'recipe',
++        commands: $this->getRecipeCommands($path),
++      );
++    }
++
++    $plugin_definition = $this->getPluginDefinition();
++    return new ProjectsResultsPage(count($list), $list, (string) $plugin_definition['label'], $this->getPluginId(), FALSE);
++  }
++
++  /**
++   * Generates the commands to apply a recipe.
++   *
++   * @param string $path
++   *   The path of the recipe.
++   *
++   * @return string
++   *   The terminal commands needed to apply the recipe.
++   */
++  private function getRecipeCommands(string $path): string {
++    $copy_button_url = $this->moduleList->getPath('project_browser') . '/images/copy-icon.svg';
++    $copy_button_url = $this->fileUrlGenerator->generateAbsoluteString($copy_button_url);
++
++    $commands = '';
++    $commands .= '<p>' . $this->t('To apply this recipe to your site, run the following command at the command line:') . '</p>';
++    $commands .= '<div class="command-box">';
++    // cspell:ignore BINDIR
++    $commands .= sprintf('<input value="%s/php %s/core/scripts/drupal recipe %s" readonly="" />', PHP_BINDIR, $this->drupalRoot, $path);
++    $commands .= '<button data-copy-command>';
++    $commands .= sprintf(
++      '<img src="%s" alt="%s" />',
++      $copy_button_url,
++      $this->t('Copy the command to apply this recipe to the clipboard.'),
++    );
++    $commands .= '</button>';
++    $commands .= '</div>';
++
++    return $commands;
++  }
++
++  /**
++   * Returns the description of the recipe, if any.
++   *
++   * @param string $description
++   *   The description of the recipe, from `recipe.yml`.
++   *
++   * @return string[]
++   *   The description of the recipe, suitable for the Project object.
++   */
++  private function getRecipeDescription(string $description): array {
++    if ($description) {
++      return ['value' => $description];
++    }
++    return [];
++  }
++
++  /**
++   * Gets the logo, if any, for a recipe.
++   *
++   * This assumes the logo will be called `logo.png` and be in the same place
++   * as `recipe.yml`.
++   *
++   * @param string $path
++   *   The path of the recipe's directory.
++   * @param string $name
++   *   The human-readable name of the recipe.
++   *
++   * @return string[]
++   *   Either an empty array, or an array with `uri` and `alt` elements for
++   *   the logo.
++   */
++  private function getRecipeLogo(string $path, string $name): array {
++    $file = $path . '/logo.png';
++    if (file_exists($file)) {
++      return [
++        'uri' => $this->fileUrlGenerator->generateAbsoluteString($file),
++        'alt' => $this->t('Logo of the "@name" recipe.', ['@name' => $name]),
++      ];
++    }
++    return [];
++  }
++
++  /**
++   * {@inheritdoc}
++   */
++  public function getCategories(): array {
++    return [];
++  }
++
++}
+diff --git a/src/ProjectBrowser/ProjectsResultsPage.php b/src/ProjectBrowser/ProjectsResultsPage.php
+index 238e22920bbaeec618df3e60eeffc8c314dcd1ae..ae45044682c5f775c0d6a77639ed85242ee0a365 100644
+--- a/src/ProjectBrowser/ProjectsResultsPage.php
++++ b/src/ProjectBrowser/ProjectsResultsPage.php
+@@ -7,13 +7,20 @@ namespace Drupal\project_browser\ProjectBrowser;
+  */
+ class ProjectsResultsPage {
+ 
++  /**
++   * The projects in this result page.
++   *
++   * @var \Drupal\project_browser\ProjectBrowser\Project[]
++   */
++  public readonly array $list;
++
+   /**
+    * Constructor for project browser results page.
+    *
+    * @param int $totalResults
+    *   Number of results.
+-   * @param array $list
+-   *   Array containing the results.
++   * @param \Drupal\project_browser\ProjectBrowser\Project[] $list
++   *   The projects in this result page.
+    * @param string $pluginLabel
+    *   The plugin label.
+    * @param string $pluginId
+@@ -22,11 +29,13 @@ class ProjectsResultsPage {
+    *   True if package manager is required.
+    */
+   public function __construct(
+-    public int $totalResults,
+-    public array $list,
+-    public string $pluginLabel,
+-    public string $pluginId,
+-    public bool $isPackageManagerRequired,
+-  ) {}
++    public readonly int $totalResults,
++    array $list,
++    public readonly string $pluginLabel,
++    public readonly string $pluginId,
++    public readonly bool $isPackageManagerRequired,
++  ) {
++    $this->list = array_values($list);
++  }
+ 
+ }
+diff --git a/src/RecipeTracker.php b/src/RecipeTracker.php
+new file mode 100644
+index 0000000000000000000000000000000000000000..0702c7d0ed702653fcf51fcde80ab3e7511b81ff
+--- /dev/null
++++ b/src/RecipeTracker.php
+@@ -0,0 +1,49 @@
++<?php
++
++namespace Drupal\project_browser;
++
++use Drupal\Component\Datetime\TimeInterface;
++use Drupal\Core\Plugin\CachedDiscoveryClearerInterface;
++use Drupal\Core\Recipe\RecipeAppliedEvent;
++use Drupal\Core\State\StateInterface;
++use Symfony\Component\EventDispatcher\EventSubscriberInterface;
++
++final class RecipeTracker implements EventSubscriberInterface {
++
++  public const STATE_KEY = 'project_browser.applied_recipes';
++
++  public function __construct(
++    private readonly StateInterface $state,
++    private readonly TimeInterface $time,
++    private readonly CachedDiscoveryClearerInterface $cachedDiscoveryClearer,
++  ) {}
++
++  /**
++   * Reacts when a recipe has been applied.
++   *
++   * @param \Drupal\Core\Recipe\RecipeAppliedEvent $event
++   *   The recipe that was applied.
++   */
++  public function onApplyRecipe(RecipeAppliedEvent $event): void {
++    // This should be done by the recipe system, but it's okay to polyfill it
++    // for now.
++    $this->cachedDiscoveryClearer->clearCachedDefinitions();
++
++    $list = $this->state->get(static::STATE_KEY, []);
++    $list[] = [
++      realpath($event->recipe->path),
++      $this->time->getRequestTime(),
++    ];
++    $this->state->set(static::STATE_KEY, $list);
++  }
++
++  /**
++   * {@inheritdoc}
++   */
++  public static function getSubscribedEvents(): array {
++    return [
++      RecipeAppliedEvent::class => 'onApplyRecipe',
++    ];
++  }
++
++}

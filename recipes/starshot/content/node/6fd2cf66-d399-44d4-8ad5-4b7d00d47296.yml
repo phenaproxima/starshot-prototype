@@ -39,12 +39,6 @@ default:
       alias: /event/2024/nasas-boeing-crew-flight-test-launch
       langcode: en
       pathauto: 1
-  content_translation_source:
-    -
-      value: und
-  content_translation_outdated:
-    -
-      value: false
   body:
     -
       value: '<p>Pellentesque turpis leo, viverra nec egestas semper, euismod venenatis diam. Nulla porta turpis ac sapien tincidunt, a luctus ligula scelerisque. Maecenas auctor vestibulum tristique. Curabitur ligula nibh, ultricies vitae aliquet vel, vehicula sed nisl. Cras nisl dolor, gravida a ornare sit amet, viverra et nisi.</p>'
