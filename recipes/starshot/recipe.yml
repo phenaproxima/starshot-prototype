@@ -24,6 +24,7 @@ recipes:
   - starshot_local_video_media_type
   - starshot_page_content_type
 install:
+  - easy_breadcrumb
   - metatag
   - menu_link_content
   - project_browser
