@@ -1,4 +1,3 @@
-name: starshot
 type: drupal
 ddev_version_constraint: '>=1.23.0'
 docroot: web
