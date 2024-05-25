@@ -120,7 +120,8 @@
             "Composer\\Config::disableProcessTimeout",
             "cd web && php -d memory_limit=512M core/scripts/drupal install ../recipes/starshot",
             "drush webform-libraries-download",
-            "drush state:set project_browser.allowed_recipes '[starshot_multilingual]' --input-format=yaml --yes"
+            "drush state:set project_browser.allowed_recipes '[starshot_multilingual]' --input-format=yaml --yes",
+            "cd web && chmod 755 sites/default"
         ],
         "drupal:install-dev": [
             "cd web/sites/default && chmod +w . && rm -rf settings.php files",
