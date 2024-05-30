@@ -5,22 +5,14 @@ on:
     branches: [ main, wip ]
   pull_request:
     branches: [ main ]
-  schedule:
-    # Every twelve (12) hours.
-    # @see https://crontab.guru/every-12-hours
-    - cron: 0 */12 * * *
   workflow_run:
-    workflows:
-      - Main
-    types:
-      - completed
+    workflows: [ Main ]
+    types: [ completed ]
   workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
 
     steps:
