@@ -2,7 +2,7 @@ name: DDEV
 
 on:
   workflow_run:
-    workflows: [Main]
+    workflows: [ Main ]
     types: [ completed ]
 
 jobs:
