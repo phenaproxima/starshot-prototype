@@ -1,0 +1,27 @@
+name: DDEV
+
+on:
+  workflow_run:
+    workflows: [Main]
+    types: [ completed ]
+
+jobs:
+  debug:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print event context
+        run: echo "$JSON"
+        env:
+          JSON: ${{ toJSON(github) }}
+
+  on-success:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - run: echo 'The triggering workflow passed'
+
+  on-failure:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+    steps:
+      - run: echo 'The triggering workflow failed'
