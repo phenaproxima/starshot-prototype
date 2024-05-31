@@ -1,27 +1,41 @@
 name: DDEV
 
 on:
+  push:
+    branches: [ main, wip ]
+  pull_request:
+    branches: [ main ]
   workflow_run:
     workflows: [ Main ]
     types: [ completed ]
+  workflow_dispatch:
 
 jobs:
-  debug:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Print event context
-        run: echo "$JSON"
-        env:
-          JSON: ${{ toJSON(github) }}
-
-  on-success:
+  build:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
-    steps:
-      - run: echo 'The triggering workflow passed'
 
-  on-failure:
-    runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
     steps:
-      - run: echo 'The triggering workflow failed'
+      - name: Checkout code
+        uses: actions/checkout@v4 # https://github.com/marketplace/actions/checkout
+
+      # See https://ddev.readthedocs.io/en/stable/users/install/ddev-installation/#debianubuntu
+      - name: Install DDEV
+        run: |
+          sudo sh -c 'echo ""'
+          sudo install -m 0755 -d /etc/apt/keyrings
+          curl -fsSL https://pkg.ddev.com/apt/gpg.key | gpg --dearmor | sudo tee /etc/apt/keyrings/ddev.gpg > /dev/null
+          sudo chmod a+r /etc/apt/keyrings/ddev.gpg
+          sudo sh -c 'echo ""'
+          echo "deb [signed-by=/etc/apt/keyrings/ddev.gpg] https://pkg.ddev.com/apt/ * *" | sudo tee /etc/apt/sources.list.d/ddev.list >/dev/null
+          sudo sh -c 'echo ""'
+          sudo apt update && sudo apt install -y ddev
+
+      - name: Spin up Starshot
+        run: |
+          ddev install
+
+      - name: Confirm that Starshot is running
+        run: |
+          curl --silent http://starshot.ddev.site/ | grep "<title>" || true
+          curl --location --silent http://starshot.ddev.site/node/1 | grep "<title>" || true
