@@ -31,11 +31,9 @@ jobs:
           sudo sh -c 'echo ""'
           sudo apt update && sudo apt install -y ddev
 
-      - name: Spin up Starshot
+      - name: Install Starshot
         run: |
           ddev install
 
       - name: Confirm that Starshot is running
-        run: |
-          curl --silent http://starshot.ddev.site/ | grep "<title>" || true
-          curl --location --silent http://starshot.ddev.site/node/1 | grep "<title>" || true
+        run: curl --location --silent http://starshot-project.ddev.site/node/1 | grep "<title>" || true
