@@ -36,4 +36,6 @@ jobs:
           ddev install
 
       - name: Confirm that Starshot is running
-        run: curl --location --silent http://starshot-project.ddev.site/node/1 | grep "<title>" || true
+        run: |
+          ddev list
+          curl --location --silent http://starshot-project.ddev.site/node/1 | grep "<title>" || true
