@@ -2,18 +2,12 @@ name: DDEV
 
 on:
   push:
-    branches: [ main, wip ]
-  pull_request:
-    branches: [ main ]
-  workflow_run:
-    workflows: [ Main ]
-    types: [ completed ]
+    branches: [ wip ]
   workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
 
     steps:
       - name: Checkout code
