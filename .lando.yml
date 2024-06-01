@@ -8,8 +8,6 @@ tooling:
     cmd: |
       composer install
       composer drupal:install
-      echo ""
-      echo "🚀 Board the spaceship!"
-      echo "👇 Click on the link below to login 👇"
+      echo "🚀 Welcome to Starshot! Click on the link below to log in.👇"      
       drush uli -l 'https://starshot.lndo.site'
       echo ""
