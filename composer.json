@@ -130,6 +130,7 @@
         ],
         "drupal:rebuild": [
             "sudo rm -rf vendor web composer.lock patches.lock.json | true",
+            "touch web/.gitkeep",
             "@composer install",
             "@drupal:install"
         ],
