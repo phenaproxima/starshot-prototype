@@ -56,7 +56,7 @@
         "drupal/type_tray": "^1.2",
         "drupal/uli_custom_workflow": "^1.0",
         "drupal/webform": "^6.2",
-        "drush/drush": "^13",
+        "drush/drush": "^12.5",
         "oomphinc/composer-installers-extender": "^2"
     },
     "require-dev": {
@@ -125,7 +125,8 @@
     },
     "scripts": {
         "drupal:install": [
-            "cd web && php core/scripts/drupal install starshot_installer",
+            "Composer\\Config::disableProcessTimeout",
+            "cd web && php -d memory_limit=512M core/scripts/drupal install starshot_installer",
             "drush webform-libraries-download"
         ],
         "drupal:install-dev": [
