@@ -3,3 +3,9 @@
 
 options:
   uri: 'http://localhost/'
+command:
+  site:
+    install:
+      options:
+        # Use SQLite by default, since it needs no additional configuration.
+        db-url: 'sqlite://localhost/db.sqlite'
