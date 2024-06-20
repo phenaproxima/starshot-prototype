@@ -1,8 +1,0 @@
-#!/bin/bash
-
-## Description: Installs Starshot and opens it in a browser.
-
-ddev start
-ddev composer install
-ddev composer drupal:install
-test -n "$CI" || open $DDEV_PRIMARY_URL

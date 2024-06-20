@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 use Composer\InstalledVersions;
 use Drupal\Core\Batch\BatchBuilder;
-use Drupal\Core\Database\Database;
 use Drupal\Core\Extension\ModuleInstallerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Recipe\Recipe;
@@ -32,12 +31,6 @@ function starshot_installer_install_tasks(): array {
  * @see \Drupal\Core\Installer\Form\SiteSettingsForm
  */
 function starshot_installer_form_install_settings_form_alter(array &$form): void {
-  $connection_info = Database::getAllConnectionInfo();
-  // If there's already a connection defined, don't interfere.
-  if ($connection_info) {
-    return;
-  }
-
   // Default to SQLite, if available, because it doesn't require any additional
   // configuration.
   $sqlite = 'Drupal\sqlite\Driver\Database\sqlite';
