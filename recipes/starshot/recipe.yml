@@ -86,6 +86,8 @@ config:
         base_primary_color: '#0a205a'
     package_manager.settings:
       simple_config_update:
+        # We can remove this when https://github.com/composer/installers/pull/534 lands
+        # in a tagged release of `composer/installers`.
         additional_trusted_composer_plugins:
           - oomphinc/composer-installers-extender
     project_browser.admin_settings:

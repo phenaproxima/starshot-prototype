@@ -23,7 +23,6 @@
         }
     },
     "require": {
-        "ext-pdo_sqlite": "*",
         "composer/installers": "^2.0",
         "cweagans/composer-patches": "^2",
         "drupal/address": "^2.0",
