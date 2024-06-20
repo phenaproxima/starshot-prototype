@@ -28,11 +28,11 @@ This one command will install Starshot and open it in a web browser for you to p
 If you use [DDEV](https://ddev.com), you can get Starshot up and running with this:
 ```
 git clone https://github.com/phenaproxima/starshot-prototype.git starshot
-cd starshot && ddev launch
+cd starshot && ddev install
 ```
 You'll need DDEV 1.23.0 or later. [See the documentation](https://ddev.readthedocs.io/en/stable/users/install/ddev-upgrade/) if you need to upgrade.
 
-## Who this is for
+## Whom this is for
 Anyone who wants to create a website with Drupal, but doesn't want to build it -- including the authoring experience -- from the ground up using the relatively bare-bones tools provided by Drupal core. You need extra modules to get the most out of Drupal, but it can be hard to know how to start.
 
 Starshot's purpose is to get you going with the most useful tools favored by the Drupal community, as quickly and easily as possible.
