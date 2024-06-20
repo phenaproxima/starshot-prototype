@@ -125,7 +125,7 @@
     },
     "scripts": {
         "drupal:install": [
-            "drush site:install --yes starshot_installer",
+            "cd web && php core/scripts/drupal install starshot_installer",
             "drush webform-libraries-download"
         ],
         "drupal:install-dev": [
