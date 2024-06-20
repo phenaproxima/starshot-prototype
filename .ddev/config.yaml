@@ -18,6 +18,9 @@ nodejs_version: "16"
 corepack_enable: false
 working_dir:
   web: /var/www/html/web
+hooks:
+  post-start:
+    - composer: install
 
 # Key features of DDEV's config.yaml:
 

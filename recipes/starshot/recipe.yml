@@ -6,13 +6,16 @@ recipes:
   - core/recipes/content_search
   - core/recipes/core_recommended_performance
   - core/recipes/core_recommended_maintenance
+  # Put starshot_admin_theme before core_recommended_front_end_theme to
+  # prevent blocks from the front-end theme being copied into the admin
+  # theme unexpectedly. This works around https://drupal.org/i/3372078.
+  - starshot_admin_theme
   - core/recipes/core_recommended_front_end_theme
   - core/recipes/user_picture
   # Provides a fallback text format which is available to all users.
   - core/recipes/restricted_html_format
   # Not in Standard...
   - core/recipes/remote_video_media_type
-  - starshot_admin_theme
   - starshot_audio_media_type
   - starshot_blog
   - starshot_basic_html_editor
@@ -26,7 +29,6 @@ recipes:
 install:
   - metatag
   - menu_link_content
-  - project_browser
   - redirect
   - uli_custom_workflow
   # The rest of these are in Standard.
@@ -85,11 +87,20 @@ config:
     olivero.settings:
       simple_config_update:
         base_primary_color: '#0a205a'
+    package_manager.settings:
+      simple_config_update:
+        # We can remove this when https://github.com/composer/installers/pull/534 lands
+        # in a tagged release of `composer/installers`.
+        additional_trusted_composer_plugins:
+          - oomphinc/composer-installers-extender
     project_browser.admin_settings:
       simple_config_update:
         enabled_sources:
-          - drupalorg_mockapi
-          - local_recipes
+          # Don't bother showing modules; just list recipes!
+          - recipes
+        allowed_projects:
+          recipes:
+            - starshot_multilingual
     system.site:
       simple_config_update:
         name: 'Starshot'
