@@ -126,7 +126,7 @@
     "scripts": {
         "drupal:install": [
             "Composer\\Config::disableProcessTimeout",
-            "cd web && php -d memory_limit=512M core/scripts/drupal install starshot_installer",
+            "drush site:install starshot_installer --yes",
             "drush webform-libraries-download"
         ],
         "drupal:install-dev": [
