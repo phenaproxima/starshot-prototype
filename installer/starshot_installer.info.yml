@@ -10,6 +10,9 @@ distribution:
     # Redirect to the project browser after installing.
     finish_url: 'admin/modules/browse'
 install:
+  # We try to get Package Manager configured early.
+  # @see starshot_installer_form_install_configure_form_alter()
+  - package_manager
   # Install Project Browser as early as possible so it can track recipes that
   # get applied.
   - project_browser

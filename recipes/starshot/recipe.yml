@@ -84,6 +84,10 @@ config:
     olivero.settings:
       simple_config_update:
         base_primary_color: '#0a205a'
+    package_manager.settings:
+      simple_config_update:
+        additional_trusted_composer_plugins:
+          - oomphinc/composer-installers-extender
     project_browser.admin_settings:
       simple_config_update:
         enabled_sources:

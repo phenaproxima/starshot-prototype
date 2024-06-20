@@ -2,5 +2,8 @@
     "name": "drupal/starshot_installer",
     "type": "drupal-profile",
     "description": "Provides install-time tweaks for Starshot. Not to be used in production.",
-    "version": "dev-main"
+    "version": "dev-main",
+    "require": {
+        "symfony/process": "^6.4 || ^7"
+    }
 }
