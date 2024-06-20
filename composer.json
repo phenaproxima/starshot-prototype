@@ -139,7 +139,9 @@
         ],
         "drupal:rebuild": [
             "sudo rm -rf vendor web composer.lock patches.lock.json | true",
-            "@composer install"
+            "touch web/.gitkeep",
+            "@composer install",
+            "@drupal:install"
         ],
         "drupal:run-server": [
             "Composer\\Config::disableProcessTimeout",
