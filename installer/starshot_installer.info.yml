@@ -1,0 +1,15 @@
+name: Installer
+type: profile
+core_version_requirement: '^10 || ^11'
+description: 'Provides install-time tweaks for Starshot. Not to be used in production.'
+# Starshot isn't a distribution, but we need to use this `distribution` key in order
+# to skip the installer's profile selection step.
+distribution:
+  name: Starshot
+  install:
+    # Redirect to the project browser after installing.
+    finish_url: 'admin/modules/browse'
+install:
+  # Install Project Browser as early as possible so it can track recipes that
+  # get applied.
+  - project_browser

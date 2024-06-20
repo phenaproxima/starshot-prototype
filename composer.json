@@ -12,6 +12,14 @@
         "drupal": {
             "type": "composer",
             "url": "https://packages.drupal.org/8"
+        },
+        "starshot_installer": {
+            "type": "path",
+            "url": "./installer"
+        },
+        "starshot_multilingual": {
+            "type": "path",
+            "url": "./recipes/starshot_multilingual"
         }
     },
     "require": {
@@ -42,6 +50,8 @@
         "drupal/scheduler": "^2.0.2",
         "drupal/simple_sitemap": "^4.1",
         "drupal/smart_date": "^4.0",
+        "drupal/starshot_installer": "dev-main",
+        "drupal/starshot_multilingual": "dev-main",
         "drupal/type_tray": "^1.2",
         "drupal/uli_custom_workflow": "^1.0",
         "drupal/webform": "^6.2",
@@ -116,8 +126,7 @@
         "drupal:install": [
             "Composer\\Config::disableProcessTimeout",
             "cd web && php -d memory_limit=512M core/scripts/drupal install ../recipes/starshot",
-            "drush webform-libraries-download",
-            "drush state:set project_browser.allowed_recipes '[starshot_multilingual]' --input-format=yaml --yes"
+            "drush webform-libraries-download"
         ],
         "drupal:install-dev": [
             "cd web/sites/default && chmod +w . && rm -rf settings.php files",
@@ -130,9 +139,7 @@
         ],
         "drupal:rebuild": [
             "sudo rm -rf vendor web composer.lock patches.lock.json | true",
-            "touch web/.gitkeep",
-            "@composer install",
-            "@drupal:install"
+            "@composer install"
         ],
         "drupal:run-server": [
             "Composer\\Config::disableProcessTimeout",

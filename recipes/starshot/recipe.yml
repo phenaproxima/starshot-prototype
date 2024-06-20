@@ -26,7 +26,6 @@ recipes:
 install:
   - metatag
   - menu_link_content
-  - project_browser
   - redirect
   - uli_custom_workflow
   # The rest of these are in Standard.
@@ -88,8 +87,11 @@ config:
     project_browser.admin_settings:
       simple_config_update:
         enabled_sources:
-          - drupalorg_mockapi
-          - local_recipes
+          # Don't bother showing modules; just list recipes!
+          - recipes
+        allowed_projects:
+          recipes:
+            - starshot_multilingual
     system.site:
       simple_config_update:
         name: 'Starshot'
