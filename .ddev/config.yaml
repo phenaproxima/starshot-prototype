@@ -1,5 +1,5 @@
-name: starshot
 type: drupal
+ddev_version_constraint: '>=1.23.0'
 docroot: web
 php_version: "8.3"
 webserver_type: nginx-fpm
@@ -8,14 +8,17 @@ router_https_port: "443"
 xdebug_enabled: false
 additional_hostnames: []
 additional_fqdns: []
-omit_containers: [db]
 use_dns_when_possible: true
 composer_version: "2"
-disable_settings_management: true
 web_environment:
   - DRUSH_OPTIONS_URI=$DDEV_PRIMARY_URL
 nodejs_version: "16"
 corepack_enable: false
+working_dir:
+  web: /var/www/html/web
+hooks:
+  post-start:
+    - composer: install
 
 # Key features of DDEV's config.yaml:
 

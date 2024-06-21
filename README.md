@@ -61,6 +61,7 @@ We don't _quite_ support this yet, but you'll also be able to use Starshot's com
 * [Antibot](https://drupal.org/project/antibot)
 * [Coffee](https://drupal.org/project/coffee)
 * [Diff](https://drupal.org/project/diff)
+* [Easy Breadcrumb](https://www.drupal.org/project/easy_breadcrumb)
 * [Focal Point](https://drupal.org/project/focal_point)
 * [Geolocation Field](https://drupal.org/project/geolocation)
 * [Gin](https://drupal.org/project/gin)
@@ -73,9 +74,11 @@ We don't _quite_ support this yet, but you'll also be able to use Starshot's com
 * [Pathauto](https://drupal.org/project/pathauto)
 * [Quick Node Clone](https://drupal.org/project/quick_node_clone)
 * [Redirect](https://drupal.org/project/redirect)
+* [Simple Add More](https://drupal.org/project/sam)
 * [Scheduler](https://drupal.org/project/scheduler)
 * [Simple Sitemap](https://drupal.org/project/simple_sitemap)
 * [Smart Date](https://drupal.org/project/smart_date)
+* [Type Tray](https://drupal.org/project/type_tray)
 * [ULI Custom Workflow](https://drupal.org/project/uli_custom_workflow)
 * [Webform](https://drupal.org/project/webform)
 
@@ -93,7 +96,6 @@ You may see an error like this:
 ```
 The process "test -n "$CI" || composer drupal:run-server" exceeded the timeout of 300 seconds.
 ```
-
 If you encounter this, you can restart the server using the following command:
 ```
 composer drupal:run-server
@@ -101,13 +103,15 @@ composer drupal:run-server
 
 ### Error: SQLSTATE[HY000]: General error: 11 database disk image is malformed
 If you're using **DDEV with Docker Desktop on a Mac**, you might see the following error:
-
 ```
 SQLSTATE[HY000]: General error: 11 database disk image is malformed`
 ```
-This error is caused by the way files are shared between your Mac and Docker, which is set to `VirtioFS`. To fix it, change the file sharing method to either `gRPC FUSE` or `osxfs (Legacy)`:
+This is caused by the way files are shared between your Mac and Docker, which is set to `VirtioFS`. To fix it, change the file sharing method to either `gRPC FUSE` or `osxfs (Legacy)`:
 
 - [Open the Docker Desktop settings](https://docs.docker.com/desktop/settings/mac/).
 - Look for the "General" tab, and find the option for file sharing implementation.
 - Choose either `gRPC FUSE` or `osxfs (Legacy)` from the available options.
 - Click on **Apply & Restart** Docker.
+
+### Using Project Browser with DDEV
+If you're using DDEV, prefix the terminal commands suggested by Project Browser with `ddev exec`.

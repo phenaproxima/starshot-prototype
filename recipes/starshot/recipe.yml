@@ -6,13 +6,16 @@ recipes:
   - core/recipes/content_search
   - core/recipes/core_recommended_performance
   - core/recipes/core_recommended_maintenance
+  # Put starshot_admin_theme before core_recommended_front_end_theme to
+  # prevent blocks from the front-end theme being copied into the admin
+  # theme unexpectedly. This works around https://drupal.org/i/3372078.
+  - starshot_admin_theme
   - core/recipes/core_recommended_front_end_theme
   - core/recipes/user_picture
   # Provides a fallback text format which is available to all users.
   - core/recipes/restricted_html_format
   # Not in Standard...
   - core/recipes/remote_video_media_type
-  - starshot_admin_theme
   - starshot_audio_media_type
   - starshot_blog
   - starshot_basic_html_editor
@@ -23,10 +26,8 @@ recipes:
   - starshot_image_media_type
   - starshot_local_video_media_type
   - starshot_page_content_type
-  # Multilingual support must be applied after all content types have been
-  # created.
-  - starshot_multilingual
 install:
+  - easy_breadcrumb
   - metatag
   - menu_link_content
   - redirect
@@ -59,6 +60,7 @@ config:
       - views.view.frontpage
       - views.view.glossary
     olivero:
+      - block.block.olivero_breadcrumbs
       - block.block.olivero_help
       - block.block.olivero_search_form_narrow
       - block.block.olivero_search_form_wide
@@ -87,6 +89,20 @@ config:
     olivero.settings:
       simple_config_update:
         base_primary_color: '#0a205a'
+    package_manager.settings:
+      simple_config_update:
+        # We can remove this when https://github.com/composer/installers/pull/534 lands
+        # in a tagged release of `composer/installers`.
+        additional_trusted_composer_plugins:
+          - oomphinc/composer-installers-extender
+    project_browser.admin_settings:
+      simple_config_update:
+        enabled_sources:
+          # Don't bother showing modules; just list recipes!
+          - recipes
+        allowed_projects:
+          recipes:
+            - starshot_multilingual
     system.site:
       simple_config_update:
         name: 'Starshot'
@@ -98,7 +114,6 @@ config:
         - 'edit any %bundle media'
       grantPermissionsForEachNodeType:
         - 'clone %bundle content'
-        - 'translate %bundle node'
         - 'create %bundle content'
         - 'delete %bundle revisions'
         - 'delete any %bundle content'
@@ -129,5 +144,12 @@ config:
     user.settings:
       simple_config_update:
         verify_mail: true
-        register: visitors_admin_approval
+        register: admin_only
         cancel_method: user_cancel_block
+    easy_breadcrumb.settings:
+      simple_config_update:
+        # Add Schema.org Breadcrumb markup.
+        add_structured_data_json_ld: true
+        # Remove breadcrumbs when only home appears.
+        # Since we print the page title, this is only the home page.
+        hide_single_home_item: true
