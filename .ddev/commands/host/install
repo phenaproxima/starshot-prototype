@@ -4,4 +4,4 @@
 
 ddev start
 ddev composer drupal:install
-test -n "$CI" || open $DDEV_PRIMARY_URL
+test -n "$CI" || ddev launch
