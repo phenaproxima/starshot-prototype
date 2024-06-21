@@ -5,7 +5,6 @@ recipes:
   - starshot_image_media_type
 install:
   - address
-  - datetime_range
   - geolocation_address
   - geolocation_leaflet
   - layout_builder
