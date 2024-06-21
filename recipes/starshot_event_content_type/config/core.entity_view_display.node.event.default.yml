@@ -775,7 +775,7 @@ content:
       add_classes: false
       time_wrapper: true
     third_party_settings: {  }
-    weight: 1
+    weight: 113
     region: content
   field_image:
     type: media_thumbnail
