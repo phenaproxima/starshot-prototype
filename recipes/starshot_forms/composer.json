@@ -1,0 +1,12 @@
+{
+    "name": "drupal/starshot_forms",
+    "type": "drupal-recipe",
+    "description": "Provides a simple contact form, and tools for building more complex forms.",
+    "version": "dev-main",
+    "require": {
+        "drupal/antibot": "^2",
+        "drupal/core": "^10.3",
+        "drupal/honeypot": "^2.1",
+        "drupal/webform": "^6.2"
+    }
+}
