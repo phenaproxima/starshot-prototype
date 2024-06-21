@@ -2,15 +2,14 @@ langcode: en
 status: true
 dependencies:
   module:
-    - datetime_range
     - node
+    - smart_date
 id: node.field_date_time
 field_name: field_date_time
 entity_type: node
-type: daterange
-settings:
-  datetime_type: datetime
-module: datetime_range
+type: smartdate
+settings: {  }
+module: smart_date
 locked: false
 cardinality: 1
 translatable: true

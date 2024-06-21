@@ -40,17 +40,20 @@ content:
     settings: {  }
     third_party_settings: {  }
   field_date_time:
-    type: smartdate_default
+    type: smartdate_inline
     weight: 15
     region: content
     settings:
       modal: false
       default_duration: 60
-      default_duration_increments: "30\r\n60|1 hour\r\n90\r\n120|2 hours\r\ncustom"
+      default_duration_increments: |-
+        30
+        60|1 hour
+        90
+        120|2 hours
+        custom
       show_extra: false
-      hide_date: false
-      allday: true
-      remove_seconds: true
+      hide_date: true
     third_party_settings: {  }
   field_image:
     type: media_library_widget
