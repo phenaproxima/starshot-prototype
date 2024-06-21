@@ -1,0 +1,11 @@
+{
+    "name": "drupal/starshot_audio_media_type",
+    "type": "drupal-recipe",
+    "description": "Adds a few enhancements to the audio file media type.",
+    "version": "dev-main",
+    "require": {
+        "drupal/core": "^10.3",
+        "drupal/media_entity_download": "^2.2",
+        "drupal/media_file_delete": "^1.3"
+    }
+}

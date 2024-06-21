@@ -1,0 +1,41 @@
+name: DDEV
+
+on:
+  push:
+    branches: [ main, wip ]
+  pull_request:
+    branches: [ main ]
+  workflow_run:
+    workflows: [ Main ]
+    types: [ completed ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4 # https://github.com/marketplace/actions/checkout
+
+      # See https://ddev.readthedocs.io/en/stable/users/install/ddev-installation/#debianubuntu
+      - name: Install DDEV
+        run: |
+          sudo sh -c 'echo ""'
+          sudo install -m 0755 -d /etc/apt/keyrings
+          curl -fsSL https://pkg.ddev.com/apt/gpg.key | gpg --dearmor | sudo tee /etc/apt/keyrings/ddev.gpg > /dev/null
+          sudo chmod a+r /etc/apt/keyrings/ddev.gpg
+          sudo sh -c 'echo ""'
+          echo "deb [signed-by=/etc/apt/keyrings/ddev.gpg] https://pkg.ddev.com/apt/ * *" | sudo tee /etc/apt/sources.list.d/ddev.list >/dev/null
+          sudo sh -c 'echo ""'
+          sudo apt update && sudo apt install -y ddev
+
+      - name: Install Starshot
+        run: |
+          ddev install
+
+      - name: Confirm that Starshot is running
+        run: |
+          ddev list -W
+          curl --location --silent http://starshot-prototype.ddev.site/node/1 | grep "<title>"

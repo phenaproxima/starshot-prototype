@@ -1,0 +1,27 @@
+_meta:
+  version: '1.0'
+  entity_type: file
+  uuid: b8a036c4-311c-4699-85f7-f0503917d1ec
+  default_langcode: en
+default:
+  uid:
+    -
+      target_id: 1
+  filename:
+    -
+      value: icon-basic-page.svg
+  uri:
+    -
+      value: 'public://type-tray-icons/icon-basic-page.svg'
+  filemime:
+    -
+      value: image/svg+xml
+  filesize:
+    -
+      value: 1484
+  status:
+    -
+      value: true
+  created:
+    -
+      value: 1715805315
