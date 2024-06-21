@@ -27,6 +27,7 @@ recipes:
   - starshot_local_video_media_type
   - starshot_page_content_type
 install:
+  - easy_breadcrumb
   - metatag
   - menu_link_content
   - redirect
@@ -59,6 +60,7 @@ config:
       - views.view.frontpage
       - views.view.glossary
     olivero:
+      - block.block.olivero_breadcrumbs
       - block.block.olivero_help
       - block.block.olivero_search_form_narrow
       - block.block.olivero_search_form_wide
@@ -144,3 +146,10 @@ config:
         verify_mail: true
         register: admin_only
         cancel_method: user_cancel_block
+    easy_breadcrumb.settings:
+      simple_config_update:
+        # Add Schema.org Breadcrumb markup.
+        add_structured_data_json_ld: true
+        # Remove breadcrumbs when only home appears.
+        # Since we print the page title, this is only the home page.
+        hide_single_home_item: true

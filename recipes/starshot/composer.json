@@ -5,6 +5,7 @@
     "version": "dev-main",
     "require": {
         "drupal/core": "^10.3",
+        "drupal/easy_breadcrumb": "^2",
         "drupal/metatag": "^2",
         "drupal/redirect": "^1.9",
         "drupal/starshot_admin_theme": "*",
