@@ -126,7 +126,7 @@
     "scripts": {
         "drupal:install": [
             "Composer\\Config::disableProcessTimeout",
-            "drush site:install starshot_installer --yes",
+            "drush site:install --yes",
             "drush webform-libraries-download"
         ],
         "drupal:install-dev": [
