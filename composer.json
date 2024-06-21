@@ -21,6 +21,10 @@
             "type": "path",
             "url": "recipes/starshot_admin_theme"
         },
+        "starshot_anti_spam": {
+            "type": "path",
+            "url": "recipes/starshot_anti_spam"
+        },
         "starshot_audio_media_type": {
             "type": "path",
             "url": "recipes/starshot_audio_media_type"
