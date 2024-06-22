@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use Composer\InstalledVersions;
 use Drupal\Core\Batch\BatchBuilder;
 use Drupal\Core\Extension\ModuleInstallerInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -106,8 +105,7 @@ function starshot_installer_apply_recipes(): array {
   $batch = new BatchBuilder();
   $batch->setTitle(t('Applying recipes'));
 
-  $project_root = InstalledVersions::getRootPackage();
-  $recipe = Recipe::createFromDirectory($project_root['install_path'] . '/recipes/starshot');
+  $recipe = Recipe::createFromDirectory(\Drupal::root() . '/recipes/starshot');
 
   foreach (RecipeRunner::toBatchOperations($recipe) as [$callback, $arguments]) {
     $batch->addOperation($callback, $arguments);

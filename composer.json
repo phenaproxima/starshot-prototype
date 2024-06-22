@@ -112,9 +112,7 @@
             "oomphinc/composer-installers-extender": true
         },
         "sort-packages": true,
-        "optimize-autoloader": true,
-        "platform": {
-        }
+        "optimize-autoloader": true
     },
     "extra": {
         "drupal-scaffold": {
