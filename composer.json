@@ -158,15 +158,14 @@
     "scripts": {
         "drupal:install": [
             "Composer\\Config::disableProcessTimeout",
-            "drush site:install --yes",
+            "drush site:install --yes --account-pass admin",
             "drush webform-libraries-download"
         ],
         "drupal:install-dev": [
             "cd web/sites/default && chmod +w . && rm -rf settings.php files",
             "@drupal:install",
             "drush config:set --yes system.logging error_level verbose",
-            "drush pm:enable --yes default_content",
-            "drush user:password admin admin",
+            "drush install --yes default_content",
             "drush user:password editor editor",
             "drush user:unblock editor"
         ],
