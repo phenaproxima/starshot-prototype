@@ -28,6 +28,7 @@ recipes:
   - starshot_page_content_type
 install:
   - easy_breadcrumb
+  - eca_ui
   - metatag
   - menu_link_content
   - redirect

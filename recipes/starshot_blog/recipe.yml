@@ -8,8 +8,6 @@ recipes:
   - starshot_image_media_type
   - core/recipes/tags_taxonomy
   - notify_new_comments
-install:
-  - eca_-ui
 config:
   import:
     image:
