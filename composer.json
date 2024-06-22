@@ -37,6 +37,10 @@
             "type": "path",
             "url": "recipes/starshot_blog"
         },
+        "starshot_card_block_type": {
+            "type": "path",
+            "url": "recipes/starshot_card_block_type"
+        },
         "starshot_content_type_base": {
             "type": "path",
             "url": "recipes/starshot_content_type_base"
