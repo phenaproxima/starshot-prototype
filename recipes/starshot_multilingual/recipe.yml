@@ -52,6 +52,9 @@ config:
       grantPermissions:
         - 'create content translations'
         - 'delete content translations'
+        - 'translate editable entities'
         - 'update content translations'
+      grantPermissionsForEachBlockContentType:
+        - 'translate %bundle block_content'
       grantPermissionsForEachNodeType:
         - 'translate %bundle node'
