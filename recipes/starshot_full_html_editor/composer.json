@@ -5,6 +5,6 @@
     "version": "dev-main",
     "require": {
         "drupal/core": ">=10.3",
-        "drupal/linkit": "6.1.x-dev"
+        "drupal/linkit": "^6.1.4"
     }
 }
