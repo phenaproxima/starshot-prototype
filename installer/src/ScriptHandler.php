@@ -13,21 +13,13 @@ use Drupal\Component\Serialization\Yaml;
 final class ScriptHandler {
 
   /**
-   * Sets the database URL in `drush.yml`, if a URL is supplied.
+   * Writes Drush configuration for installing Starshot.
    *
    * @param \Composer\Script\Event $event
    *   The event object.
    */
-  public static function setDatabaseUrl(Event $event): void {
-    $file = getcwd() . '/drush/drush.yml';
-    if (file_exists($file)) {
-      $data = file_get_contents($file);
-      $data = Yaml::decode($data);
-    }
-    else {
-      $data = [];
-    }
-
+  public static function configureDrush(Event $event): void {
+    $data = [];
     $arguments = $event->getArguments();
 
     // If SQLite is available, use a SQLite database by default. Otherwise,
@@ -38,7 +30,7 @@ final class ScriptHandler {
     if ($arguments) {
       $data['command']['site']['install']['options']['db-url'] = $arguments[0];
     }
-    file_put_contents($file, Yaml::encode($data));
+    file_put_contents('drush-install.yml', Yaml::encode($data));
   }
 
 }
