@@ -1,5 +1,0 @@
-# https://www.drush.org/latest/using-drush-configuration/
-# https://www.drush.org/latest/examples/example.drush.yml/
-
-options:
-  uri: 'http://localhost/'

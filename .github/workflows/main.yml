@@ -15,7 +15,7 @@ jobs:
   ubuntu:
     runs-on: ubuntu-latest
     container:
-      image: tugboatqa/php:8.3-apache
+      image: tugboatqa/php:${{ matrix.php }}-apache
       volumes:
         - ${{ github.workspace }}:/var/lib/tugboat
     strategy:
@@ -58,6 +58,7 @@ jobs:
             drupal/starshot-project \
             /var/www
           cd /var/www
+          composer quick-start
 
           # @todo For some reason the Drush "config:set" command run by composer
           #   create-project to enable verbose logging doesn't ultimately take

@@ -3,6 +3,7 @@ type: Starshot
 description: 'Sets up a basic blog, with tagging and commenting.'
 recipes:
   - core/recipes/comment_base
+  - starshot_anti_spam
   - starshot_content_type_base
   - starshot_image_media_type
   - core/recipes/tags_taxonomy

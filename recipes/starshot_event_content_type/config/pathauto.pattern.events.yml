@@ -9,7 +9,7 @@ dependencies:
 id: events
 label: Events
 type: 'canonical_entities:node'
-pattern: '/event/[node:field_date_time:start_date:html_year]/[node:title]'
+pattern: '/event/[node:field_date_time:value-custom:Y]/[node:title]'
 selection_criteria:
   79517ec7-284f-47ac-bc09-a26616c74ace:
     id: 'entity_bundle:node'

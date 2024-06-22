@@ -17,6 +17,13 @@ third_party_settings:
     unpublish_enable: true
     unpublish_required: false
     unpublish_revision: true
+  type_tray:
+    type_category: _none
+    type_thumbnail: ''
+    type_icon: public://type-tray-icons/icon-basic-page.svg
+    type_description: ''
+    existing_nodes_link_text: ''
+    type_weight: 0
 name: 'Basic page'
 type: page
 description: "Use <em>basic pages</em> for your static content, such as an 'About us' page."

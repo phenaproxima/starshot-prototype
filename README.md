@@ -12,7 +12,7 @@ Starshot is Drupal 10, but supercharged with some of the best modules and themes
 <hr/>
 
 * [Installation](#installation)
-* [Whom this is for](#whom-this-is-for)
+* [Who this is for](#who-this-is-for)
 * [What this gets you](#what-this-gets-you)
 * [How this is different from a distribution](#how-this-is-different-from-a-distribution)
 * [Included modules and themes](#included-modules-and-themes)
@@ -20,19 +20,22 @@ Starshot is Drupal 10, but supercharged with some of the best modules and themes
 * [Known issues & workarounds](#known-issues--workarounds)
 
 ## Installation
+First, install the dependencies:
 ```
 composer create-project drupal/starshot-project --repository='{"type":"vcs","url":"https://github.com/phenaproxima/starshot-prototype"}' --stability=dev
+cd starshot-project
 ```
-This one command will install Starshot and open it in a web browser for you to play with. You'll get all the modules and themes listed below, pre-configured.
+Then, if you're using [DDEV](https://ddev.com) (v1.23.0 or later; [see the documentation](https://ddev.readthedocs.io/en/stable/users/install/ddev-upgrade) if you need to upgrade):
+```
+ddev quick-start
+```
+Or, if you're not:
+```
+composer quick-start
+```
+This will install Starshot and open it in a web browser for you to play with. You'll get all the modules and themes listed below, pre-configured.
 
-If you use [DDEV](https://ddev.com), you can get Starshot up and running with this:
-```
-git clone https://github.com/phenaproxima/starshot-prototype.git starshot
-cd starshot && ddev install
-```
-You'll need DDEV 1.23.0 or later. [See the documentation](https://ddev.readthedocs.io/en/stable/users/install/ddev-upgrade/) if you need to upgrade.
-
-## Whom this is for
+## Who this is for
 Anyone who wants to create a website with Drupal, but doesn't want to build it -- including the authoring experience -- from the ground up using the relatively bare-bones tools provided by Drupal core. You need extra modules to get the most out of Drupal, but it can be hard to know how to start.
 
 Starshot's purpose is to get you going with the most useful tools favored by the Drupal community, as quickly and easily as possible.
@@ -61,6 +64,7 @@ We don't _quite_ support this yet, but you'll also be able to use Starshot's com
 * [Antibot](https://drupal.org/project/antibot)
 * [Coffee](https://drupal.org/project/coffee)
 * [Diff](https://drupal.org/project/diff)
+* [Easy Breadcrumb](https://www.drupal.org/project/easy_breadcrumb)
 * [Focal Point](https://drupal.org/project/focal_point)
 * [Geolocation Field](https://drupal.org/project/geolocation)
 * [Gin](https://drupal.org/project/gin)
@@ -77,6 +81,7 @@ We don't _quite_ support this yet, but you'll also be able to use Starshot's com
 * [Scheduler](https://drupal.org/project/scheduler)
 * [Simple Sitemap](https://drupal.org/project/simple_sitemap)
 * [Smart Date](https://drupal.org/project/smart_date)
+* [Type Tray](https://drupal.org/project/type_tray)
 * [ULI Custom Workflow](https://drupal.org/project/uli_custom_workflow)
 * [Webform](https://drupal.org/project/webform)
 
@@ -94,7 +99,6 @@ You may see an error like this:
 ```
 The process "test -n "$CI" || composer drupal:run-server" exceeded the timeout of 300 seconds.
 ```
-
 If you encounter this, you can restart the server using the following command:
 ```
 composer drupal:run-server
@@ -102,13 +106,15 @@ composer drupal:run-server
 
 ### Error: SQLSTATE[HY000]: General error: 11 database disk image is malformed
 If you're using **DDEV with Docker Desktop on a Mac**, you might see the following error:
-
 ```
 SQLSTATE[HY000]: General error: 11 database disk image is malformed`
 ```
-This error is caused by the way files are shared between your Mac and Docker, which is set to `VirtioFS`. To fix it, change the file sharing method to either `gRPC FUSE` or `osxfs (Legacy)`:
+This is caused by the way files are shared between your Mac and Docker, which is set to `VirtioFS`. To fix it, change the file sharing method to either `gRPC FUSE` or `osxfs (Legacy)`:
 
 - [Open the Docker Desktop settings](https://docs.docker.com/desktop/settings/mac/).
 - Look for the "General" tab, and find the option for file sharing implementation.
 - Choose either `gRPC FUSE` or `osxfs (Legacy)` from the available options.
 - Click on **Apply & Restart** Docker.
+
+### Using Project Browser with DDEV
+If you're using DDEV, prefix the terminal commands suggested by Project Browser with `ddev exec`.

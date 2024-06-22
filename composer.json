@@ -5,44 +5,88 @@
     "license": "GPL-2.0-or-later",
     "homepage": "https://www.drupal.org/project/drupal",
     "support": {
-        "docs": "https://www.drupal.org/docs/user_guide/en/index.html",
-        "chat": "https://www.drupal.org/node/314178"
+        "docs": "https://drupal.org/docs/user_guide/en/index.html",
+        "chat": "https://drupal.org/node/314178"
     },
     "repositories": {
         "drupal": {
             "type": "composer",
             "url": "https://packages.drupal.org/8"
+        },
+        "starshot": {
+            "type": "path",
+            "url": "recipes/starshot"
+        },
+        "starshot_admin_theme": {
+            "type": "path",
+            "url": "recipes/starshot_admin_theme"
+        },
+        "starshot_anti_spam": {
+            "type": "path",
+            "url": "recipes/starshot_anti_spam"
+        },
+        "starshot_audio_media_type": {
+            "type": "path",
+            "url": "recipes/starshot_audio_media_type"
+        },
+        "starshot_basic_html_editor": {
+            "type": "path",
+            "url": "recipes/starshot_basic_html_editor"
+        },
+        "starshot_blog": {
+            "type": "path",
+            "url": "recipes/starshot_blog"
+        },
+        "starshot_content_type_base": {
+            "type": "path",
+            "url": "recipes/starshot_content_type_base"
+        },
+        "starshot_document_media_type": {
+            "type": "path",
+            "url": "recipes/starshot_document_media_type"
+        },
+        "starshot_event_content_type": {
+            "type": "path",
+            "url": "recipes/starshot_event_content_type"
+        },
+        "starshot_forms": {
+            "type": "path",
+            "url": "recipes/starshot_forms"
+        },
+        "starshot_full_html_editor": {
+            "type": "path",
+            "url": "recipes/starshot_full_html_editor"
+        },
+        "starshot_image_media_type": {
+            "type": "path",
+            "url": "recipes/starshot_image_media_type"
+        },
+        "starshot_installer": {
+            "type": "path",
+            "url": "installer"
+        },
+        "starshot_local_video_media_type": {
+            "type": "path",
+            "url": "recipes/starshot_local_video_media_type"
+        },
+        "starshot_multilingual": {
+            "type": "path",
+            "url": "recipes/starshot_multilingual"
+        },
+        "starshot_page_content_type": {
+            "type": "path",
+            "url": "recipes/starshot_page_content_type"
         }
     },
     "require": {
-        "ext-pdo_sqlite": "*",
         "composer/installers": "^2.0",
         "cweagans/composer-patches": "^2",
-        "drupal/address": "^2.0",
-        "drupal/antibot": "^2.0",
-        "drupal/coffee": "^1.4",
         "drupal/core-composer-scaffold": "^10.3",
         "drupal/core-project-message": "^10.3",
         "drupal/core-recommended": "^10.3",
-        "drupal/diff": "^1.3",
-        "drupal/focal_point": "^2.0",
-        "drupal/geolocation": "^3.12",
-        "drupal/gin": "3.x-dev",
-        "drupal/gin_toolbar": "1.x-dev",
-        "drupal/honeypot": "^2.1",
-        "drupal/linkit": "6.1.x-dev",
-        "drupal/media_entity_download": "^2.2",
-        "drupal/media_file_delete": "^1.3",
-        "drupal/metatag": "^2.0",
-        "drupal/pathauto": "^1.12",
-        "drupal/quick_node_clone": "^1.18",
-        "drupal/redirect": "^1.9",
-        "drupal/sam": "^1.2",
-        "drupal/scheduler": "^2.0.2",
-        "drupal/simple_sitemap": "^4.1",
-        "drupal/smart_date": "^4.0",
-        "drupal/uli_custom_workflow": "^1.0",
-        "drupal/webform": "^6.2",
+        "drupal/starshot": "*",
+        "drupal/starshot_installer": "*",
+        "drupal/starshot_multilingual": "*",
         "drush/drush": "^12.5",
         "oomphinc/composer-installers-extender": "^2"
     },
@@ -69,7 +113,10 @@
             "oomphinc/composer-installers-extender": true
         },
         "sort-packages": true,
-        "optimize-autoloader": true
+        "optimize-autoloader": true,
+        "platform": {
+            "php": "8.1"
+        }
     },
     "extra": {
         "drupal-scaffold": {
@@ -98,10 +145,10 @@
                 "<bg=blue;fg=white>                                                 </>",
                 "",
                 "<bg=yellow;fg=black>Next steps</>:",
+                "  * Run <fg=yellow>composer quick-start</> to install Starshot and open it in a browser",
                 "  * Read the user guide: https://www.drupal.org/docs/user_guide/en/index.html",
-                "  * Get support: https://www.drupal.org/support",
-                "  * Get involved with the Drupal community:",
-                "      https://www.drupal.org/getting-involved"
+                "  * Get support: https://drupal.org/support",
+                "  * Get involved with the Drupal community: https://drupal.org/getting-involved"
             ]
         },
         "patches": {
@@ -115,7 +162,8 @@
     "scripts": {
         "drupal:install": [
             "Composer\\Config::disableProcessTimeout",
-            "cd web && php -d memory_limit=512M core/scripts/drupal install ../recipes/starshot",
+            "\\Drupal\\starshot_installer\\ScriptHandler::configureDrush",
+            "drush site:install --yes --account-pass admin --config drush-install.yml && rm -f drush-install.yml",
             "drush webform-libraries-download"
         ],
         "drupal:install-dev": [
@@ -123,12 +171,12 @@
             "@drupal:install",
             "drush config:set --yes system.logging error_level verbose",
             "drush pm:enable --yes base_field_override_ui default_content",
-            "drush user:password admin admin",
             "drush user:password editor editor",
             "drush user:unblock editor"
         ],
         "drupal:rebuild": [
             "sudo rm -rf vendor web composer.lock patches.lock.json | true",
+            "git checkout web/.gitkeep",
             "@composer install",
             "@drupal:install"
         ],
@@ -140,6 +188,9 @@
             "./vendor/bin/phpunit"
         ],
         "post-create-project-cmd": [
+            "@composer config --unset platform.php"
+        ],
+        "quick-start": [
             "@drupal:install",
             "test -n \"$CI\" || composer drupal:run-server"
         ]
@@ -149,7 +200,8 @@
         "drupal:install-dev": "Installs Starshot, with additional modules and configuration tweaks for development.",
         "drupal:rebuild": "Rebuilds the codebase and reinstalls Starshot from scratch. Should only be used for internal development.",
         "drupal:run-server": "Runs Starshot using the PHP webserver and opens it in the default browser.",
-        "drupal:run-tests": "Runs Starshot's automated test suite."
+        "drupal:run-tests": "Runs Starshot's automated test suite.",
+        "quick-start": "Installs Starshot and opens it in a browser."
     },
     "scripts-aliases": {
         "drupal:install": [
@@ -163,5 +215,10 @@
         "drupal:run-tests": [
             "test"
         ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Drupal\\starshot_installer\\": "installer/src"
+        }
     }
 }
