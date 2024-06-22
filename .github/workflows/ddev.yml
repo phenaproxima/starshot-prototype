@@ -33,7 +33,6 @@ jobs:
 
       - name: Install Starshot
         run: |
-          ddev composer install
           ddev quick-start
 
       - name: Confirm that Starshot is running
