@@ -41,7 +41,7 @@ Starshot's purpose is to get you going with the most useful tools favored by the
 * Useful content types, already set up for translation, meta tags, pretty URLs, moderation, and scheduling.
 * A standard set of media types, with some enhancements (setting an image's focal point, for example, or better linking to uploaded documents).
 * An amazingly full-featured platform for building web forms with anti-spam protection.
-* A much nicer administrative experience than you'd get with plain Drupal, based on the Gin theme, plus the Navigation and Coffee modules.
+* A much nicer administrative experience than you'd get with plain Drupal, based on the Gin theme, plus the Navigation, Coffee, and Project Browser modules.
 * Basic niceties:
   * An XML site map
   * Better date and time fields
@@ -60,6 +60,7 @@ We don't _quite_ support this yet, but you'll also be able to use Starshot's com
 ## Included modules and themes
 * [Address](https://drupal.org/project/address)
 * [Antibot](https://drupal.org/project/antibot)
+* [Automatic Updates](https://drupal.org/project/automatic_updates)
 * [Coffee](https://drupal.org/project/coffee)
 * [Diff](https://drupal.org/project/diff)
 * [Easy Breadcrumb](https://drupal.org/project/easy_breadcrumb)
@@ -74,6 +75,7 @@ We don't _quite_ support this yet, but you'll also be able to use Starshot's com
 * [Media File Delete](https://drupal.org/project/media_file_delete)
 * [Metatag](https://drupal.org/project/metatag)
 * [Pathauto](https://drupal.org/project/pathauto)
+* [Project Browser](https://drupal.org/project/project_browser)
 * [Quick Node Clone](https://drupal.org/project/quick_node_clone)
 * [Redirect](https://drupal.org/project/redirect)
 * [Simple Add More](https://drupal.org/project/sam)

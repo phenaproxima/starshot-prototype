@@ -19,6 +19,8 @@ final class ScriptHandler {
    *   The event object.
    */
   public static function configureDrush(Event $event): void {
+    // If DDEV is managing site settings, it's probably already set up the
+    // database, so we don't need to do anything else here.
     if (getenv('IS_DDEV_PROJECT') && file_exists('web/sites/default/settings.ddev.php')) {
       return;
     }
