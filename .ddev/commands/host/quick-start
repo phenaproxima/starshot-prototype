@@ -3,8 +3,6 @@
 ## Description: Installs Starshot and opens it in a browser.
 
 ddev start
-if [ ! -d vendor ]; then
-  ddev composer install
-fi
+ddev composer install
 ddev composer drupal:install
 test -n "$CI" || ddev launch

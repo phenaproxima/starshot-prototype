@@ -1,5 +1,4 @@
 type: drupal
-ddev_version_constraint: '>= 1.23.0'
 docroot: web
 php_version: "8.3"
 webserver_type: nginx-fpm
@@ -8,14 +7,18 @@ router_https_port: "443"
 xdebug_enabled: false
 additional_hostnames: []
 additional_fqdns: []
+database:
+    type: mariadb
+    version: "10.11"
+working_dir:
+    web: /var/www/html/web
 use_dns_when_possible: true
 composer_version: "2"
 web_environment:
-  - DRUSH_OPTIONS_URI=$DDEV_PRIMARY_URL
+    - DRUSH_OPTIONS_URI=$DDEV_PRIMARY_URL
 nodejs_version: "16"
 corepack_enable: false
-working_dir:
-  web: /var/www/html/web
+ddev_version_constraint: '>= 1.23.0'
 
 # Key features of DDEV's config.yaml:
 
@@ -203,7 +206,7 @@ working_dir:
 
 # disable_settings_management: false
 # If true, DDEV will not create CMS-specific settings files like
-# Drupal's settings.php/settings.ddev.php or TYPO3's AdditionalConfiguration.php
+# Drupal's settings.php/settings.ddev.php or TYPO3's additional.php
 # In this case the user must provide all such settings.
 
 # You can inject environment variables into the web container with:
