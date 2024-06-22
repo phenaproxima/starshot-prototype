@@ -6,6 +6,7 @@
     "require": {
         "drupal/core": ">=10.3",
         "drupal/easy_breadcrumb": "^2",
+        "drupal/eca": "^2",
         "drupal/metatag": "^2",
         "drupal/redirect": "^1.9",
         "drupal/starshot_admin_theme": "*",
@@ -18,6 +19,7 @@
         "drupal/starshot_full_html_editor": "*",
         "drupal/starshot_image_media_type": "*",
         "drupal/starshot_local_video_media_type": "*",
+        "drupal/starshot_multilingual": "*",
         "drupal/starshot_page_content_type": "*",
         "drupal/uli_custom_workflow": "^1"
     }

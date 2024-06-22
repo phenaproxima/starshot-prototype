@@ -49,6 +49,7 @@ Starshot's purpose is to get you going with the most useful tools favored by the
   * Better handling of files on disk
   * The ability to clone content
   * Comparing different versions of content
+  * Email notifications when a comment is posted
 * Some sample content, so you're not starting from nothing.
 
 ## How this is different from a distribution
@@ -61,7 +62,8 @@ We don't _quite_ support this yet, but you'll also be able to use Starshot's com
 * [Antibot](https://drupal.org/project/antibot)
 * [Coffee](https://drupal.org/project/coffee)
 * [Diff](https://drupal.org/project/diff)
-* [Easy Breadcrumb](https://www.drupal.org/project/easy_breadcrumb)
+* [Easy Breadcrumb](https://drupal.org/project/easy_breadcrumb)
+* [ECA (Event - Condition - Action)](https://drupal.org/project/eca)
 * [Focal Point](https://drupal.org/project/focal_point)
 * [Geolocation Field](https://drupal.org/project/geolocation)
 * [Gin](https://drupal.org/project/gin)

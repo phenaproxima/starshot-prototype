@@ -86,7 +86,6 @@
         "drupal/core-recommended": "^10.3",
         "drupal/starshot": "*",
         "drupal/starshot_installer": "*",
-        "drupal/starshot_multilingual": "*",
         "drush/drush": "^12.5",
         "oomphinc/composer-installers-extender": "^2"
     },
@@ -112,9 +111,7 @@
             "oomphinc/composer-installers-extender": true
         },
         "sort-packages": true,
-        "optimize-autoloader": true,
-        "platform": {
-        }
+        "optimize-autoloader": true
     },
     "extra": {
         "drupal-scaffold": {

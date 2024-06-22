@@ -19,6 +19,9 @@ final class ScriptHandler {
    *   The event object.
    */
   public static function configureDrush(Event $event): void {
+    if (getenv('IS_DDEV_PROJECT') && file_exists('web/sites/default/settings.ddev.php')) {
+      return;
+    }
     $data = [];
     $arguments = $event->getArguments();
 

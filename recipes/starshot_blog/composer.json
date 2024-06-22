@@ -7,6 +7,7 @@
         "drupal/core": ">=10.3",
         "drupal/starshot_anti_spam": "*",
         "drupal/starshot_content_type_base": "*",
-        "drupal/starshot_image_media_type": "*"
+        "drupal/starshot_image_media_type": "*",
+        "drupal-eca-recipe/notify_new_comments": "*"
     }
 }
