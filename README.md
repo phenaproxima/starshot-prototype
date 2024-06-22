@@ -12,7 +12,7 @@ Starshot is Drupal 10, but supercharged with some of the best modules and themes
 <hr/>
 
 * [Installation](#installation)
-* [Whom this is for](#whom-this-is-for)
+* [Who this is for](#who-this-is-for)
 * [What this gets you](#what-this-gets-you)
 * [How this is different from a distribution](#how-this-is-different-from-a-distribution)
 * [Included modules and themes](#included-modules-and-themes)
@@ -20,11 +20,12 @@ Starshot is Drupal 10, but supercharged with some of the best modules and themes
 * [Known issues & workarounds](#known-issues--workarounds)
 
 ## Installation
+First, install the dependencies:
 ```
 composer create-project drupal/starshot-project --repository='{"type":"vcs","url":"https://github.com/phenaproxima/starshot-prototype"}' --stability=dev
 cd starshot-project
 ```
-Then, if you're using [DDEV](https://ddev.com) (version 1.23.0 or later is required; [see the documentation](https://ddev.readthedocs.io/en/stable/users/install/ddev-upgrade/ if you need to upgrade):
+Then, if you're using [DDEV](https://ddev.com) (v1.23.0 or later; [see the documentation](https://ddev.readthedocs.io/en/stable/users/install/ddev-upgrade) if you need to upgrade):
 ```
 ddev quick-start
 ```
@@ -34,7 +35,7 @@ composer quick-start
 ```
 This will install Starshot and open it in a web browser for you to play with. You'll get all the modules and themes listed below, pre-configured.
 
-## Whom this is for
+## Who this is for
 Anyone who wants to create a website with Drupal, but doesn't want to build it -- including the authoring experience -- from the ground up using the relatively bare-bones tools provided by Drupal core. You need extra modules to get the most out of Drupal, but it can be hard to know how to start.
 
 Starshot's purpose is to get you going with the most useful tools favored by the Drupal community, as quickly and easily as possible.
