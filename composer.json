@@ -79,7 +79,6 @@
         }
     },
     "require": {
-        "ext-pdo_sqlite": "*",
         "composer/installers": "^2.0",
         "cweagans/composer-patches": "^2",
         "drupal/core-composer-scaffold": "^10.3",
@@ -158,6 +157,7 @@
     "scripts": {
         "drupal:install": [
             "Composer\\Config::disableProcessTimeout",
+            "\\Drupal\\starshot_installer\\ScriptHandler::setDatabaseUrl",
             "drush site:install --yes --account-pass admin",
             "drush webform-libraries-download"
         ],
@@ -207,5 +207,10 @@
         "drupal:run-tests": [
             "test"
         ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Drupal\\starshot_installer\\": "installer/src"
+        }
     }
 }
