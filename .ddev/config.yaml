@@ -1,5 +1,5 @@
 type: drupal
-ddev_version_constraint: '>=1.23.0'
+ddev_version_constraint: '>= 1.23.0'
 docroot: web
 php_version: "8.3"
 webserver_type: nginx-fpm
@@ -16,9 +16,6 @@ nodejs_version: "16"
 corepack_enable: false
 working_dir:
   web: /var/www/html/web
-hooks:
-  post-start:
-    - composer: install
 
 # Key features of DDEV's config.yaml:
 

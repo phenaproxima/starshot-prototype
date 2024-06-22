@@ -58,6 +58,7 @@ jobs:
             drupal/starshot-project \
             /var/www
           cd /var/www
+          composer quick-start
 
           # @todo For some reason the Drush "config:set" command run by composer
           #   create-project to enable verbose logging doesn't ultimately take

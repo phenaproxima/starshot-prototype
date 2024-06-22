@@ -5,8 +5,8 @@
     "license": "GPL-2.0-or-later",
     "homepage": "https://www.drupal.org/project/drupal",
     "support": {
-        "docs": "https://www.drupal.org/docs/user_guide/en/index.html",
-        "chat": "https://www.drupal.org/node/314178"
+        "docs": "https://drupal.org/docs/user_guide/en/index.html",
+        "chat": "https://drupal.org/node/314178"
     },
     "repositories": {
         "drupal": {
@@ -79,7 +79,6 @@
         }
     },
     "require": {
-        "ext-pdo_sqlite": "*",
         "composer/installers": "^2.0",
         "cweagans/composer-patches": "^2",
         "drupal/core-composer-scaffold": "^10.3",
@@ -142,10 +141,10 @@
                 "<bg=blue;fg=white>                                                 </>",
                 "",
                 "<bg=yellow;fg=black>Next steps</>:",
+                "  * Run <fg=yellow>composer quick-start</> to install Starshot and open it in a browser",
                 "  * Read the user guide: https://www.drupal.org/docs/user_guide/en/index.html",
-                "  * Get support: https://www.drupal.org/support",
-                "  * Get involved with the Drupal community:",
-                "      https://www.drupal.org/getting-involved"
+                "  * Get support: https://drupal.org/support",
+                "  * Get involved with the Drupal community: https://drupal.org/getting-involved"
             ]
         },
         "patches": {
@@ -158,15 +157,15 @@
     "scripts": {
         "drupal:install": [
             "Composer\\Config::disableProcessTimeout",
-            "drush site:install --yes",
+            "\\Drupal\\starshot_installer\\ScriptHandler::configureDrush",
+            "drush site:install --yes --account-pass admin --config drush-install.yml && rm -f drush-install.yml",
             "drush webform-libraries-download"
         ],
         "drupal:install-dev": [
             "cd web/sites/default && chmod +w . && rm -rf settings.php files",
             "@drupal:install",
             "drush config:set --yes system.logging error_level verbose",
-            "drush pm:enable --yes default_content",
-            "drush user:password admin admin",
+            "drush install --yes default_content",
             "drush user:password editor editor",
             "drush user:unblock editor"
         ],
@@ -183,7 +182,7 @@
         "drupal:run-tests": [
             "./vendor/bin/phpunit"
         ],
-        "post-create-project-cmd": [
+        "quick-start": [
             "@drupal:install",
             "test -n \"$CI\" || composer drupal:run-server"
         ]
@@ -193,7 +192,8 @@
         "drupal:install-dev": "Installs Starshot, with additional modules and configuration tweaks for development.",
         "drupal:rebuild": "Rebuilds the codebase and reinstalls Starshot from scratch. Should only be used for internal development.",
         "drupal:run-server": "Runs Starshot using the PHP webserver and opens it in the default browser.",
-        "drupal:run-tests": "Runs Starshot's automated test suite."
+        "drupal:run-tests": "Runs Starshot's automated test suite.",
+        "quick-start": "Installs Starshot and opens it in a browser."
     },
     "scripts-aliases": {
         "drupal:install": [
@@ -207,5 +207,10 @@
         "drupal:run-tests": [
             "test"
         ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Drupal\\starshot_installer\\": "installer/src"
+        }
     }
 }
