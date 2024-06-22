@@ -185,9 +185,6 @@
         "drupal:run-tests": [
             "./vendor/bin/phpunit"
         ],
-        "post-create-project-cmd": [
-            "@composer config --unset platform.php"
-        ],
         "quick-start": [
             "@drupal:install",
             "test -n \"$CI\" || composer drupal:run-server"
