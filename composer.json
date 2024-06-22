@@ -15,67 +15,115 @@
         },
         "starshot": {
             "type": "path",
-            "url": "recipes/starshot"
+            "url": "recipes/starshot",
+            "options": {
+                "symlink": false
+            }
         },
         "starshot_admin_theme": {
             "type": "path",
-            "url": "recipes/starshot_admin_theme"
+            "url": "recipes/starshot_admin_theme",
+            "options": {
+                "symlink": false
+            }
         },
         "starshot_anti_spam": {
             "type": "path",
-            "url": "recipes/starshot_anti_spam"
+            "url": "recipes/starshot_anti_spam",
+            "options": {
+                "symlink": false
+            }
         },
         "starshot_audio_media_type": {
             "type": "path",
-            "url": "recipes/starshot_audio_media_type"
+            "url": "recipes/starshot_audio_media_type",
+            "options": {
+                "symlink": false
+            }
         },
         "starshot_basic_html_editor": {
             "type": "path",
-            "url": "recipes/starshot_basic_html_editor"
+            "url": "recipes/starshot_basic_html_editor",
+            "options": {
+                "symlink": false
+            }
         },
         "starshot_blog": {
             "type": "path",
-            "url": "recipes/starshot_blog"
+            "url": "recipes/starshot_blog",
+            "options": {
+                "symlink": false
+            }
         },
         "starshot_content_type_base": {
             "type": "path",
-            "url": "recipes/starshot_content_type_base"
+            "url": "recipes/starshot_content_type_base",
+            "options": {
+                "symlink": false
+            }
         },
         "starshot_document_media_type": {
             "type": "path",
-            "url": "recipes/starshot_document_media_type"
+            "url": "recipes/starshot_document_media_type",
+            "options": {
+                "symlink": false
+            }
         },
         "starshot_event_content_type": {
             "type": "path",
-            "url": "recipes/starshot_event_content_type"
+            "url": "recipes/starshot_event_content_type",
+            "options": {
+                "symlink": false
+            }
         },
         "starshot_forms": {
             "type": "path",
-            "url": "recipes/starshot_forms"
+            "url": "recipes/starshot_forms",
+            "options": {
+                "symlink": false
+            }
         },
         "starshot_full_html_editor": {
             "type": "path",
-            "url": "recipes/starshot_full_html_editor"
+            "url": "recipes/starshot_full_html_editor",
+            "options": {
+                "symlink": false
+            }
         },
         "starshot_image_media_type": {
             "type": "path",
-            "url": "recipes/starshot_image_media_type"
+            "url": "recipes/starshot_image_media_type",
+            "options": {
+                "symlink": false
+            }
         },
         "starshot_installer": {
             "type": "path",
-            "url": "installer"
+            "url": "installer",
+            "options": {
+                "symlink": false
+            }
         },
         "starshot_local_video_media_type": {
             "type": "path",
-            "url": "recipes/starshot_local_video_media_type"
+            "url": "recipes/starshot_local_video_media_type",
+            "options": {
+                "symlink": false
+            }
         },
         "starshot_multilingual": {
             "type": "path",
-            "url": "recipes/starshot_multilingual"
+            "url": "recipes/starshot_multilingual",
+            "options": {
+                "symlink": false
+            }
         },
         "starshot_page_content_type": {
             "type": "path",
-            "url": "recipes/starshot_page_content_type"
+            "url": "recipes/starshot_page_content_type",
+            "options": {
+                "symlink": false
+            }
         }
     },
     "require": {
