@@ -30,7 +30,7 @@ ddev quick-start
 ```
 Or, if you're not:
 ```
-composer drupal:quick-start
+composer quick-start
 ```
 This will install Starshot and open it in a web browser for you to play with. You'll get all the modules and themes listed below, pre-configured.
 

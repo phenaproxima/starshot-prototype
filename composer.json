@@ -142,7 +142,7 @@
                 "<bg=blue;fg=white>                                                 </>",
                 "",
                 "<bg=yellow;fg=black>Next steps</>:",
-                "  * Run <fg=yellow>composer drupal:quick-start</> to install Starshot and open it in a browser",
+                "  * Run <fg=yellow>composer quick-start</> to install Starshot and open it in a browser",
                 "  * Read the user guide: https://www.drupal.org/docs/user_guide/en/index.html",
                 "  * Get support: https://drupal.org/support",
                 "  * Get involved with the Drupal community: https://drupal.org/getting-involved"
@@ -170,10 +170,6 @@
             "drush user:password editor editor",
             "drush user:unblock editor"
         ],
-        "drupal:quick-start": [
-            "@drupal:install",
-            "test -n \"$CI\" || composer drupal:run-server"
-        ],
         "drupal:rebuild": [
             "sudo rm -rf vendor web composer.lock patches.lock.json | true",
             "git checkout web/.gitkeep",
@@ -186,6 +182,10 @@
         ],
         "drupal:run-tests": [
             "./vendor/bin/phpunit"
+        ],
+        "quick-start": [
+            "@drupal:install",
+            "test -n \"$CI\" || composer drupal:run-server"
         ]
     },
     "scripts-descriptions": {
@@ -193,7 +193,8 @@
         "drupal:install-dev": "Installs Starshot, with additional modules and configuration tweaks for development.",
         "drupal:rebuild": "Rebuilds the codebase and reinstalls Starshot from scratch. Should only be used for internal development.",
         "drupal:run-server": "Runs Starshot using the PHP webserver and opens it in the default browser.",
-        "drupal:run-tests": "Runs Starshot's automated test suite."
+        "drupal:run-tests": "Runs Starshot's automated test suite.",
+        "quick-start": "Installs Starshot and opens it in a browser."
     },
     "scripts-aliases": {
         "drupal:install": [
