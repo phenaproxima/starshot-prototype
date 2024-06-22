@@ -7,7 +7,7 @@ recipes:
   - starshot_content_type_base
   - starshot_image_media_type
   - core/recipes/tags_taxonomy
-  - recipes/notify_new_comments
+  - notify_new_comments
 config:
   import:
     image:
