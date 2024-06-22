@@ -49,6 +49,7 @@ Starshot's purpose is to get you going with the most useful tools favored by the
   * Better handling of files on disk
   * The ability to clone content
   * Comparing different versions of content
+  * Email notifications when a comment is posted
 * Some sample content, so you're not starting from nothing.
 
 ## How this is different from a distribution
