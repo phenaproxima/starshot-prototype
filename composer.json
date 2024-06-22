@@ -114,7 +114,6 @@
         "sort-packages": true,
         "optimize-autoloader": true,
         "platform": {
-            "php": "8.1"
         }
     },
     "extra": {
@@ -184,9 +183,6 @@
         ],
         "drupal:run-tests": [
             "./vendor/bin/phpunit"
-        ],
-        "post-create-project-cmd": [
-            "@composer config --unset platform.php"
         ],
         "quick-start": [
             "@drupal:install",
