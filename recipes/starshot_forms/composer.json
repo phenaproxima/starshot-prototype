@@ -5,7 +5,7 @@
     "version": "dev-main",
     "require": {
         "drupal/starshot_anti_spam": "*",
-        "drupal/core": "^10.3",
+        "drupal/core": ">=10.3",
         "drupal/webform": "^6.2"
     }
 }

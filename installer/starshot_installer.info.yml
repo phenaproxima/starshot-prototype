@@ -1,6 +1,6 @@
 name: Installer
 type: profile
-core_version_requirement: '^10 || ^11'
+core_version_requirement: '>=10.3'
 description: 'Provides install-time tweaks for Starshot. Not to be used in production.'
 # Starshot isn't a distribution, but we need to use this `distribution` key in order
 # to skip the installer's profile selection step.

@@ -4,7 +4,7 @@
     "description": "Sets up a site with useful features and sample content.",
     "version": "dev-main",
     "require": {
-        "drupal/core": "^10.3",
+        "drupal/core": ">=10.3",
         "drupal/easy_breadcrumb": "^2",
         "drupal/metatag": "^2",
         "drupal/redirect": "^1.9",
