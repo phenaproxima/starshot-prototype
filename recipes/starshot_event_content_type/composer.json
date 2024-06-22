@@ -3,7 +3,7 @@
     "type": "drupal-recipe",
     "version": "dev-main",
     "require": {
-        "drupal/core": "^10.3",
+        "drupal/core": ">=10.3",
         "drupal/address": "^2",
         "drupal/geolocation": "^3.12",
         "drupal/smart_date": "^4",

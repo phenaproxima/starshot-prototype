@@ -4,7 +4,7 @@
     "description": "Adds a few enhancements to the document media type.",
     "version": "dev-main",
     "require": {
-        "drupal/core": "^10.3",
+        "drupal/core": ">=10.3",
         "drupal/media_entity_download": "^2.2",
         "drupal/media_file_delete": "^1.3"
     }

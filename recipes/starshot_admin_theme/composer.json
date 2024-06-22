@@ -5,7 +5,7 @@
     "version": "dev-main",
     "require": {
         "drupal/coffee": "^1.4",
-        "drupal/core": "^10.3",
+        "drupal/core": ">=10.3",
         "drupal/gin": "3.x-dev",
         "drupal/gin_toolbar": "1.x-dev"
     }

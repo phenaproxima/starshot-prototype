@@ -4,7 +4,7 @@
     "description": "Provides a basic Page content type with pretty URLs, moderation, scheduling, translation, and meta tags.",
     "version": "dev-main",
     "require": {
-        "drupal/core": "^10.3",
+        "drupal/core": ">=10.3",
         "drupal/starshot_content_type_base": "*"
     }
 }
