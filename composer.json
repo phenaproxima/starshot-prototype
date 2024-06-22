@@ -87,7 +87,7 @@
         "drupal/starshot": "*",
         "drupal/starshot_installer": "*",
         "drupal/starshot_multilingual": "*",
-        "drush/drush": "^13",
+        "drush/drush": "^12.5",
         "oomphinc/composer-installers-extender": "^2"
     },
     "require-dev": {

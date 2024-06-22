@@ -25,7 +25,7 @@ final class ScriptHandler {
     // If SQLite is available, use a SQLite database by default. Otherwise,
     // Drush will prompt for a database URL during installation.
     if (extension_loaded('pdo_sqlite')) {
-      $arguments[0] ??= 'sqlite://localhost/../db.sqlite';
+      $arguments[0] ??= 'sqlite://db.sqlite';
     }
     if ($arguments) {
       $data['command']['site']['install']['options']['db-url'] = $arguments[0];
