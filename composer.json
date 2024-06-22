@@ -88,6 +88,7 @@
         "drupal/starshot_installer": "*",
         "drupal/starshot_multilingual": "*",
         "drush/drush": "^12.5",
+        "drupal-eca-recipe/notify_new_comments": "dev-main",
         "oomphinc/composer-installers-extender": "^2"
     },
     "require-dev": {
