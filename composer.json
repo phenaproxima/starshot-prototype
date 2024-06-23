@@ -203,7 +203,7 @@
     },
     "scripts": {
         "web-root": [
-            "@putenv WEB_ROOT=web"
+            "\\Drupal\\starshot_installer\\ScriptHandler::webRoot"
         ],
         "drupal:install": [
             "Composer\\Config::disableProcessTimeout",
