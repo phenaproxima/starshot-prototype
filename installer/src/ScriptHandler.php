@@ -28,6 +28,7 @@ final class ScriptHandler {
     $arguments = $event->getArguments();
     if ($arguments) {
       assert(str_ends_with($old_root, '/'));
+      Platform::putEnv('PREVIOUS_WEB_ROOT', $old_root);
 
       $file = new JsonFile('composer.json');
       $data = $file->read();

@@ -168,20 +168,45 @@
             }
         },
         "installer-paths": {
-            "web/core": ["type:drupal-core"],
-            "web/libraries/{$name}": ["type:drupal-library"],
-            "web/modules/contrib/{$name}": ["type:drupal-module"],
-            "web/profiles/contrib/{$name}": ["type:drupal-profile"],
-            "web/themes/contrib/{$name}": ["type:drupal-theme"],
-            "drush/Commands/contrib/{$name}": ["type:drupal-drush"],
-            "web/modules/custom/{$name}": ["type:drupal-custom-module"],
-            "web/profiles/custom/{$name}": ["type:drupal-custom-profile"],
-            "web/recipes/{$name}": ["type:drupal-recipe"],
-            "web/themes/custom/{$name}": ["type:drupal-custom-theme"]
+            "web/core": [
+                "type:drupal-core"
+            ],
+            "web/libraries/{$name}": [
+                "type:drupal-library"
+            ],
+            "web/modules/contrib/{$name}": [
+                "type:drupal-module"
+            ],
+            "web/profiles/contrib/{$name}": [
+                "type:drupal-profile"
+            ],
+            "web/themes/contrib/{$name}": [
+                "type:drupal-theme"
+            ],
+            "drush/Commands/contrib/{$name}": [
+                "type:drupal-drush"
+            ],
+            "web/modules/custom/{$name}": [
+                "type:drupal-custom-module"
+            ],
+            "web/profiles/custom/{$name}": [
+                "type:drupal-custom-profile"
+            ],
+            "web/recipes/{$name}": [
+                "type:drupal-recipe"
+            ],
+            "web/themes/custom/{$name}": [
+                "type:drupal-custom-theme"
+            ]
         },
-        "installer-types": ["drupal-recipe"],
+        "installer-types": [
+            "drupal-recipe"
+        ],
         "drupal-core-project-message": {
-            "include-keys": ["homepage", "support"],
+            "include-keys": [
+                "homepage",
+                "support"
+            ],
             "post-create-project-cmd-message": [
                 "<bg=blue;fg=white>                                                 </>",
                 "<bg=blue;fg=white>  Congratulations, you’ve installed Starshot!    </>",
@@ -203,7 +228,8 @@
     },
     "scripts": {
         "web-root": [
-            "\\Drupal\\starshot_installer\\ScriptHandler::webRoot"
+            "\\Drupal\\starshot_installer\\ScriptHandler::webRoot",
+            "test -z \"$PREVIOUS_WEB_ROOT\" || sudo rm -rf $PREVIOUS_WEB_ROOT | true"
         ],
         "drupal:install": [
             "Composer\\Config::disableProcessTimeout",
@@ -223,7 +249,7 @@
         "drupal:rebuild": [
             "@web-root",
             "sudo rm -rf vendor $WEB_ROOT composer.lock patches.lock.json | true",
-            "git checkout $DOC_ROOT/.gitkeep",
+            "git checkout $WEB_ROOT/.gitkeep",
             "@composer install",
             "@drupal:install"
         ],
