@@ -202,6 +202,9 @@
         }
     },
     "scripts": {
+        "web-root": [
+            "@putenv WEB_ROOT=web"
+        ],
         "drupal:install": [
             "Composer\\Config::disableProcessTimeout",
             "\\Drupal\\starshot_installer\\ScriptHandler::configureDrush",
@@ -209,7 +212,8 @@
             "drush webform-libraries-download"
         ],
         "drupal:install-dev": [
-            "cd web/sites/default && chmod +w . && rm -rf settings.php files",
+            "@web-root",
+            "cd $WEB_ROOT/sites/default && chmod +w . && rm -rf settings.php files",
             "@drupal:install",
             "drush config:set --yes system.logging error_level verbose",
             "drush install --yes default_content",
@@ -217,17 +221,19 @@
             "drush user:unblock editor"
         ],
         "drupal:rebuild": [
-            "sudo rm -rf vendor web composer.lock patches.lock.json | true",
-            "git checkout web/.gitkeep",
+            "@web-root",
+            "sudo rm -rf vendor $WEB_ROOT composer.lock patches.lock.json | true",
+            "git checkout $DOC_ROOT/.gitkeep",
             "@composer install",
             "@drupal:install"
         ],
         "drupal:run-server": [
             "Composer\\Config::disableProcessTimeout",
-            "@php -d max_execution_time=0 web/core/scripts/drupal quick-start"
+            "@web-root",
+            "@php -d max_execution_time=0 $WEB_ROOT/core/scripts/drupal quick-start"
         ],
         "drupal:run-tests": [
-            "./vendor/bin/phpunit"
+            "phpunit"
         ],
         "quick-start": [
             "@drupal:install",
