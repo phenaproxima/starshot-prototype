@@ -27,17 +27,20 @@ final class ScriptHandler {
     // If a new web root was passed, update `composer.json`.
     $arguments = $event->getArguments();
     if ($arguments) {
-      assert(str_ends_with($old_root, '/'));
-      Platform::putEnv('PREVIOUS_WEB_ROOT', $old_root);
+      $old_root = rtrim($old_root, '/');
+      $new_root = rtrim($arguments[0], '/');
+
+      if ($old_root !== $new_root) {
+        Platform::putEnv('PREVIOUS_WEB_ROOT', $old_root);
+      }
 
       $file = new JsonFile('composer.json');
       $data = $file->read();
 
-      $new_root = rtrim($arguments[0], '/');
       $data['extra']['drupal-scaffold']['locations']['web-root'] = "$new_root/";
 
       $installer_paths = array_keys($extra['installer-paths']);
-      $installer_paths = preg_replace("|^$old_root|", "$new_root/", $installer_paths);
+      $installer_paths = preg_replace("|^$old_root/|", "$new_root/", $installer_paths);
       $data['extra']['installer-paths'] = array_combine($installer_paths, $extra['installer-paths']);
 
       $file->write($data);
