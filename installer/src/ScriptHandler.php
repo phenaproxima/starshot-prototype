@@ -30,10 +30,6 @@ final class ScriptHandler {
       $old_root = rtrim($old_root, '/');
       $new_root = rtrim($arguments[0], '/');
 
-      if ($old_root !== $new_root) {
-        Platform::putEnv('PREVIOUS_WEB_ROOT', $old_root);
-      }
-
       $file = new JsonFile('composer.json');
       $data = $file->read();
 

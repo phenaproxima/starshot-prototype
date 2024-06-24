@@ -1,0 +1,6 @@
+#!/bin/bash
+
+## Description: Changes the document root of the project.
+
+ddev config --docroot=$1
+ddev composer web-root $1

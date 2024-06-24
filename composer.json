@@ -228,8 +228,7 @@
     },
     "scripts": {
         "web-root": [
-            "\\Drupal\\starshot_installer\\ScriptHandler::webRoot",
-            "test -z \"$PREVIOUS_WEB_ROOT\" || sudo rm -rf $PREVIOUS_WEB_ROOT | true"
+            "\\Drupal\\starshot_installer\\ScriptHandler::webRoot"
         ],
         "drupal:install": [
             "Composer\\Config::disableProcessTimeout",
