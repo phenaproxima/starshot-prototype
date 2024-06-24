@@ -127,15 +127,14 @@
         }
     },
     "require": {
-        "composer/installers": "^2.0",
+        "composer/installers": "^2.3",
         "cweagans/composer-patches": "^2",
         "drupal/core-composer-scaffold": "^10.3",
         "drupal/core-project-message": "^10.3",
         "drupal/core-recommended": "^10.3",
         "drupal/starshot": "*",
         "drupal/starshot_installer": "*",
-        "drush/drush": "^12.5",
-        "oomphinc/composer-installers-extender": "^2"
+        "drush/drush": "^12.5"
     },
     "require-dev": {
         "drupal/core-dev": "^10.3",
@@ -155,8 +154,7 @@
             "phpstan/extension-installer": true,
             "dealerdirect/phpcodesniffer-composer-installer": true,
             "php-http/discovery": true,
-            "cweagans/composer-patches": true,
-            "oomphinc/composer-installers-extender": true
+            "cweagans/composer-patches": true
         },
         "sort-packages": true,
         "optimize-autoloader": true
@@ -179,7 +177,6 @@
             "web/recipes/{$name}": ["type:drupal-recipe"],
             "web/themes/custom/{$name}": ["type:drupal-custom-theme"]
         },
-        "installer-types": ["drupal-recipe"],
         "drupal-core-project-message": {
             "include-keys": ["homepage", "support"],
             "post-create-project-cmd-message": [
