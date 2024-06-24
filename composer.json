@@ -271,7 +271,8 @@
         "drupal:rebuild": "Rebuilds the codebase and reinstalls Starshot from scratch. Should only be used for internal development.",
         "drupal:run-server": "Runs Starshot using the PHP webserver and opens it in the default browser.",
         "drupal:run-tests": "Runs Starshot's automated test suite.",
-        "quick-start": "Installs Starshot and opens it in a browser."
+        "quick-start": "Installs Starshot and opens it in a browser.",
+        "web-root": "Changes the configured web root in composer.json."
     },
     "scripts-aliases": {
         "drupal:install": [
