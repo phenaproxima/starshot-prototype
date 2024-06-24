@@ -3,4 +3,9 @@
 ## Description: Changes the document root of the project.
 
 ddev config --docroot=$1
+if [ $DDEV_PROJECT_STATUS == "stopped" ]; then
+  _STOP="1"
+  ddev start
+fi
 ddev composer web-root $1
+test -z "$_STOP" || ddev stop
