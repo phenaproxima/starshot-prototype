@@ -164,38 +164,38 @@
     "extra": {
         "drupal-scaffold": {
             "locations": {
-                "web-root": "www/"
+                "web-root": "web/"
             }
         },
         "installer-paths": {
-            "www/core": [
+            "web/core": [
                 "type:drupal-core"
             ],
-            "www/libraries/{$name}": [
+            "web/libraries/{$name}": [
                 "type:drupal-library"
             ],
-            "www/modules/contrib/{$name}": [
+            "web/modules/contrib/{$name}": [
                 "type:drupal-module"
             ],
-            "www/profiles/contrib/{$name}": [
+            "web/profiles/contrib/{$name}": [
                 "type:drupal-profile"
             ],
-            "www/themes/contrib/{$name}": [
+            "web/themes/contrib/{$name}": [
                 "type:drupal-theme"
             ],
             "drush/Commands/contrib/{$name}": [
                 "type:drupal-drush"
             ],
-            "www/modules/custom/{$name}": [
+            "web/modules/custom/{$name}": [
                 "type:drupal-custom-module"
             ],
-            "www/profiles/custom/{$name}": [
+            "web/profiles/custom/{$name}": [
                 "type:drupal-custom-profile"
             ],
-            "www/recipes/{$name}": [
+            "web/recipes/{$name}": [
                 "type:drupal-recipe"
             ],
-            "www/themes/custom/{$name}": [
+            "web/themes/custom/{$name}": [
                 "type:drupal-custom-theme"
             ]
         },
