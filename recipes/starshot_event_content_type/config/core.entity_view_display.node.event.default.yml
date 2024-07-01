@@ -123,7 +123,7 @@ third_party_settings:
                     decimals: 2
                     suffix: h
                 third_party_settings: {  }
-            weight: 1
+            weight: 0
             additional: {  }
           12439f61-1753-4bef-a1a8-8724639d644a:
             uuid: 12439f61-1753-4bef-a1a8-8724639d644a
@@ -163,7 +163,7 @@ third_party_settings:
                 label: above
                 settings: {  }
                 third_party_settings: {  }
-            weight: 2
+            weight: 1
             additional: {  }
           f26a53a5-a6a3-4ebe-a798-57aea88294a8:
             uuid: f26a53a5-a6a3-4ebe-a798-57aea88294a8
@@ -315,7 +315,7 @@ content:
       output_format: wkt
       output_escape: true
     third_party_settings: {  }
-    weight: 114
+    weight: 112
     region: content
   field_meta_tags:
     type: metatag_empty_formatter
@@ -329,4 +329,5 @@ content:
     third_party_settings: {  }
     weight: 100
     region: content
-hidden: {  }
+hidden:
+  langcode: true
