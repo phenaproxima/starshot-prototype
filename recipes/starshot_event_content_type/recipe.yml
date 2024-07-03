@@ -8,7 +8,7 @@ install:
   - geocoder_address
   - geocoder_geofield
   - layout_builder
-  - leaflet
+  - leaflet_more_maps
   - smart_date
 config:
   import:

@@ -132,6 +132,7 @@
         "drupal/core-composer-scaffold": "^10.3",
         "drupal/core-project-message": "^10.3",
         "drupal/core-recommended": "^10.3",
+        "drupal/leaflet_more_maps": "^2.2",
         "drupal/starshot": "*",
         "drupal/starshot_installer": "*",
         "drush/drush": "^12.5"
