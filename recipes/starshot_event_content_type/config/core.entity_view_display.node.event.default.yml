@@ -181,7 +181,7 @@ third_party_settings:
                 label: above
                 settings:
                   multiple_map: false
-                  leaflet_map: 'OSM Mapnik'
+                  leaflet_map: osm-de
                   height: 400
                   height_unit: px
                   hide_empty_map: false
