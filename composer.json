@@ -201,7 +201,9 @@
     "scripts": {
         "drupal:install": [
             "Composer\\Config::disableProcessTimeout",
-            "drush site:install --yes --account-pass admin --config drush-install.yml && rm -f drush-install.yml",
+            "\\Drupal\\starshot_installer\\ScriptHandler::configureDrush",
+            "drush site:install --yes --account-pass admin --config drush-install.yml",
+            "rm -f drush-install.yml",
             "drush webform-libraries-download"
         ],
         "drupal:install-dev": [
@@ -224,9 +226,6 @@
         ],
         "drupal:run-tests": [
             "./vendor/bin/phpunit"
-        ],
-        "drupal:set-db": [
-            "\\Drupal\\starshot_installer\\ScriptHandler::configureDrush"
         ],
         "quick-start": [
             "@drupal:install",
