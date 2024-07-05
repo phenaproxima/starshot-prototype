@@ -201,17 +201,16 @@
     "scripts": {
         "drupal:install": [
             "Composer\\Config::disableProcessTimeout",
-            "\\Drupal\\starshot_installer\\ScriptHandler::configureDrush",
-            "drush site:install --yes --account-pass admin --config drush-install.yml && rm -f drush-install.yml #",
-            "drush webform-libraries-download #"
+            "drush site:install --yes --account-pass admin --config drush-install.yml && rm -f drush-install.yml",
+            "drush webform-libraries-download"
         ],
         "drupal:install-dev": [
-            "cd web/sites/default && chmod +w . && rm -rf settings.php files #",
+            "cd web/sites/default && chmod +w . && rm -rf settings.php files",
             "@drupal:install",
-            "drush config:set --yes system.logging error_level verbose #",
-            "drush install --yes default_content #",
-            "drush user:password editor editor #",
-            "drush user:unblock editor #"
+            "drush config:set --yes system.logging error_level verbose",
+            "drush install --yes default_content",
+            "drush user:password editor editor",
+            "drush user:unblock editor"
         ],
         "drupal:rebuild": [
             "sudo rm -rf vendor web composer.lock patches.lock.json | true",
@@ -225,6 +224,9 @@
         ],
         "drupal:run-tests": [
             "./vendor/bin/phpunit"
+        ],
+        "drupal:set-db": [
+            "\\Drupal\\starshot_installer\\ScriptHandler::configureDrush"
         ],
         "quick-start": [
             "@drupal:install",
