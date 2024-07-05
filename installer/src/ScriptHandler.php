@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\starshot_installer;
 
-use Composer\Script\Event;
 use Drupal\Component\Serialization\Yaml;
 
 /**
