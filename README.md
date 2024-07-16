@@ -93,6 +93,8 @@ We don't _quite_ support this yet, but you'll also be able to use Starshot's com
 ## How we choose which modules and themes to include
 Right now it's pretty much "let's add whatever we think is useful for most people". [We're working on defining a policy and process for this.](https://github.com/phenaproxima/starshot-prototype/issues/11) If you have an idea for a module to include, by all means [open an issue](https://github.com/phenaproxima/starshot-prototype/issues/new/choose)!
 
+Several formal work tracks have been defined for Starshot; [see the relevant issue on drupal.org](https://www.drupal.org/project/starshot/issues/3454529).
+
 ## Known issues & workarounds
 
 ### Server timeout
