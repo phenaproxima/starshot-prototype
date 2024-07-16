@@ -1,0 +1,17 @@
+# This file contains default DDEV configuration overrides for local
+# development. To use it, copy and rename it such that its path plus filename
+# is '.ddev/config.local.yaml', and it will take effect for you without being
+# committed to the Git repository. You must restart DDEV for changes to take
+# effect.
+#
+# See https://ddev.readthedocs.io/en/stable/users/extend/customization-extendibility/#extending-configyaml-with-custom-configyaml-files
+
+# Enable XDebug for debugging and profiling.
+#
+# Alternatively, you can enable Xdebug by running `ddev xdebug` or
+# `ddev xdebug on` from your project directory. It will remain enabled
+# until you start or restart the project.
+#
+# See https://ddev.readthedocs.io/en/stable/users/debugging-profiling/step-debugging/
+# See https://ddev.readthedocs.io/en/stable/users/debugging-profiling/xdebug-profiling/
+# xdebug_enabled: true
