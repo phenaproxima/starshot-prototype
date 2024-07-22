@@ -26,7 +26,7 @@ third_party_settings:
     type_weight: 0
 name: Event
 type: event
-description: null
+description: "Use the event content type for creating and managing events, complete with details like date, time, location, and description."
 help: null
 new_revision: true
 preview_mode: 1
