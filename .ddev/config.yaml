@@ -12,8 +12,7 @@ working_dir:
     web: /var/www/html/web
 use_dns_when_possible: true
 composer_version: "2"
-web_environment:
-    - DRUSH_OPTIONS_URI=$DDEV_PRIMARY_URL
+web_environment: []
 nodejs_version: "16"
 corepack_enable: false
 ddev_version_constraint: '>= 1.23.0'
