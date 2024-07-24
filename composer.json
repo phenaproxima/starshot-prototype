@@ -134,7 +134,7 @@
         "drupal/core-recommended": "^10.3",
         "drupal/starshot": "*",
         "drupal/starshot_installer": "*",
-        "drush/drush": "^12.5"
+        "drush/drush": "13.x-dev"
     },
     "require-dev": {
         "drupal/core-dev": "^10.3",
@@ -174,7 +174,7 @@
             "drush/Commands/contrib/{$name}": ["type:drupal-drush"],
             "web/modules/custom/{$name}": ["type:drupal-custom-module"],
             "web/profiles/custom/{$name}": ["type:drupal-custom-profile"],
-            "web/recipes/{$name}": ["type:drupal-recipe"],
+            "recipes/{$name}": ["type:drupal-recipe"],
             "web/themes/custom/{$name}": ["type:drupal-custom-theme"]
         },
         "drupal-core-project-message": {
@@ -206,6 +206,12 @@
             "rm -f drush-install.yml",
             "drush webform-libraries-download"
         ],
+        "drupal:install-recipe": [
+            "Composer\\Config::disableProcessTimeout",
+            "\\Drupal\\starshot_installer\\ScriptHandler::configureDrush",
+            "drush site:install --yes ../recipes/starshot --account-pass admin --site-name=Starshot",
+            "drush webform-libraries-download"
+        ],
         "drupal:install-dev": [
             "cd web/sites/default && chmod +w . && rm -rf settings.php files",
             "@drupal:install",
@@ -234,6 +240,7 @@
     },
     "scripts-descriptions": {
         "drupal:install": "Installs Starshot.",
+        "drupal:install-recipe": "Installs Starshot, using the recipes.",
         "drupal:install-dev": "Installs Starshot, with additional modules and configuration tweaks for development.",
         "drupal:rebuild": "Rebuilds the codebase and reinstalls Starshot from scratch. Should only be used for internal development.",
         "drupal:run-server": "Runs Starshot using the PHP webserver and opens it in the default browser.",

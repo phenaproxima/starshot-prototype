@@ -1,5 +1,6 @@
 /.phpunit.result.cache
 /composer.lock
 /patches.lock.json
+/recipes/notify_new_comments
 /vendor
 /web

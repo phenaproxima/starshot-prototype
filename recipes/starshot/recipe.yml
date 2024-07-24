@@ -42,6 +42,8 @@ install:
   - datetime
   - menu_ui
   - options
+  - project_browser
+  - redirect
   - shortcut
   - toolbar
   - field_ui
