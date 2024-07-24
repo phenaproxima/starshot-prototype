@@ -1,0 +1,12 @@
+{
+    "name": "drupal/starshot_accessibility",
+    "type": "drupal-recipe",
+    "description": "Sets up accessibility tools and functionality.",
+    "version": "dev-main",
+    "require": {
+        "drupal/a11y_form_helpers": "^2.0",
+        "drupal/block_aria_landmark_roles": "^3.0",
+        "drupal/editoria11y": "^2.1",
+        "drupal/core": ">=10.3"
+    }
+}

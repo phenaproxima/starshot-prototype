@@ -26,6 +26,7 @@ recipes:
   - starshot_image_media_type
   - starshot_local_video_media_type
   - starshot_page_content_type
+  - starshot_accessibility
 install:
   - easy_breadcrumb
   - eca_ui
