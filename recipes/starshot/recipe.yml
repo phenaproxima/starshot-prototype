@@ -98,6 +98,7 @@ config:
           - drupalorg_mockapi
         allowed_projects:
           recipes:
+            - starshot_editoria11y
             - starshot_multilingual
     system.site:
       simple_config_update:
