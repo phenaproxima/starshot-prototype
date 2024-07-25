@@ -1,0 +1,10 @@
+{
+    "name": "drupal/starshot_editoria11y",
+    "version": "dev-main",
+    "description": "Installs and configures editoria11y module.",
+    "type": "drupal-recipe",
+    "require": {
+        "drupal/core": ">=10.3",
+        "drupal/editoria11y": "^2.1"
+    }
+}

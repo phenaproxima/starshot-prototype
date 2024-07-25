@@ -1,0 +1,10 @@
+name: Editoria11y support
+type: Starshot
+description: Installs and configures editoria11y module.
+install:
+  - editoria11y
+config:
+  actions:
+    editoria11y.settings:
+      simple_config_update:
+        ignore_elements: '.leaflet-map-pane *'

@@ -69,6 +69,13 @@
                 "symlink": false
             }
         },
+        "starshot_editoria11y": {
+            "type": "path",
+            "url": "recipes/starshot_editoria11y",
+            "options": {
+                "symlink": false
+            }
+        },
         "starshot_event_content_type": {
             "type": "path",
             "url": "recipes/starshot_event_content_type",
