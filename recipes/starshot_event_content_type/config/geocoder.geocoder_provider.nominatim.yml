@@ -11,6 +11,5 @@ configuration:
   geocoder:
     locale: ''
   rootUrl: 'https://nominatim.openstreetmap.org'
-  # @see starshot_installer_configure_geocoder()
   userAgent: ''
   referer: ''
