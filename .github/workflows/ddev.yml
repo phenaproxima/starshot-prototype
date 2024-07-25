@@ -33,7 +33,12 @@ jobs:
 
       - name: Install Starshot
         run: |
-          ddev quick-start
+          OUTPUT=$(ddev quick-start 2>&1)
+          echo "$OUTPUT"
+          if echo "$OUTPUT" | grep -q "returned with error code 1"; then
+            echo "Starshot installation failed"
+            exit 1
+          fi
 
       - name: Confirm that Starshot is running
         run: |
