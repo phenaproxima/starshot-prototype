@@ -32,13 +32,7 @@ jobs:
           sudo apt update && sudo apt install -y ddev
 
       - name: Install Starshot
-        run: |
-          OUTPUT=$(ddev quick-start 2>&1)
-          echo "$OUTPUT"
-          if echo "$OUTPUT" | grep -q "returned with error code 1"; then
-            echo "Starshot installation failed"
-            exit 1
-          fi
+        run: ddev quick-start
 
       - name: Confirm that Starshot is running
         run: |
