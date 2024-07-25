@@ -91,6 +91,14 @@ config:
     olivero.settings:
       simple_config_update:
         base_primary_color: '#0a205a'
+    project_browser.admin_settings:
+      simple_config_update:
+        enabled_sources:
+          - recipes
+          - drupalorg_mockapi
+        allowed_projects:
+          recipes:
+            - starshot_multilingual
     system.site:
       simple_config_update:
         name: 'Starshot'
