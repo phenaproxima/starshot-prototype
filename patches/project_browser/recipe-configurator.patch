@@ -1,0 +1,44 @@
+diff --git a/src/StarshotConfigurator.php b/src/StarshotConfigurator.php
+new file mode 100644
+index 0000000..8b78cd0
+--- /dev/null
++++ b/src/StarshotConfigurator.php
+@@ -0,0 +1,38 @@
++<?php
++
++declare(strict_types=1);
++
++namespace Drupal\project_browser;
++
++use Drupal\Core\Config\ConfigFactoryInterface;
++use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
++use Drupal\Core\Extension\ModuleExtensionList;
++use Symfony\Component\DependencyInjection\ContainerInterface;
++
++final class StarshotConfigurator implements ContainerInjectionInterface {
++
++  private function __construct(
++    private readonly ModuleExtensionList $moduleList,
++    private readonly ConfigFactoryInterface $configFactory,
++  ) {}
++
++  /**
++   * {@inheritdoc}
++   */
++  public static function create(ContainerInterface $container) {
++    return new self(
++      $container->get(ModuleExtensionList::class),
++      $container->get(ConfigFactoryInterface::class),
++    );
++  }
++
++  public function supportsUiInstall(): bool {
++    if (array_key_exists('package_manager', $this->moduleList->getAllInstalledInfo())) {
++      $executables = $this->configFactory->get('package_manager.settings')
++        ->get('executables');
++      return $executables['composer'] && $executables['rsync'];
++    }
++    return FALSE;
++  }
++
++}

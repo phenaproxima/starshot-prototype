@@ -1,9 +1,25 @@
-diff --git a/core/lib/Drupal/Core/Recipe/InputCollector.php b/core/lib/Drupal/Core/Recipe/InputCollector.php
+diff --git a/core/core.services.yml b/core/core.services.yml
+index e73b944301bc98edb3aa367bf714518730542bb9..f3321eb0d5e682a2a17c8e5fd8ef637e6b9ed503 100644
+--- a/core/core.services.yml
++++ b/core/core.services.yml
+@@ -1885,3 +1885,11 @@ services:
+     tags:
+       - { name: twig.loader, priority: 5 }
+   Drupal\Core\EventSubscriber\CsrfExceptionSubscriber: ~
++  Drupal\Core\Recipe\InputCollector:
++    tags:
++      - { name: service_collector, call: addSource, tag: recipe.input_source }
++  Drupal\Core\Recipe\ConfigInputSource:
++    public: false
++    autowire: true
++    tags:
++      - { name: recipe.input_source, type: config }
+diff --git a/core/lib/Drupal/Core/Recipe/ConfigInputSource.php b/core/lib/Drupal/Core/Recipe/ConfigInputSource.php
 new file mode 100644
-index 0000000000000000000000000000000000000000..4913ea603efd589d1fdcc67e59aa5b856516a1a5
+index 0000000000000000000000000000000000000000..58a7cfff91101c8cb10c5315952b4e24792f0d57
 --- /dev/null
-+++ b/core/lib/Drupal/Core/Recipe/InputCollector.php
-@@ -0,0 +1,67 @@
++++ b/core/lib/Drupal/Core/Recipe/ConfigInputSource.php
+@@ -0,0 +1,36 @@
 +<?php
 +
 +declare(strict_types=1);
@@ -11,23 +27,60 @@ index 0000000000000000000000000000000000000000..4913ea603efd589d1fdcc67e59aa5b85
 +namespace Drupal\Core\Recipe;
 +
 +use Drupal\Core\Config\ConfigFactoryInterface;
-+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-+use Symfony\Component\DependencyInjection\ContainerInterface;
++
++/**
++ * @internal
++ *   Tagged services are internal.
++ */
++final class ConfigInputSource implements InputSourceInterface {
++
++  public function __construct(
++    private readonly ConfigFactoryInterface $configFactory,
++  ) {}
++
++  /**
++   * @param array{config: string[]} $definition
++   *   The input definition. Must contain a `config` element, which is an
++   *   indexed array with two elements: the name of the config object, and the
++   *   key to retrieve.
++   *
++   * @return mixed
++   *   A value from config.
++   */
++  public function collectValue(array $definition): mixed {
++    assert(is_array($definition['config']));
++    assert(count($definition['config']) === 2);
++
++    [$name, $key] = $definition['config'];
++    return $this->configFactory->get($name)->get($key);
++  }
++
++}
+diff --git a/core/lib/Drupal/Core/Recipe/InputCollector.php b/core/lib/Drupal/Core/Recipe/InputCollector.php
+new file mode 100644
+index 0000000000000000000000000000000000000000..60b05c37a29ce2bd098a41b8333d19d4c8b37acb
+--- /dev/null
++++ b/core/lib/Drupal/Core/Recipe/InputCollector.php
+@@ -0,0 +1,48 @@
++<?php
++
++declare(strict_types=1);
++
++namespace Drupal\Core\Recipe;
 +
 +/**
 + * @internal
 + *   This API is experimental.
 + */
-+final class InputCollector implements ContainerInjectionInterface {
++final class InputCollector {
 +
-+  private function __construct(
-+    private readonly ConfigFactoryInterface $configFactory,
-+  ) {}
++  /**
++   * @var \Drupal\Core\Recipe\InputSourceInterface[]
++   */
++  private array $sources = [];
 +
-+  public static function create(ContainerInterface $container): self {
-+    return new self(
-+      $container->get(ConfigFactoryInterface::class),
-+    );
++  public function addSource(InputSourceInterface $source, string $type): void {
++    $this->sources[$type] = $source;
 +  }
 +
 +  public function prepare(Recipe $recipe): void {
@@ -42,37 +95,50 @@ index 0000000000000000000000000000000000000000..4913ea603efd589d1fdcc67e59aa5b85
 +    }
 +
 +    $values = [];
-+    /** @var array{from: string, source?: string} $definition */
++    /** @var array{source: string} $definition */
 +    foreach ($recipe->inputDefinitions as $key => $definition) {
-+      // Add more ways of collecting values here, as needed. We use a match
-+      // expression because value collection is not extensible.
-+      if ($definition['from'] === 'config') {
-+        assert(array_key_exists('source', $definition));
-+        $values[$key] = $this->getFromConfig($definition);
++      $source = $definition['source'];
++      if (array_key_exists($source, $this->sources)) {
++        $values[$key] = $this->sources[$source]->collectValue($definition);
++      }
++      else {
++        throw new \RuntimeException("'$source' is not a known input source.");
 +      }
 +    }
 +    $recipe->setInputValues($values);
 +    $processed[] = $recipe->path;
 +  }
 +
++}
+diff --git a/core/lib/Drupal/Core/Recipe/InputSourceInterface.php b/core/lib/Drupal/Core/Recipe/InputSourceInterface.php
+new file mode 100644
+index 0000000000000000000000000000000000000000..6f9791bf94ae41c0a3a901a7193f19a4a5c846cb
+--- /dev/null
++++ b/core/lib/Drupal/Core/Recipe/InputSourceInterface.php
+@@ -0,0 +1,21 @@
++<?php
++
++declare(strict_types=1);
++
++namespace Drupal\Core\Recipe;
++
++interface InputSourceInterface {
++
 +  /**
-+   * Fetches a value from config.
++   * Collects an input value, based on a definition.
 +   *
-+   * @param array{source: string} $definition
-+   *   The input definition. Must have a `source` element, which is a string
-+   *   in the form `CONFIG_NAME:KEY`.
++   * @param array<string, mixed> $definition
++   *   The input definition. What this contains, and how it is used, varies
++   *   by implementation.
 +   *
 +   * @return mixed
-+   *   A value from config.
++   *   The input value.
 +   */
-+  private function getFromConfig(array $definition): mixed {
-+    [$name, $key] = explode(':', $definition['source'], 2);
-+    return $this->configFactory->get($name)->get($key);
-+  }
++  public function collectValue(array $definition): mixed;
 +
 +}
 diff --git a/core/lib/Drupal/Core/Recipe/Recipe.php b/core/lib/Drupal/Core/Recipe/Recipe.php
-index 0312de9337010aa33917948c19737b5249595c41..716ff244905ec01454b7d28fe5e738bcd6a326d3 100644
+index 0312de9337010aa33917948c19737b5249595c41..49c89566bc110931097a15ea253b81e7f5234840 100644
 --- a/core/lib/Drupal/Core/Recipe/Recipe.php
 +++ b/core/lib/Drupal/Core/Recipe/Recipe.php
 @@ -33,6 +33,41 @@ final class Recipe {
@@ -137,7 +203,7 @@ index 0312de9337010aa33917948c19737b5249595c41..716ff244905ec01454b7d28fe5e738bc
    }
 
    /**
-@@ -151,6 +189,17 @@ private static function parse(string $file): array {
+@@ -151,6 +189,20 @@ private static function parse(string $file): array {
            ]),
          ]),
        ]),
@@ -145,17 +211,20 @@ index 0312de9337010aa33917948c19737b5249595c41..716ff244905ec01454b7d28fe5e738bc
 +        new Type('array'),
 +        new All([
 +          new Collection([
-+            'from' => new IdenticalTo('config'),
-+            'source' => [
-+              new Regex('/^(\w+\.)+\w+:\w+$/', message: 'This value must be in the format `CONFIG_NAME:KEY`.'),
++            'fields' => [
++              'source' => [
++                new Type('string'),
++                new NotBlank(),
++              ],
 +            ],
++            'allowExtraFields' => TRUE,
 +          ]),
 +        ]),
 +      ]),
        'config' => new Optional([
          new Collection([
            // Each entry in the `import` list can either be `*` (import all of
-@@ -285,4 +334,36 @@ private static function validateConfigActions(mixed $value, ExecutionContextInte
+@@ -285,4 +337,36 @@ private static function validateConfigActions(mixed $value, ExecutionContextInte
      }
    }
 
@@ -193,19 +262,19 @@ index 0312de9337010aa33917948c19737b5249595c41..716ff244905ec01454b7d28fe5e738bc
 +
  }
 diff --git a/core/lib/Drupal/Core/Recipe/RecipeCommand.php b/core/lib/Drupal/Core/Recipe/RecipeCommand.php
-index 3040e40960475a77d7e848350a26329ab72a5992..4bf0954f965e50025ce630e02e5bdbe53912d4e8 100644
+index 3040e40960475a77d7e848350a26329ab72a5992..31981290ba0c0e389c79540c8f44bef7c1b6323d 100644
 --- a/core/lib/Drupal/Core/Recipe/RecipeCommand.php
 +++ b/core/lib/Drupal/Core/Recipe/RecipeCommand.php
 @@ -73,6 +73,7 @@ protected function execute(InputInterface $input, OutputInterface $output): int
      /** @var \Drupal\Core\Config\Checkpoint\CheckpointStorageInterface $checkpoint_storage */
      $checkpoint_storage = $container->get('config.storage.checkpoint');
      $recipe = Recipe::createFromDirectory($recipe_path);
-+    InputCollector::create($container)->prepare($recipe);
++    $container->get(InputCollector::class)->prepare($recipe);
      if ($checkpoint_storage instanceof LoggerAwareInterface) {
        $logger = new ConsoleLogger($output, [
          // The checkpoint storage logs a notice if it decides to not create a
 diff --git a/core/lib/Drupal/Core/Recipe/RecipeRunner.php b/core/lib/Drupal/Core/Recipe/RecipeRunner.php
-index 626c203d0371f00142283f6d037039908fcc3855..000bfd0cd5c4c265830b7d0b424017fd33b7463d 100644
+index 626c203d0371f00142283f6d037039908fcc3855..1202b6bd4e5d46ef1fbcafedfeb6c03a991e2859 100644
 --- a/core/lib/Drupal/Core/Recipe/RecipeRunner.php
 +++ b/core/lib/Drupal/Core/Recipe/RecipeRunner.php
 @@ -30,11 +30,23 @@ final class RecipeRunner {
@@ -223,7 +292,7 @@ index 626c203d0371f00142283f6d037039908fcc3855..000bfd0cd5c4c265830b7d0b424017fd
 +    // If we need to collect input for this recipe or any of its dependencies,
 +    // do that now.
 +    if ($collect_input) {
-+      \Drupal::classResolver(InputCollector::class)->prepare($recipe);
++      \Drupal::service(InputCollector::class)->prepare($recipe);
 +    }
 +
 +    foreach ($recipe->recipes->recipes as $dependency) {
@@ -279,8 +348,8 @@ index 626c203d0371f00142283f6d037039908fcc3855..000bfd0cd5c4c265830b7d0b424017fd
 
      if (!empty($config->config['actions'])) {
 +      $values = $recipe->getInputValues();
-+      // Prefix all the replacement strings with `%`.
-+      $keys = array_map(fn ($k) => "%$k", array_keys($values));
++      // Prefix all the replacement strings with `$`.
++      $keys = array_map(fn ($k) => "\$$k", array_keys($values));
 +      $replace = array_combine($keys, $values);
 +
        // Process the actions.
