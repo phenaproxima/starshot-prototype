@@ -19,6 +19,7 @@
         "drupal/starshot_full_html_editor": "*",
         "drupal/starshot_image_media_type": "*",
         "drupal/starshot_local_video_media_type": "*",
+        "drupal/starshot_maintenance": "*",
         "drupal/starshot_multilingual": "*",
         "drupal/starshot_page_content_type": "*",
         "drupal/uli_custom_workflow": "^1"

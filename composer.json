@@ -111,6 +111,13 @@
                 "symlink": false
             }
         },
+        "starshot_maintenance": {
+            "type": "path",
+            "url": "recipes/starshot_maintenance",
+            "options": {
+                "symlink": false
+            }
+        },
         "starshot_multilingual": {
             "type": "path",
             "url": "recipes/starshot_multilingual",

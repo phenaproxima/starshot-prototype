@@ -5,7 +5,6 @@ recipes:
   - core/recipes/basic_block_type
   - core/recipes/content_search
   - core/recipes/core_recommended_performance
-  - core/recipes/core_recommended_maintenance
   # Put starshot_admin_theme before core_recommended_front_end_theme to
   # prevent blocks from the front-end theme being copied into the admin
   # theme unexpectedly. This works around https://drupal.org/i/3372078.
@@ -25,14 +24,13 @@ recipes:
   - starshot_full_html_editor
   - starshot_image_media_type
   - starshot_local_video_media_type
+  - starshot_maintenance
   - starshot_page_content_type
 install:
   - easy_breadcrumb
   - eca_ui
   - metatag
   - menu_link_content
-  - package_manager
-  - project_browser
   - redirect
   - uli_custom_workflow
   # The rest of these are in Standard.
@@ -48,10 +46,6 @@ install:
   - toolbar
   - field_ui
   - views_ui
-input:
-  ui_install_supported:
-    source: callable
-    callable: '\Drupal\project_browser\StarshotConfigurator::supportsUiInstall'
 config:
   import:
     help:
@@ -98,13 +92,9 @@ config:
         base_primary_color: '#0a205a'
     project_browser.admin_settings:
       simple_config_update:
-        enabled_sources:
-          - recipes
-          - drupalorg_mockapi
         allowed_projects:
           recipes:
             - starshot_multilingual
-        allow_ui_install: $ui_install_supported
     system.site:
       simple_config_update:
         name: 'Starshot'

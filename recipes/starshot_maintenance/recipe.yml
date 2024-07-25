@@ -1,0 +1,20 @@
+name: Recommended maintenance
+type: Starshot
+description: Sets up best practices for ongoing site maintenance.
+recipes:
+  - core/recipes/core_recommended_maintenance
+install:
+  - automatic_updates
+  - project_browser
+input:
+  ui_install_supported:
+    source: callable
+    callable: '\Drupal\project_browser\StarshotConfigurator::supportsUiInstall'
+config:
+  actions:
+    project_browser.admin_settings:
+      simple_config_update:
+        enabled_sources:
+          - recipes
+          - drupalorg_mockapi
+        allow_ui_install: $ui_install_supported
