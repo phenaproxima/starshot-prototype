@@ -31,6 +31,8 @@ install:
   - eca_ui
   - metatag
   - menu_link_content
+  - package_manager
+  - project_browser
   - redirect
   - uli_custom_workflow
   # The rest of these are in Standard.
@@ -46,6 +48,10 @@ install:
   - toolbar
   - field_ui
   - views_ui
+input:
+  ui_install_supported:
+    source: callable
+    callable: '\Drupal\project_browser\StarshotConfigurator::supportsUiInstall'
 config:
   import:
     help:
@@ -98,6 +104,7 @@ config:
         allowed_projects:
           recipes:
             - starshot_multilingual
+        allow_ui_install: $ui_install_supported
     system.site:
       simple_config_update:
         name: 'Starshot'

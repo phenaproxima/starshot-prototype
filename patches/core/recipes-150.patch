@@ -348,8 +348,8 @@ index 626c203d0371f00142283f6d037039908fcc3855..1202b6bd4e5d46ef1fbcafedfeb6c03a
 
      if (!empty($config->config['actions'])) {
 +      $values = $recipe->getInputValues();
-+      // Prefix all the replacement strings with `%`.
-+      $keys = array_map(fn ($k) => "%$k", array_keys($values));
++      // Prefix all the replacement strings with `$`.
++      $keys = array_map(fn ($k) => "\$$k", array_keys($values));
 +      $replace = array_combine($keys, $values);
 +
        // Process the actions.
