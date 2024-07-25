@@ -13,8 +13,8 @@ install:
   - smart_date
 input:
   site_uuid:
-    from: config
-    source: 'system.site:uuid'
+    source: config
+    config: ['system.site', 'uuid']
 config:
   import:
     filter:
