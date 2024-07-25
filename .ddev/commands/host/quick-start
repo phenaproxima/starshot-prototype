@@ -2,6 +2,8 @@
 
 ## Description: Installs Starshot and opens it in a browser.
 
+set -e
+
 ddev start
 ddev composer install
 ddev composer drupal:install
