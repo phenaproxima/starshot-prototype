@@ -4,7 +4,7 @@ description: Sets up best practices for ongoing site maintenance.
 recipes:
   - core/recipes/core_recommended_maintenance
 install:
-  - automatic_updates
+  - automatic_updates_extensions
   - project_browser
 input:
   ui_install_supported:
