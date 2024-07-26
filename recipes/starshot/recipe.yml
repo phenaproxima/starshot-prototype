@@ -36,6 +36,7 @@ install:
   # The rest of these are in Standard.
   - help
   - history
+  - inline_form_errors
   - config
   - contextual
   - menu_link_content
