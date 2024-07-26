@@ -65,6 +65,7 @@ We don't _quite_ support this yet, but you'll also be able to use Starshot's com
 * [Diff](https://drupal.org/project/diff)
 * [Easy Breadcrumb](https://drupal.org/project/easy_breadcrumb)
 * [ECA (Event - Condition - Action)](https://drupal.org/project/eca)
+* [editoria11y](https://www.drupal.org/project/editoria11y)
 * [Focal Point](https://drupal.org/project/focal_point)
 * [Geocoder](https://drupal.org/project/geocoder)
 * [Geofield](https://drupal.org/project/geofield)
