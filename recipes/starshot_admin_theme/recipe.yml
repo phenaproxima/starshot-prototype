@@ -14,8 +14,6 @@ config:
     gin.settings:
       simple_config_update:
         high_contrast_mode: true
-        accent_color: ''
-        focus_color: ''
     system.theme:
       simple_config_update:
         admin: gin
