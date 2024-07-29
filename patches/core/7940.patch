@@ -1,0 +1,28 @@
+diff --git a/core/lib/Drupal/Core/Config/Entity/ConfigEntityBase.php b/core/lib/Drupal/Core/Config/Entity/ConfigEntityBase.php
+index c008feaea870e7b35300cf82771a486334a35ee9..0c91c17127f562a87e46bed19fa2bc5efcf5de38 100644
+--- a/core/lib/Drupal/Core/Config/Entity/ConfigEntityBase.php
++++ b/core/lib/Drupal/Core/Config/Entity/ConfigEntityBase.php
+@@ -160,6 +160,7 @@ public function get($property_name) {
+   /**
+    * {@inheritdoc}
+    */
++  #[ActionMethod(adminLabel: new TranslatableMarkup('Set a value'), pluralize: 'setMultiple')]
+   public function set($property_name, $value) {
+     if ($this instanceof EntityWithPluginCollectionInterface && !$this->isSyncing()) {
+       $plugin_collections = $this->getPluginCollections();
+@@ -177,6 +178,7 @@ public function set($property_name, $value) {
+   /**
+    * {@inheritdoc}
+    */
++  #[ActionMethod(adminLabel: new TranslatableMarkup('Enable'), pluralize: FALSE)]
+   public function enable() {
+     return $this->setStatus(TRUE);
+   }
+@@ -184,6 +186,7 @@ public function enable() {
+   /**
+    * {@inheritdoc}
+    */
++  #[ActionMethod(adminLabel: new TranslatableMarkup('Disable'), pluralize: FALSE)]
+   public function disable() {
+     return $this->setStatus(FALSE);
+   }
