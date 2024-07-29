@@ -193,9 +193,9 @@
         },
         "patches": {
             "drupal/core": {
-                "#3444246: Create a config action to set the status of the entity": "./patches/core/recipes-103.patch",
                 "#3303126: Allow recipes to reuse existing config values": "./patches/core/recipes-150.patch",
-                "Add config actions to make a bundle of an entity type translatable": "./patches/core/make-translatable-action.patch",
+                "#3464550: Create config action which can create an entity for every bundle of another entity type": "./patches/core/8975.patch",
+                "#3303127: Determine which core config entity methods should be config actions": "./patches/core/7940.patch",
                 "Allow arbitrary callables to provide input to recipes": "./patches/core/recipe-callable-input.patch"
             },
             "drupal/automatic_updates": {
