@@ -1,6 +1,6 @@
 name: Accessibility tools
 type: Starshot
-description: Installs and configures tools to help with the site accessibility.
+description: Installs and configures tools to help authors make their content accessible.
 install:
   - editoria11y
 config:
