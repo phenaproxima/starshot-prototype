@@ -22,10 +22,9 @@ class BasicExpectationsTest extends ExistingSiteBase {
     $assert_session->statusCodeEquals(200);
     $assert_session->elementAttributeContains('css', 'meta[name="Generator"]', 'content', 'Drupal');
 
-    // The installer should not still be, er, installed.
     /** @var \Drupal\Core\Config\ConfigFactoryInterface $config_factory */
     $config_factory = $this->container->get(ConfigFactoryInterface::class);
-    $this->assertFalse($config_factory->get('core.extension')->get('profile'));
+    $this->assertEmpty($config_factory->get('core.extension')->get('profile'));
   }
 
 }
