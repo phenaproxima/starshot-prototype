@@ -2,27 +2,34 @@
 
 declare(strict_types=1);
 
-use Drupal\Core\Batch\BatchBuilder;
 use Drupal\Core\Extension\ModuleInstallerInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Recipe\InputCollector;
-use Drupal\Core\Recipe\Recipe;
-use Drupal\Core\Recipe\RecipeRunner;
 use Symfony\Component\Process\ExecutableFinder;
 
 /**
- * Implements hook_install_tasks().
+ * Implements hook_install_tasks_alter().
  */
-function starshot_installer_install_tasks(): array {
-  return [
+function starshot_installer_install_tasks_alter(&$tasks, $install_state) {
+  $recipe_tasks = [
     'starshot_installer_apply_recipes' => [
-      'type' => 'batch',
+      'run' => INSTALL_TASK_RUN_IF_REACHED,
       'display_name' => t('Apply recipes'),
-    ],
+    ]
+  ];
+  $key = array_search('install_select_profile', array_keys($tasks), TRUE);
+  $tasks = array_slice($tasks, 0, $key, TRUE) +
+    $recipe_tasks +
+    array_slice($tasks, $key, NULL, TRUE);
+
+  $recipe_tasks = [
     'starshot_installer_uninstall_myself' => [
       // As a final task, this profile should uninstall itself.
     ],
   ];
+  $key = array_search('install_finished', array_keys($tasks), TRUE);
+  $tasks = array_slice($tasks, 0, $key, TRUE) +
+    $recipe_tasks +
+    array_slice($tasks, $key, NULL, TRUE);
 }
 
 /**
@@ -92,22 +99,10 @@ function _starshot_installer_install_configure_form_submit(array &$form, FormSta
 }
 
 /**
- * Runs a batch job that applies all of the Starshot recipes.
- *
- * @return array
- *   The batch job definition.
+ * Apply Starshot recipes.
  */
-function starshot_installer_apply_recipes(): array {
-  $batch = new BatchBuilder();
-  $batch->setTitle(t('Applying recipes'));
-
-  $recipe = Recipe::createFromDirectory(Drupal::root() . '/recipes/starshot');
-  Drupal::classResolver(InputCollector::class)->prepare($recipe);
-
-  foreach (RecipeRunner::toBatchOperations($recipe) as [$callback, $arguments]) {
-    $batch->addOperation($callback, $arguments);
-  }
-  return $batch->toArray();
+function starshot_installer_apply_recipes(&$install_state) {
+  $install_state['parameters']['recipe'] = 'recipes/starshot';
 }
 
 /**
