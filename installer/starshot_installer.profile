@@ -2,13 +2,12 @@
 
 declare(strict_types=1);
 
-use Drupal\Component\Plugin\ConfigurableInterface;
 use Drupal\Core\Batch\BatchBuilder;
 use Drupal\Core\Extension\ModuleInstallerInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Recipe\InputCollector;
 use Drupal\Core\Recipe\Recipe;
 use Drupal\Core\Recipe\RecipeRunner;
-use Drupal\geocoder\Entity\GeocoderProvider;
 use Symfony\Component\Process\ExecutableFinder;
 
 /**
@@ -19,8 +18,6 @@ function starshot_installer_install_tasks(): array {
     'starshot_installer_apply_recipes' => [
       'type' => 'batch',
       'display_name' => t('Apply recipes'),
-    ],
-    'starshot_installer_configure_geocoder' => [
     ],
     'starshot_installer_uninstall_myself' => [
       // As a final task, this profile should uninstall itself.
@@ -46,7 +43,7 @@ function starshot_installer_form_install_settings_form_alter(array &$form): void
  * Implements hook_form_alter() for install_configure_form.
  */
 function starshot_installer_form_install_configure_form_alter(array &$form): void {
-  ['composer' => $composer, 'rsync' => $rsync] = \Drupal::configFactory()
+  ['composer' => $composer, 'rsync' => $rsync] = Drupal::configFactory()
     ->get('package_manager.settings')
     ->get('executables');
 
@@ -84,17 +81,12 @@ function _starshot_installer_install_configure_form_submit(array &$form, FormSta
   $rsync = $form_state->getValue('rsync');
 
   if ($composer && $rsync) {
-    \Drupal::configFactory()
+    Drupal::configFactory()
       ->getEditable('package_manager.settings')
       ->set('executables', [
         'composer' => $composer,
         'rsync' => $rsync,
       ])
-      ->save();
-
-    \Drupal::configFactory()
-      ->getEditable('project_browser.admin_settings')
-      ->set('allow_ui_install', TRUE)
       ->save();
   }
 }
@@ -109,7 +101,8 @@ function starshot_installer_apply_recipes(): array {
   $batch = new BatchBuilder();
   $batch->setTitle(t('Applying recipes'));
 
-  $recipe = Recipe::createFromDirectory(\Drupal::root() . '/recipes/starshot');
+  $recipe = Recipe::createFromDirectory(Drupal::root() . '/recipes/starshot');
+  Drupal::classResolver(InputCollector::class)->prepare($recipe);
 
   foreach (RecipeRunner::toBatchOperations($recipe) as [$callback, $arguments]) {
     $batch->addOperation($callback, $arguments);
@@ -117,25 +110,11 @@ function starshot_installer_apply_recipes(): array {
   return $batch->toArray();
 }
 
-function starshot_installer_configure_geocoder(): void {
-  /** @var \Drupal\geocoder\GeocoderProviderInterface $provider */
-  $provider = GeocoderProvider::load('nominatim');
-  $plugin = $provider->getPlugin();
-  if ($plugin instanceof ConfigurableInterface) {
-    $uuid = \Drupal::config('system.site')->get('uuid');
-    $configuration = $plugin->getConfiguration();
-    $configuration['userAgent'] = "Drupal $uuid";
-    $configuration['referer'] = "http://drupal-$uuid.local";
-    $plugin->setConfiguration($configuration);
-  }
-  $provider->save();
-}
-
 /**
  * Uninstalls this install profile, as a final step.
  */
 function starshot_installer_uninstall_myself(): void {
-  \Drupal::service(ModuleInstallerInterface::class)->uninstall([
+  Drupal::service(ModuleInstallerInterface::class)->uninstall([
     'starshot_installer',
   ]);
 }

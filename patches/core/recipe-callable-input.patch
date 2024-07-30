@@ -1,0 +1,43 @@
+diff --git a/core/core.services.yml b/core/core.services.yml
+index f3321eb0d5..c7e50964ea 100644
+--- a/core/core.services.yml
++++ b/core/core.services.yml
+@@ -1893,3 +1893,8 @@ services:
+     autowire: true
+     tags:
+       - { name: recipe.input_source, type: config }
++  Drupal\Core\Recipe\CallableInputSource:
++    public: false
++    autowire: true
++    tags:
++      - { name: recipe.input_source, type: callable }
+diff --git a/core/lib/Drupal/Core/Recipe/CallableInputSource.php b/core/lib/Drupal/Core/Recipe/CallableInputSource.php
+new file mode 100644
+index 0000000000..025b7ad5a4
+--- /dev/null
++++ b/core/lib/Drupal/Core/Recipe/CallableInputSource.php
+@@ -0,0 +1,24 @@
++<?php
++
++declare(strict_types=1);
++
++namespace Drupal\Core\Recipe;
++
++use Drupal\Core\Utility\CallableResolver;
++
++final class CallableInputSource implements InputSourceInterface {
++
++  public function __construct(
++    private readonly CallableResolver $callableResolver,
++  ) {}
++
++  /**
++   * {@inheritdoc}
++   */
++  public function collectValue(array $definition): mixed {
++    $callable = $this->callableResolver->getCallableFromDefinition($definition['callable']);
++    $arguments = $definition['arguments'] ?? [];
++    return $callable(...$arguments);
++  }
++
++}

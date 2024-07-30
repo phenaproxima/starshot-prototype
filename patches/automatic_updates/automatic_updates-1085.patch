@@ -1,0 +1,37 @@
+diff --git a/package_manager/package_manager.install b/package_manager/package_manager.install
+index af66abf669c3175c65f657d83d81f7cb68507c5d..2a924f13a950c35dd666ca6cdcf78dc8b8ad297c 100644
+--- a/package_manager/package_manager.install
++++ b/package_manager/package_manager.install
+@@ -13,6 +13,32 @@ use Drupal\package_manager\FailureMarker;
+ use PhpTuf\ComposerStager\API\Core\BeginnerInterface;
+ use PhpTuf\ComposerStager\API\Exception\ExceptionInterface;
+ use PhpTuf\ComposerStager\API\Finder\Service\ExecutableFinderInterface;
++use Symfony\Component\Process\ExecutableFinder;
++
++/**
++ * Implements hook_install().
++ */
++function package_manager_install(): void {
++  $finder = new ExecutableFinder();
++  $finder->addSuffix('.phar');
++
++  $composer_path = $finder->find('composer');
++  $rsync_path = $finder->find('rsync');
++
++  if ($composer_path || $rsync_path) {
++    $config = \Drupal::configFactory()->getEditable('package_manager.settings');
++
++    if ($composer_path) {
++      $config->set('executables.composer', $composer_path);
++      \Drupal::messenger()->addStatus(t('The path to Composer was automatically detected.'));
++    }
++    if ($rsync_path) {
++      $config->set('executables.rsync', $rsync_path);
++      \Drupal::messenger()->addStatus(t('The path to <code>rsync</code> was automatically detected.'));
++    }
++    $config->save();
++  }
++}
+ 
+ /**
+  * Implements hook_requirements().
