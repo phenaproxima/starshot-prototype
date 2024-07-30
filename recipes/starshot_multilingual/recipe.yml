@@ -7,8 +7,6 @@ install:
   - node
 config:
   actions:
-    node.type.*:
-      makeTranslatable: ~
     core.entity_form_display.node.*.default:
       setComponent:
         name: langcode
@@ -16,6 +14,11 @@ config:
           type: language_select
           weight: 2
           region: content
+    'language.content_settings.node.%bundle':
+      createIfNotExistsForEachNodeType:
+        target_entity_type_id: node
+        target_bundle: '%bundle'
+        language_alterable: true
     language.content_settings.node.*:
       setThirdPartySettings:
         -

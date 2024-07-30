@@ -1,0 +1,136 @@
+diff --git a/core/lib/Drupal/Core/Config/Action/Plugin/ConfigAction/CreatePerBundle.php b/core/lib/Drupal/Core/Config/Action/Plugin/ConfigAction/CreatePerBundle.php
+new file mode 100644
+index 0000000000000000000000000000000000000000..9cb614e4bdf0298298acb511c76881b4a230fb07
+--- /dev/null
++++ b/core/lib/Drupal/Core/Config/Action/Plugin/ConfigAction/CreatePerBundle.php
+@@ -0,0 +1,69 @@
++<?php
++
++declare(strict_types=1);
++
++namespace Drupal\Core\Config\Action\Plugin\ConfigAction;
++
++use Drupal\Core\Config\Action\Attribute\ConfigAction;
++use Drupal\Core\Config\Action\ConfigActionPluginInterface;
++use Drupal\Core\Config\Action\Plugin\ConfigAction\Deriver\CreatePerBundleDeriver;
++use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
++use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
++use Symfony\Component\DependencyInjection\ContainerInterface;
++
++/**
++ * @internal
++ *   This API is experimental.
++ */
++#[ConfigAction(
++  id: 'create_per_bundle',
++  deriver: CreatePerBundleDeriver::class,
++  entity_types: ['*'],
++)]
++final class CreatePerBundle implements ConfigActionPluginInterface, ContainerFactoryPluginInterface {
++
++  public function __construct(
++    private readonly EntityTypeBundleInfoInterface $entityTypeBundleInfo,
++    private readonly string $targetEntityType,
++    private readonly ConfigActionPluginInterface $decorated,
++  ) {}
++
++  /**
++   * {@inheritdoc}
++   */
++  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
++    return new static(
++      $container->get(EntityTypeBundleInfoInterface::class),
++      $plugin_definition['target_entity_type'],
++      $container->get('plugin.manager.config_action')->createInstance($plugin_definition['decorated'], $configuration),
++    );
++  }
++
++  /**
++   * {@inheritdoc}
++   */
++  public function apply(string $configName, mixed $value): void {
++    assert(is_array($value));
++
++    $bundles = $this->entityTypeBundleInfo->getBundleInfo($this->targetEntityType);
++    foreach (array_keys($bundles) as $bundle_id) {
++      $this->decorated->apply(
++        static::searchAndReplace($bundle_id, $configName),
++        static::searchAndReplace($bundle_id, $value),
++      );
++    }
++  }
++
++  private static function searchAndReplace(string $bundle_id, mixed $data): mixed {
++    if (is_string($data)) {
++      $data = str_replace('%bundle', $bundle_id, $data);
++    }
++    elseif (is_array($data)) {
++      foreach ($data as $key => $value) {
++        $data[$key] = static::searchAndReplace($bundle_id, $value);
++      }
++    }
++    return $data;
++  }
++
++}
+diff --git a/core/lib/Drupal/Core/Config/Action/Plugin/ConfigAction/Deriver/CreatePerBundleDeriver.php b/core/lib/Drupal/Core/Config/Action/Plugin/ConfigAction/Deriver/CreatePerBundleDeriver.php
+new file mode 100644
+index 0000000000000000000000000000000000000000..79544861eecb1fc2ba1ceae15cca60f0164df61c
+--- /dev/null
++++ b/core/lib/Drupal/Core/Config/Action/Plugin/ConfigAction/Deriver/CreatePerBundleDeriver.php
+@@ -0,0 +1,55 @@
++<?php
++
++declare(strict_types=1);
++
++namespace Drupal\Core\Config\Action\Plugin\ConfigAction\Deriver;
++
++use Drupal\Component\Plugin\Derivative\DeriverBase;
++use Drupal\Core\Entity\EntityTypeManagerInterface;
++use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
++use Symfony\Component\DependencyInjection\Container;
++use Symfony\Component\DependencyInjection\ContainerInterface;
++
++/**
++ * @internal
++ *   This API is experimental.
++ */
++final class CreatePerBundleDeriver extends DeriverBase implements ContainerDeriverInterface {
++
++  public function __construct(
++    private readonly EntityTypeManagerInterface $entityTypeManager,
++  ) {}
++
++  /**
++   * {@inheritdoc}
++   */
++  public static function create(ContainerInterface $container, $base_plugin_id) {
++    return new static(
++      $container->get(EntityTypeManagerInterface::class),
++    );
++  }
++
++  /**
++   * {@inheritdoc}
++   */
++  public function getDerivativeDefinitions($base_plugin_definition) {
++    foreach ($this->entityTypeManager->getDefinitions() as $id => $entity_type) {
++      if (($bundle_entity_type = $entity_type->getBundleEntityType()) !== NULL) {
++        // Convert unique plugin IDs, like `taxonomy_vocabulary`, into strings
++        // like `TaxonomyVocabulary`.
++        $suffix = Container::camelize($bundle_entity_type);
++
++        $this->derivatives["createForEach{$suffix}"] = [
++          'target_entity_type' => $id,
++          'decorated' => 'entity_create:create',
++        ] + $base_plugin_definition;
++        $this->derivatives["createIfNotExistsForEach{$suffix}"] = [
++          'target_entity_type' => $id,
++          'decorated' => 'entity_create:createIfNotExists',
++        ] + $base_plugin_definition;
++      }
++    }
++    return parent::getDerivativeDefinitions($base_plugin_definition);
++  }
++
++}
