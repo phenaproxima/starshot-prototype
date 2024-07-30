@@ -23,14 +23,18 @@ class MetaTagsTest extends ExistingSiteBase {
     $expected_title = 'I say potato, you say potato';
 
     // Set the site name.
-    $this->container->get(ConfigFactoryInterface::class)
-      ->getEditable('system.site')
-      ->set('name', $expected_title)
-      ->save();
+    $account = $this->createUser(['administer site configuration']);
+    $this->drupalLogin($account);
+    $this->drupalGet('/admin/config/system/site-information');
+    $page = $this->getSession()->getPage();
+    $page->fillField('site_name', $expected_title);
+    $page->pressButton('Save configuration');
+    $assert_session = $this->assertSession();
+    $assert_session->statusMessageContains('The configuration options have been saved.');
 
     // Get the front page title.
     $this->drupalGet('<front>');
-    $this->assertSession()->titleEquals($expected_title);
+    $assert_session->titleEquals($expected_title);
   }
 
   /**
