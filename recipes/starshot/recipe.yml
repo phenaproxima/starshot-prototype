@@ -104,7 +104,7 @@ config:
           - drupalorg_mockapi
         allowed_projects:
           recipes:
-            - starshot_editoria11y
+            - starshot_accessibility_tools
             - starshot_multilingual
         allow_ui_install: $ui_install_supported
     system.site:

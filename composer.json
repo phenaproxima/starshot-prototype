@@ -69,9 +69,9 @@
                 "symlink": false
             }
         },
-        "starshot_editoria11y": {
+        "starshot_accessibility_tools": {
             "type": "path",
-            "url": "recipes/starshot_editoria11y",
+            "url": "recipes/starshot_accessibility_tools",
             "options": {
                 "symlink": false
             }
