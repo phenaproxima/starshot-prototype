@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\starshot\ExistingSite;
 
-use Behat\Mink\Element\NodeElement;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\file\Entity\File;
 use Drupal\media\Entity\Media;
@@ -20,24 +20,17 @@ class MetaTagsTest extends ExistingSiteBase {
    */
   public function testFrontPageMetaTags(): void
   {
-    // Create a random title expectation.
-    $expected_title = $this->getRandomGenerator()->name();
+    $expected_title = 'I say potato, you say potato';
 
     // Set the site name.
-    $config_factory = $this->container->get('config.factory');
-    $config_factory->getEditable('system.site')
+    $this->container->get(ConfigFactoryInterface::class)
+      ->getEditable('system.site')
       ->set('name', $expected_title)
       ->save();
 
     // Get the front page title.
     $this->drupalGet('<front>');
-    $title_tag = $this->getSession()
-      ->getPage()
-      ->find('xpath', '/head/title');
-    assert($title_tag instanceof NodeElement, 'Ensure that the "<title>" tag is found.');
-    $actual_title = $title_tag->getText();
-
-    $this->assertEquals($expected_title, $actual_title, 'Page title matches expected.');
+    $this->assertSession()->titleEquals($expected_title);
   }
 
   /**
