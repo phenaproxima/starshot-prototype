@@ -24,7 +24,7 @@ class BasicExpectationsTest extends ExistingSiteBase {
 
     /** @var \Drupal\Core\Config\ConfigFactoryInterface $config_factory */
     $config_factory = $this->container->get(ConfigFactoryInterface::class);
-    $this->assertFalse($config_factory->get('core.extension')->get('profile'));
+    $this->assertEmpty($config_factory->get('core.extension')->get('profile'));
   }
 
 }
