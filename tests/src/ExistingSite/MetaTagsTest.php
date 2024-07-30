@@ -23,7 +23,7 @@ class MetaTagsTest extends ExistingSiteBase {
     $expected_title = 'I say potato, you say potato';
 
     // Set the site name.
-    \Drupal::configFactory()
+    $this->container->get(ConfigFactoryInterface::class)
       ->getEditable('system.site')
       ->set('name', $expected_title)
       ->save();
