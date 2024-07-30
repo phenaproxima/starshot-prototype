@@ -1,7 +1,7 @@
 {
-    "name": "drupal/starshot_editoria11y",
+    "name": "drupal/starshot_accessibility_tools",
     "version": "dev-main",
-    "description": "Installs and configures editoria11y module.",
+    "description": "Installs and configures tools to help authors make their content accessible.",
     "type": "drupal-recipe",
     "require": {
         "drupal/core": ">=10.3",
