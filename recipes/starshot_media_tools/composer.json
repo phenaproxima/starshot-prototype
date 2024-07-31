@@ -1,8 +1,8 @@
 {
-    "name": "drupal/starshot_audio_media_type",
-    "type": "drupal-recipe",
-    "description": "Adds a few enhancements to the audio file media type.",
+    "name": "drupal/starshot_media_tools",
     "version": "dev-main",
+    "description": "Installs and configures tools for better media management.",
+    "type": "drupal-recipe",
     "require": {
         "drupal/core": ">=10.3",
         "drupal/media_entity_download": "^2.2",

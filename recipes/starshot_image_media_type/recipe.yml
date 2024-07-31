@@ -5,7 +5,6 @@ recipes:
   - core/recipes/image_media_type
 install:
   - focal_point
-  - media_file_delete
 config:
   import:
     focal_point: '*'
@@ -22,6 +21,3 @@ config:
             preview_image_style: media_library
             preview_link: true
             offsets: '50,50'
-    media_file_delete.settings:
-      simple_config_update:
-        delete_file_default: true
