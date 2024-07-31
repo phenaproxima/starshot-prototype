@@ -15,10 +15,21 @@ use Symfony\Component\Process\ExecutableFinder;
  */
 function starshot_installer_install_tasks(): array {
   return [
-    'starshot_installer_apply_recipes' => [
+    'starshot_installer_choose_template' => [
+      // Because the choice of template is currently hard-coded, this should
+      // not be presented to the user.
+      // 'display_name' => t('Choose template'),
+    ],
+    'starshot_installer_apply_template' => [
       'type' => 'batch',
       'display_name' => t('Apply recipes'),
     ],
+    // 'starshot_installer_choose_add_on_recipes' => [
+      // We don't currently have the ability to present add-on recipes, so for
+      // now this task doesn't do anything and is hidden from users.
+      // @todo Fill this in after https://www.drupal.org/i/3450629 is fixed.
+      // 'display_name' => t('Choose add-ons'),
+    // ],
     'starshot_installer_uninstall_myself' => [
       // As a final task, this profile should uninstall itself.
     ],
@@ -92,16 +103,35 @@ function _starshot_installer_install_configure_form_submit(array &$form, FormSta
 }
 
 /**
- * Runs a batch job that applies all of the Starshot recipes.
+ * Presents the user which a choice of which template should set up the site.
+ *
+ * @param array $install_state
+ *   An array of information about the current installation state.
+ *
+ * @see starshot_installer_apply_template()
+ */
+function starshot_installer_choose_template(array &$install_state): void {
+  // For now, hard-code the choice to the main Starshot recipe. When more
+  // choices are available, this should present a form whose submit handler
+  // should set the `template` install parameter for
+  // starshot_installer_apply_template() to act upon.
+  $install_state['parameters']['template'] = Drupal::root() . '/recipes/starshot';
+}
+
+/**
+ * Runs a batch job that applies the template recipe.
+ *
+ * @param array $install_state
+ *   An array of information about the current installation state.
  *
  * @return array
  *   The batch job definition.
  */
-function starshot_installer_apply_recipes(): array {
+function starshot_installer_apply_template(array &$install_state): array {
   $batch = new BatchBuilder();
   $batch->setTitle(t('Applying recipes'));
 
-  $recipe = Recipe::createFromDirectory(Drupal::root() . '/recipes/starshot');
+  $recipe = Recipe::createFromDirectory($install_state['parameters']['template']);
   Drupal::classResolver(InputCollector::class)->prepare($recipe);
 
   foreach (RecipeRunner::toBatchOperations($recipe) as [$callback, $arguments]) {
