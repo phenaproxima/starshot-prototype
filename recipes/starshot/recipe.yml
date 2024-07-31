@@ -27,6 +27,7 @@ recipes:
   - starshot_maintenance
   - starshot_media_tools
   - starshot_page_content_type
+  - starshot_workflows
 install:
   - easy_breadcrumb
   - eca_ui

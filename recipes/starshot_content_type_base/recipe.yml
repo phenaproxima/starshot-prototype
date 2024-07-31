@@ -1,18 +1,13 @@
 name: 'Content type basics'
 type: 'Starshot'
-description: 'Provides basic infrastructure for moderation, meta tags, cloning, and scheduled publishing of content.'
-recipes:
-  - core/recipes/editorial_workflow
+description: 'Provides basic infrastructure for meta tags and cloning of content.'
 install:
-  - diff
   - metatag
   - metatag_open_graph
   - node
   - pathauto
   - quick_node_clone
-  - scheduler
   - simple_sitemap
-  - views
 config:
   import:
     language: '*'
@@ -34,9 +29,3 @@ config:
       - system.action.node_unpromote_action
       - system.action.node_unpublish_action
     simple_sitemap: '*'
-    scheduler:
-      - views.view.scheduler_scheduled_content
-  actions:
-    scheduler.settings:
-      simple_config_update:
-        hide_seconds: true

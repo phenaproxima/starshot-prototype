@@ -24,6 +24,3 @@ config:
           - basic
           - advanced
           - open_graph
-    workflows.workflow.editorial:
-      addNodeTypes:
-        - blog

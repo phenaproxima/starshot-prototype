@@ -124,6 +124,13 @@
             "options": {
                 "symlink": false
             }
+        },
+        "starshot_workflows": {
+            "type": "path",
+            "url": "recipes/starshot_workflows",
+            "options": {
+                "symlink": false
+            }
         }
     },
     "require": {
