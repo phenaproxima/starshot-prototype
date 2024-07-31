@@ -7,6 +7,7 @@ install:
   - automatic_updates
   - automatic_updates_extensions
   - project_browser
+  - upgrade_status
 input:
   ui_install_supported:
     source: callable

@@ -86,6 +86,7 @@ We don't _quite_ support this yet, but you'll also be able to use Starshot's com
 * [Smart Date](https://drupal.org/project/smart_date)
 * [Type Tray](https://drupal.org/project/type_tray)
 * [ULI Custom Workflow](https://drupal.org/project/uli_custom_workflow)
+* [Upgrade Status](https://www.drupal.org/project/upgrade_status)
 * [Webform](https://drupal.org/project/webform)
 
 ...and, of course, [Drush](https://www.drush.org).
