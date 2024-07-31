@@ -95,6 +95,7 @@ config:
       simple_config_update:
         allowed_projects:
           recipes:
+            - starshot_accessibility_tools
             - starshot_multilingual
     system.site:
       simple_config_update:
