@@ -2,34 +2,35 @@
 
 declare(strict_types=1);
 
+use Drupal\Core\Batch\BatchBuilder;
 use Drupal\Core\Extension\ModuleInstallerInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Recipe\InputCollector;
+use Drupal\Core\Recipe\Recipe;
+use Drupal\Core\Recipe\RecipeRunner;
 use Symfony\Component\Process\ExecutableFinder;
 
 /**
- * Implements hook_install_tasks_alter().
+ * Implements hook_install_tasks().
  */
-function starshot_installer_install_tasks_alter(&$tasks, $install_state) {
-  $recipe_tasks = [
-    'starshot_installer_apply_recipes' => [
+function starshot_installer_install_tasks(): array {
+  return [
+    'starshot_installer_choose_template' => [
       'run' => INSTALL_TASK_RUN_IF_REACHED,
+      'display_name' => t('Choose template'),
+    ],
+    'starshot_installer_apply_recipes' => [
+      'type' => 'batch',
       'display_name' => t('Apply recipes'),
-    ]
-  ];
-  $key = array_search('install_select_profile', array_keys($tasks), TRUE);
-  $tasks = array_slice($tasks, 0, $key, TRUE) +
-    $recipe_tasks +
-    array_slice($tasks, $key, NULL, TRUE);
-
-  $recipe_tasks = [
+    ],
+    'starshot_installer_additional_recipes' => [
+      'run' => INSTALL_TASK_RUN_IF_REACHED,
+      'display_name' => t('Apply additional recipes'),
+    ],
     'starshot_installer_uninstall_myself' => [
       // As a final task, this profile should uninstall itself.
     ],
   ];
-  $key = array_search('install_finished', array_keys($tasks), TRUE);
-  $tasks = array_slice($tasks, 0, $key, TRUE) +
-    $recipe_tasks +
-    array_slice($tasks, $key, NULL, TRUE);
 }
 
 /**
@@ -99,10 +100,27 @@ function _starshot_installer_install_configure_form_submit(array &$form, FormSta
 }
 
 /**
- * Apply Starshot recipes.
+ * Runs a batch job that applies all of the Starshot recipes.
+ *
+ * @param $install_state
+ *   An array of information about the current installation state.
+ *
+ * @return array
+ *   The batch job definition.
  */
-function starshot_installer_apply_recipes(&$install_state) {
-  $install_state['parameters']['recipe'] = 'recipes/starshot';
+function starshot_installer_apply_recipes(&$install_state): array {
+  if (!empty($install_state['parameters']['template'])) {
+    $batch = new BatchBuilder();
+    $batch->setTitle(t('Applying recipes'));
+
+    $recipe = Recipe::createFromDirectory(Drupal::root() . $install_state['parameters']['template']);
+    Drupal::classResolver(InputCollector::class)->prepare($recipe);
+
+    foreach (RecipeRunner::toBatchOperations($recipe) as [$callback, $arguments]) {
+      $batch->addOperation($callback, $arguments);
+    }
+    return $batch->toArray();
+  }
 }
 
 /**
@@ -112,4 +130,26 @@ function starshot_installer_uninstall_myself(): void {
   Drupal::service(ModuleInstallerInterface::class)->uninstall([
     'starshot_installer',
   ]);
+}
+
+/**
+ * Sets up Starshot base recipe.
+ *
+ * @param $install_state
+ *   An array of information about the current installation state.
+ *
+ * @see starshot_installer_apply_recipes()
+ */
+function starshot_installer_choose_template(&$install_state) {
+  $install_state['parameters']['template'] = '/recipes/starshot';
+}
+
+/**
+ * Gets additional recipes list.
+ *
+ * @param $install_state
+ *   An array of information about the current installation state.
+ */
+function starshot_installer_additional_recipes(&$install_state) {
+  // @todo Get list once https://www.drupal.org/project/project_browser/issues/3450629 is fixed.
 }
