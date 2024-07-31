@@ -1,0 +1,90 @@
+diff --git a/core/core.services.yml b/core/core.services.yml
+index 54efa83842f06a19f619e9d7f39cae964a323ee5..3b9c4dfad9b2392f7cb5d24d5cad2ccd96523655 100644
+--- a/core/core.services.yml
++++ b/core/core.services.yml
+@@ -556,9 +556,7 @@ services:
+   Drupal\Core\State\StateInterface: '@state'
+   queue:
+     class: Drupal\Core\Queue\QueueFactory
+-    arguments: ['@settings']
+-    calls:
+-      - [setContainer, ['@service_container']]
++    autowire: true
+   Drupal\Core\Queue\QueueFactory: '@queue'
+   queue.database:
+     class: Drupal\Core\Queue\QueueDatabaseFactory
+diff --git a/core/lib/Drupal/Core/CoreServiceProvider.php b/core/lib/Drupal/Core/CoreServiceProvider.php
+index 5fb8d9360219b67dac18ba2cafc67f2c66150c08..28c09a417f00faa6e460391fd2b58fb2d376a07b 100644
+--- a/core/lib/Drupal/Core/CoreServiceProvider.php
++++ b/core/lib/Drupal/Core/CoreServiceProvider.php
+@@ -24,6 +24,7 @@
+ use Drupal\Core\DependencyInjection\ServiceModifierInterface;
+ use Drupal\Core\DependencyInjection\ServiceProviderInterface;
+ use Drupal\Core\Plugin\PluginManagerPass;
++use Drupal\Core\Queue\QueueFactoryInterface;
+ use Drupal\Core\Render\MainContent\MainContentRenderersPass;
+ use Drupal\Core\Site\Settings;
+ use Psr\Log\LoggerAwareInterface;
+@@ -106,6 +107,8 @@ public function register(ContainerBuilder $container) {
+     $container->registerForAutoconfiguration(LoggerAwareInterface::class)
+       ->addTag('logger_aware');
+
++    $container->registerForAutoconfiguration(QueueFactoryInterface::class)
++      ->addTag('queue_factory');
+   }
+
+   /**
+diff --git a/core/lib/Drupal/Core/Queue/QueueFactory.php b/core/lib/Drupal/Core/Queue/QueueFactory.php
+index 0fb33da2a20a6ddec73fdaf355d98c2d62a3d0e3..f17c391ad3bfc7f9c1c6c93436f7bd8c940d7a58 100644
+--- a/core/lib/Drupal/Core/Queue/QueueFactory.php
++++ b/core/lib/Drupal/Core/Queue/QueueFactory.php
+@@ -3,15 +3,13 @@
+ namespace Drupal\Core\Queue;
+
+ use Drupal\Core\Site\Settings;
+-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
++use Psr\Container\ContainerInterface;
++use Symfony\Component\DependencyInjection\Attribute\AutowireLocator;
+
+ /**
+  * Defines the queue factory.
+  */
+-class QueueFactory implements ContainerAwareInterface {
+-
+-  use ContainerAwareTrait;
++class QueueFactory {
+
+   /**
+    * Instantiated queues, keyed by name.
+@@ -28,9 +26,18 @@ class QueueFactory implements ContainerAwareInterface {
+   protected $settings;
+
+   /**
+-   * Constructs a queue factory.
++   * Constructs QueueFactory object.
++   *
++   * @param \Drupal\Core\Site\Settings $settings
++   *   The site settings.
++   * @param \Psr\Container\ContainerInterface $container
++   *   A service locator that contains the queue services.
+    */
+-  public function __construct(Settings $settings) {
++  public function __construct(
++    Settings $settings,
++    #[AutowireLocator('queue_factory')]
++    protected ContainerInterface $container,
++  ) {
+     $this->settings = $settings;
+   }
+
+@@ -59,9 +66,6 @@ public function get($name, $reliable = FALSE) {
+         $service_name = $this->settings->get('queue_service_' . $name, $this->settings->get('queue_default', 'queue.database'));
+       }
+       $factory = $this->container->get($service_name);
+-      if (!$factory instanceof QueueFactoryInterface) {
+-        @trigger_error(sprintf('Not implementing %s in %s is deprecated in drupal:10.3.0 and the factory will not be discovered in drupal:11.0.0. Implement the interface in your factory class. See https://www.drupal.org/node/3417034', QueueFactoryInterface::class, $factory::class), E_USER_DEPRECATED);
+-      }
+       $this->queues[$name] = $factory->get($name);
+     }
+     return $this->queues[$name];
