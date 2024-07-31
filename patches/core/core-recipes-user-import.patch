@@ -1,0 +1,60 @@
+diff --git a/core/recipes/comment_base/recipe.yml b/core/recipes/comment_base/recipe.yml
+index 0cf967155a..73acd8b891 100644
+--- a/core/recipes/comment_base/recipe.yml
++++ b/core/recipes/comment_base/recipe.yml
+@@ -4,6 +4,7 @@ type: 'Comment type'
+ install:
+   - comment
+   - node
++  - user
+   - views
+ config:
+   import:
+@@ -16,6 +17,9 @@ config:
+       - system.action.comment_unpublish_action
+       - views.view.comment
+       - views.view.comments_recent
++    user:
++      - user.role.anonymous
++      - user.role.authenticated
+   actions:
+     user.role.authenticated:
+       grantPermissions:
+diff --git a/core/recipes/content_search/recipe.yml b/core/recipes/content_search/recipe.yml
+index b9f60c59a7..e0e20c68cb 100644
+--- a/core/recipes/content_search/recipe.yml
++++ b/core/recipes/content_search/recipe.yml
+@@ -4,12 +4,16 @@ description: 'Adds a page that can search site content.'
+ install:
+   - node
+   - search
++  - user
+ config:
+   import:
+     node:
+       - core.entity_view_mode.node.search_index
+       - core.entity_view_mode.node.search_result
+       - search.page.node_search
++    user:
++      - user.role.anonymous
++      - user.role.authenticated
+   actions:
+     user.role.anonymous:
+       grantPermissions:
+diff --git a/core/recipes/restricted_html_format/recipe.yml b/core/recipes/restricted_html_format/recipe.yml
+index 8aec764918..89c4c8c5d9 100644
+--- a/core/recipes/restricted_html_format/recipe.yml
++++ b/core/recipes/restricted_html_format/recipe.yml
+@@ -3,9 +3,12 @@ description: 'Provides "Restricted HTML" text format.'
+ type: 'Text format'
+ install:
+   - filter
++  - user
+ config:
+   import:
+     filter: '*'
++    user:
++      - user.role.anonymous
+   actions:
+     user.role.anonymous:
+       grantPermission: 'use text format restricted_html'
