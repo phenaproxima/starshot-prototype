@@ -20,6 +20,6 @@ config:
     project_browser.admin_settings:
       simple_config_update:
         enabled_sources:
+          - drupalorg_jsonapi
           - recipes
-          - drupalorg_mockapi
         allow_ui_install: $ui_install_supported
