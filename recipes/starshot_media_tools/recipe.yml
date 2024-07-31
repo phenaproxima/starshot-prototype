@@ -1,15 +1,16 @@
-name: Audio media type
+name: Media tools
 type: Starshot
 description: 'Adds a few enhancements to the audio file media type.'
-recipes:
-  - core/recipes/audio_media_type
 install:
   - media_entity_download
   - media_file_delete
+  - user
 config:
   actions:
     media_file_delete.settings:
       simple_config_update:
         delete_file_default: true
+    user.role.anonymous:
+      grantPermission: 'download media'
     user.role.authenticated:
       grantPermission: 'download media'

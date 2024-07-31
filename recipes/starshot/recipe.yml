@@ -14,17 +14,18 @@ recipes:
   # Provides a fallback text format which is available to all users.
   - core/recipes/restricted_html_format
   # Not in Standard...
+  - core/recipes/audio_media_type
+  - core/recipes/document_media_type
+  - core/recipes/local_video_media_type
   - core/recipes/remote_video_media_type
-  - starshot_audio_media_type
   - starshot_blog
   - starshot_basic_html_editor
-  - starshot_document_media_type
   - starshot_event_content_type
   - starshot_forms
   - starshot_full_html_editor
   - starshot_image_media_type
-  - starshot_local_video_media_type
   - starshot_maintenance
+  - starshot_media_tools
   - starshot_page_content_type
 install:
   - easy_breadcrumb
