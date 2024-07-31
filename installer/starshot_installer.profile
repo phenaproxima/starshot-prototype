@@ -22,6 +22,7 @@ function starshot_installer_install_tasks(): array {
     ],
     'starshot_installer_apply_template' => [
       'type' => 'batch',
+      'display_name' => t('Apply recipes'),
     ],
     // 'starshot_installer_choose_add_on_recipes' => [
       // We don't currently have the ability to present add-on recipes, so for
