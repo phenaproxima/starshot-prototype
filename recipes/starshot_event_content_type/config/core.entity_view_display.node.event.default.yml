@@ -74,16 +74,6 @@ third_party_settings:
                 third_party_settings: {  }
             weight: 4
             additional: {  }
-          2d4e96f1-a3e5-4a50-9262-107a32299d90:
-            uuid: 2d4e96f1-a3e5-4a50-9262-107a32299d90
-            region: content
-            configuration:
-              id: 'extra_field_block:node:event:content_moderation_control'
-              label_display: '0'
-              context_mapping:
-                entity: layout_builder.entity
-            weight: 1
-            additional: {  }
         third_party_settings: {  }
       -
         layout_id: layout_twocol_section
@@ -278,11 +268,6 @@ content:
     settings: {  }
     third_party_settings: {  }
     weight: 101
-    region: content
-  content_moderation_control:
-    settings: {  }
-    third_party_settings: {  }
-    weight: -20
     region: content
   field_date_time:
     type: smartdate_default

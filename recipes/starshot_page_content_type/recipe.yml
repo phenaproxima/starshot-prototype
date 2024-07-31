@@ -1,6 +1,6 @@
 name: Basic Page
 type: Starshot
-description: 'Provides a basic Page content type with pretty URLs, moderation, scheduling, translation, and meta tags.'
+description: 'Provides a basic Page content type with pretty URLs and meta tags.'
 recipes:
   - starshot_content_type_base
 config:

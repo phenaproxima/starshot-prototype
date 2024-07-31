@@ -16,6 +16,10 @@ config:
   actions:
     core.entity_form_display.node.*.default:
       setComponents:
+        - name: moderation_state
+          options:
+            type: moderation_state_default
+            region: content
         - name: scheduler_settings
           options:
             region: content

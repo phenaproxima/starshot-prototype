@@ -9,10 +9,8 @@ dependencies:
     - field.field.node.event.field_map_location
     - field.field.node.event.field_meta_tags
     - node.type.event
-    - workflows.workflow.editorial
   module:
     - address
-    - content_moderation
     - media_library
     - metatag
     - path
@@ -68,12 +66,6 @@ content:
     region: content
     settings:
       wrapper_type: details
-    third_party_settings: {  }
-  moderation_state:
-    type: moderation_state_default
-    weight: 10
-    region: content
-    settings: {  }
     third_party_settings: {  }
   path:
     type: path
