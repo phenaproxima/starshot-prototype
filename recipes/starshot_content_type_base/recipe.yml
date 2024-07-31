@@ -10,10 +10,8 @@ install:
   - node
   - pathauto
   - quick_node_clone
-  - sam
   - scheduler
   - simple_sitemap
-  - type_tray
   - views
 config:
   import:

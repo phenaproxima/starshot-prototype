@@ -9,9 +9,7 @@
         "drupal/metatag": "^2",
         "drupal/pathauto": "^1.12",
         "drupal/quick_node_clone": "^1.18",
-        "drupal/sam": "^1.2",
         "drupal/scheduler": "^2.0.2",
-        "drupal/simple_sitemap": "^4.1",
-        "drupal/type_tray": "^1.2"
+        "drupal/simple_sitemap": "^4.1"
     }
 }
