@@ -14,6 +14,19 @@ config:
     scheduler:
       - views.view.scheduler_scheduled_content
   actions:
+    core.entity_form_display.node.*.default:
+      setComponents:
+        - name: scheduler_settings
+          options:
+            region: content
+        - name: publish_on
+          options:
+            type: datetime_timestamp_no_default
+            region: content
+        - name: unpublish_on
+          options:
+            type: datetime_timestamp_no_default
+            region: content
     node.type.*:
       setThirdPartySettings:
         - module: scheduler

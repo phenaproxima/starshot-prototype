@@ -13,7 +13,6 @@ dependencies:
     - media_library
     - metatag
     - path
-    - scheduler
     - text
 id: node.blog.default
 targetEntityType: node
@@ -72,17 +71,6 @@ content:
     settings:
       display_label: true
     third_party_settings: {  }
-  publish_on:
-    type: datetime_timestamp_no_default
-    weight: 14
-    region: content
-    settings: {  }
-    third_party_settings: {  }
-  scheduler_settings:
-    weight: 13
-    region: content
-    settings: {  }
-    third_party_settings: {  }
   status:
     type: boolean_checkbox
     weight: 120
@@ -119,12 +107,6 @@ content:
       match_limit: 10
       size: 60
       placeholder: ''
-    third_party_settings: {  }
-  unpublish_on:
-    type: datetime_timestamp_no_default
-    weight: 15
-    region: content
-    settings: {  }
     third_party_settings: {  }
 hidden:
   # These settings are advanced, and therefore hidden by default to avoid making

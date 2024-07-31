@@ -16,7 +16,6 @@ dependencies:
     - media_library
     - metatag
     - path
-    - scheduler
     - smart_date
     - text
 id: node.event.default
@@ -89,17 +88,6 @@ content:
     settings:
       display_label: true
     third_party_settings: {  }
-  publish_on:
-    type: datetime_timestamp_no_default
-    weight: 16
-    region: content
-    settings: {  }
-    third_party_settings: {  }
-  scheduler_settings:
-    weight: 9
-    region: content
-    settings: {  }
-    third_party_settings: {  }
   status:
     type: boolean_checkbox
     weight: 11
@@ -136,12 +124,6 @@ content:
       match_limit: 10
       size: 60
       placeholder: ''
-    third_party_settings: {  }
-  unpublish_on:
-    type: datetime_timestamp_no_default
-    weight: 17
-    region: content
-    settings: {  }
     third_party_settings: {  }
 hidden:
   # This field stores a latitude and longitude, which are derived from the address
