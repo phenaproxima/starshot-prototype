@@ -117,6 +117,11 @@ function _starshot_installer_install_configure_form_submit(array &$form, FormSta
         'rsync' => $rsync,
       ])
       ->save();
+
+    Drupal::configFactory()
+      ->getEditable('project_browser.admin_settings')
+      ->set('allow_ui_install', TRUE)
+      ->save();
   }
 }
 

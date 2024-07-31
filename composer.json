@@ -203,15 +203,11 @@
                 "#3303126: Allow recipes to reuse existing config values": "./patches/core/recipes-150.patch",
                 "#3464550: Create config action which can create an entity for every bundle of another entity type": "./patches/core/8975.patch",
                 "#3303127: Determine which core config entity methods should be config actions": "./patches/core/7940.patch",
-                "Allow arbitrary callables to provide input to recipes": "./patches/core/recipe-callable-input.patch",
                 "Ensure core recipes that affect user roles also install the User module": "./patches/core/core-recipes-user-import.patch",
                 "#3416357: Convert QueueFactory to use a service locator": "./patches/core/3416357-10.3.x-only.patch"
             },
             "drupal/automatic_updates": {
                 "#3463662: When it is installed, Package Manager should try to detect the paths of Composer and rsync": "./patches/automatic_updates/automatic_updates-1085.patch"
-            },
-            "drupal/project_browser": {
-                "Provide dynamic inputs to recipes": "./patches/project_browser/recipe-configurator.patch"
             }
         }
     },
