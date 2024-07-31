@@ -8,10 +8,6 @@ install:
   - automatic_updates_extensions
   - project_browser
   - upgrade_status
-input:
-  ui_install_supported:
-    source: callable
-    callable: '\Drupal\project_browser\StarshotConfigurator::supportsUiInstall'
 config:
   actions:
     automatic_updates.settings:
@@ -22,4 +18,3 @@ config:
         enabled_sources:
           - drupalorg_jsonapi
           - recipes
-        allow_ui_install: $ui_install_supported
