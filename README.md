@@ -65,6 +65,7 @@ We don't _quite_ support this yet, but you'll also be able to use Starshot's com
 * [Diff](https://drupal.org/project/diff)
 * [Easy Breadcrumb](https://drupal.org/project/easy_breadcrumb)
 * [ECA (Event - Condition - Action)](https://drupal.org/project/eca)
+* [Editoria11y Accessibility Checker](https://www.drupal.org/project/editoria11y)
 * [Focal Point](https://drupal.org/project/focal_point)
 * [Geocoder](https://drupal.org/project/geocoder)
 * [Geofield](https://drupal.org/project/geofield)
@@ -86,6 +87,7 @@ We don't _quite_ support this yet, but you'll also be able to use Starshot's com
 * [Smart Date](https://drupal.org/project/smart_date)
 * [Type Tray](https://drupal.org/project/type_tray)
 * [ULI Custom Workflow](https://drupal.org/project/uli_custom_workflow)
+* [Upgrade Status](https://www.drupal.org/project/upgrade_status)
 * [Webform](https://drupal.org/project/webform)
 
 ...and, of course, [Drush](https://www.drush.org).
