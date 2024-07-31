@@ -21,6 +21,7 @@
         "drupal/starshot_media_tools": "*",
         "drupal/starshot_multilingual": "*",
         "drupal/starshot_page_content_type": "*",
+        "drupal/starshot_workflows": "*",
         "drupal/uli_custom_workflow": "^1"
     }
 }
