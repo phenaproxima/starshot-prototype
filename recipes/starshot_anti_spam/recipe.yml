@@ -4,7 +4,10 @@ description: 'Sets up anti-spam and anti-abuse functionality.'
 install:
   - antibot
   - honeypot
+  - user
 config:
+  import:
+    user: '*'
   actions:
     honeypot.settings:
       simple_config_update:

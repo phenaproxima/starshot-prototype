@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use Drupal\Core\Batch\BatchBuilder;
 use Drupal\Core\Extension\ModuleInstallerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Recipe\InputCollector;
@@ -15,15 +14,6 @@ use Symfony\Component\Process\ExecutableFinder;
  */
 function starshot_installer_install_tasks(): array {
   return [
-    'starshot_installer_choose_template' => [
-      // Because the choice of template is currently hard-coded, this should
-      // not be presented to the user.
-      // 'display_name' => t('Choose template'),
-    ],
-    'starshot_installer_apply_template' => [
-      'type' => 'batch',
-      'display_name' => t('Apply recipes'),
-    ],
     // 'starshot_installer_choose_add_on_recipes' => [
       // We don't currently have the ability to present add-on recipes, so for
       // now this task doesn't do anything and is hidden from users.
@@ -34,6 +24,34 @@ function starshot_installer_install_tasks(): array {
       // As a final task, this profile should uninstall itself.
     ],
   ];
+}
+
+/**
+ * Implements hook_install_tasks_alter().
+ */
+function starshot_installer_install_tasks_alter(array &$tasks): void {
+  $insert_before = function (string $key, array $additions) use (&$tasks): void {
+    $key = array_search($key, array_keys($tasks), TRUE);
+    if ($key === FALSE) {
+      return;
+    }
+    // This isn't very clean, but it's the only way to positionally splice into
+    // an associative (and therefore by definition unordered) array.
+    $tasks_before = array_slice($tasks, 0, $key, TRUE);
+    $tasks_after = array_slice($tasks, $key, NULL, TRUE);
+    $tasks = $tasks_before + $additions + $tasks_after;
+  };
+  $insert_before('install_settings_form', [
+    'starshot_installer_choose_template' => [
+      // Because the choice of template is currently hard-coded, this should
+      // not be presented to the user.
+      // 'display_name' => t('Choose template'),
+    ],
+  ]);
+
+  // Wrap the install_profile_modules() function, which returns a batch job, and
+  // add all the necessary operations to apply the chosen template recipe.
+  $tasks['install_profile_modules']['function'] = 'starshot_installer_apply_template';
 }
 
 /**
@@ -128,16 +146,15 @@ function starshot_installer_choose_template(array &$install_state): void {
  *   The batch job definition.
  */
 function starshot_installer_apply_template(array &$install_state): array {
-  $batch = new BatchBuilder();
-  $batch->setTitle(t('Applying recipes'));
+  $batch = install_profile_modules($install_state);
 
   $recipe = Recipe::createFromDirectory($install_state['parameters']['template']);
   Drupal::classResolver(InputCollector::class)->prepare($recipe);
 
-  foreach (RecipeRunner::toBatchOperations($recipe) as [$callback, $arguments]) {
-    $batch->addOperation($callback, $arguments);
+  foreach (RecipeRunner::toBatchOperations($recipe) as $operation) {
+    $batch['operations'][] = $operation;
   }
-  return $batch->toArray();
+  return $batch;
 }
 
 /**
