@@ -1,0 +1,34 @@
+diff --git a/automatic_updates.module b/automatic_updates.module
+index c18bed92c2eca930cb53dfeaf67a4f83f2a0d386..d1c03dd05017e1cb7815d19b6ead42a2293b647a 100644
+--- a/automatic_updates.module
++++ b/automatic_updates.module
+@@ -13,6 +13,7 @@ use Drupal\automatic_updates\ReleaseChooser;
+ use Drupal\automatic_updates\UpdateStage;
+ use Drupal\automatic_updates\Validation\StatusChecker;
+ use Drupal\Core\Form\FormStateInterface;
++use Drupal\Core\Installer\InstallerKernel;
+ use Drupal\Core\Routing\RouteMatchInterface;
+ use Drupal\automatic_updates\Validation\AdminStatusCheckMessages;
+ use Drupal\Core\Url;
+@@ -173,12 +174,17 @@ function automatic_updates_module_implements_alter(&$implementations, $hook) {
+ /**
+  * Implements hook_modules_installed().
+  */
+-function automatic_updates_modules_installed($modules) {
+-  // Run the status checkers if needed when any modules are installed in
+-  // case they provide status checkers.
++function automatic_updates_modules_installed(): void {
++  // Invalidate stored status check results, in case the new modules provide
++  // status checkers.
+   /** @var \Drupal\automatic_updates\Validation\StatusChecker $status_checker */
+   $status_checker = \Drupal::service(StatusChecker::class);
+-  $status_checker->run();
++  $status_checker->clearStoredResults();
++  // If we're not in the middle of installing Drupal, go ahead and run the
++  // status checks.
++  if (!InstallerKernel::installationAttempted()) {
++    $status_checker->run();
++  }
+   /** @var \Drupal\automatic_updates\CronUpdateRunner $runner */
+   $runner = \Drupal::service(CronUpdateRunner::class);
+   // If cron updates are disabled status check messages will not be displayed on
