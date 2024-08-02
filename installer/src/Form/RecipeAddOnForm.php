@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\starshot_installer_module\Form;
+namespace Drupal\starshot_installer\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;

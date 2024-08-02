@@ -53,7 +53,7 @@ function starshot_installer_install_tasks_alter(array &$tasks, $install_state): 
       'display_name' => t('Choose add-ons'),
       'type' => 'form',
       'run' => !empty($install_state['parameters']['addons']) ? INSTALL_TASK_SKIP : INSTALL_TASK_RUN_IF_REACHED,
-      'function' => 'Drupal\starshot_installer_module\Form\RecipeAddOnForm',
+      'function' => 'Drupal\starshot_installer\Form\RecipeAddOnForm',
     ],
   ]);
 
@@ -181,12 +181,9 @@ function starshot_installer_apply_template(array &$install_state): array {
 }
 
 /**
- * Uninstalls this install profile and module, as a final step.
+ * Uninstalls this install profile, as a final step.
  */
 function starshot_installer_uninstall_myself(): void {
-  Drupal::service(ModuleInstallerInterface::class)->uninstall([
-    'starshot_installer_module',
-  ]);
   Drupal::service(ModuleInstallerInterface::class)->uninstall([
     'starshot_installer',
   ]);
