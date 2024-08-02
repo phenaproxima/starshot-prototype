@@ -69,7 +69,7 @@ final class RecipesForm extends FormBase {
     $add_ons = array_filter($add_ons);
 
     $install_state['parameters']['recipes'] = [
-      $form_state->getValue('template', 'starshot'),
+      $form_state->getValue('template'),
       ...array_values($add_ons),
     ];
   }
