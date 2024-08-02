@@ -10,6 +10,14 @@ install:
   - type_tray
 config:
   import:
+    claro:
+      - block.block.claro_breadcrumbs
+      - block.block.claro_content
+      - block.block.claro_local_actions
+      - block.block.claro_messages
+      - block.block.claro_page_title
+      - block.block.claro_primary_local_tasks
+      - block.block.claro_secondary_local_tasks
     gin: '*'
     navigation: '*'
   actions:
