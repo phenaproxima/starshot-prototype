@@ -1,0 +1,4 @@
+name: 'Installer module'
+type: module
+version: VERSION
+core_version_requirement: '>=10.3'

@@ -9,3 +9,5 @@ distribution:
   install:
     # Redirect to the project browser after installing.
     finish_url: 'admin/modules/browse'
+install:
+  - starshot_installer_module

@@ -5,6 +5,7 @@ install:
   - content_translation
   - language
   - node
+  - user
 config:
   actions:
     core.entity_form_display.node.*.default:

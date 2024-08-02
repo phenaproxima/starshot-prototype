@@ -14,12 +14,6 @@ use Symfony\Component\Process\ExecutableFinder;
  */
 function starshot_installer_install_tasks(): array {
   return [
-    // 'starshot_installer_choose_add_on_recipes' => [
-      // We don't currently have the ability to present add-on recipes, so for
-      // now this task doesn't do anything and is hidden from users.
-      // @todo Fill this in after https://www.drupal.org/i/3450629 is fixed.
-      // 'display_name' => t('Choose add-ons'),
-    // ],
     'starshot_installer_uninstall_myself' => [
       // As a final task, this profile should uninstall itself.
     ],
@@ -29,7 +23,7 @@ function starshot_installer_install_tasks(): array {
 /**
  * Implements hook_install_tasks_alter().
  */
-function starshot_installer_install_tasks_alter(array &$tasks): void {
+function starshot_installer_install_tasks_alter(array &$tasks, $install_state): void {
   $insert_before = function (string $key, array $additions) use (&$tasks): void {
     $key = array_search($key, array_keys($tasks), TRUE);
     if ($key === FALSE) {
@@ -41,11 +35,25 @@ function starshot_installer_install_tasks_alter(array &$tasks): void {
     $tasks_after = array_slice($tasks, $key, NULL, TRUE);
     $tasks = $tasks_before + $additions + $tasks_after;
   };
+
+  // Ensure 'addons' key exists within parameters.
+  if (!isset($install_state['parameters']['addons'])) {
+    $install_state['parameters']['addons'] = [];
+  }
+
   $insert_before('install_settings_form', [
     'starshot_installer_choose_template' => [
       // Because the choice of template is currently hard-coded, this should
       // not be presented to the user.
       // 'display_name' => t('Choose template'),
+    ],
+    'starshot_installer_choose_add_on_recipes' => [
+      // Present hard-coded add-on recipes.
+      // @todo Update this after https://www.drupal.org/i/3450629 is fixed.
+      'display_name' => t('Choose add-ons'),
+      'type' => 'form',
+      'run' => !empty($install_state['parameters']['addons']) ? INSTALL_TASK_SKIP : INSTALL_TASK_RUN_IF_REACHED,
+      'function' => 'Drupal\starshot_installer_module\Form\RecipeAddOnForm',
     ],
   ]);
 
@@ -159,13 +167,26 @@ function starshot_installer_apply_template(array &$install_state): array {
   foreach (RecipeRunner::toBatchOperations($recipe) as $operation) {
     $batch['operations'][] = $operation;
   }
+  // Apply addon recipes.
+  foreach ($install_state['parameters']['addons'] as $addon) {
+    if (!empty($addon)) {
+      $recipe = Recipe::createFromDirectory(Drupal::root() . $addon);
+      Drupal::classResolver(InputCollector::class)->prepare($recipe);
+      foreach (RecipeRunner::toBatchOperations($recipe) as $operation) {
+        $batch['operations'][] = $operation;
+      }
+    }
+  }
   return $batch;
 }
 
 /**
- * Uninstalls this install profile, as a final step.
+ * Uninstalls this install profile and module, as a final step.
  */
 function starshot_installer_uninstall_myself(): void {
+  Drupal::service(ModuleInstallerInterface::class)->uninstall([
+    'starshot_installer_module',
+  ]);
   Drupal::service(ModuleInstallerInterface::class)->uninstall([
     'starshot_installer',
   ]);
