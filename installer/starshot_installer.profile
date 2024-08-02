@@ -24,7 +24,7 @@ function starshot_installer_install_tasks(): array {
 /**
  * Implements hook_install_tasks_alter().
  */
-function starshot_installer_install_tasks_alter(array &$tasks, $install_state): void {
+function starshot_installer_install_tasks_alter(array &$tasks, array $install_state): void {
   $insert_before = function (string $key, array $additions) use (&$tasks): void {
     $key = array_search($key, array_keys($tasks), TRUE);
     if ($key === FALSE) {
@@ -36,11 +36,8 @@ function starshot_installer_install_tasks_alter(array &$tasks, $install_state): 
     $tasks_after = array_slice($tasks, $key, NULL, TRUE);
     $tasks = $tasks_before + $additions + $tasks_after;
   };
-
   $insert_before('install_settings_form', [
     'starshot_installer_choose_recipes' => [
-      // Present hard-coded add-on recipes.
-      // @todo Update this after https://www.drupal.org/i/3450629 is fixed.
       'display_name' => t('Choose template & add-ons'),
       'type' => 'form',
       'run' => array_key_exists('recipes', $install_state['parameters']) ? INSTALL_TASK_SKIP : INSTALL_TASK_RUN_IF_REACHED,

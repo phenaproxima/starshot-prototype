@@ -6,7 +6,10 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Provides the recipe add-on selection form.
+ * Provides a form to choose the site template and optional add-on recipes.
+ *
+ * @todo Present this as a mini project browser once
+ *   https://www.drupal.org/i/3450629 is fixed.
  */
 final class RecipesForm extends FormBase {
 
