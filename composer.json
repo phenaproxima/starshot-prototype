@@ -207,7 +207,7 @@
                 "#3416357: Convert QueueFactory to use a service locator": "./patches/core/3416357-10.3.x-only.patch"
             },
             "drupal/automatic_updates": {
-                "#3463662: When it is installed, Package Manager should try to detect the paths of Composer and rsync": "./patches/automatic_updates/automatic_updates-1085.patch"
+                "#3465155: automatic_updates_modules_installed() significantly slows down module install": "./patches/automatic_updates/1091.patch"
             }
         }
     },
