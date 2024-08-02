@@ -215,8 +215,9 @@
         "drupal:install": [
             "Composer\\Config::disableProcessTimeout",
             "\\Drupal\\starshot_installer\\ScriptHandler::configureDrush",
-            "drush site:install --yes --account-pass admin --config drush-install.yml standard",
-            "rm -f drush-install.yml"
+            "drush site:install --yes --account-pass admin --config drush-install.yml",
+            "rm -f drush-install.yml",
+            "drush webform-libraries-download"
         ],
         "drupal:install-dev": [
             "cd web/sites/default && chmod +w . && rm -rf settings.php files",
