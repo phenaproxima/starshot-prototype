@@ -7,6 +7,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Recipe\InputCollector;
 use Drupal\Core\Recipe\Recipe;
 use Drupal\Core\Recipe\RecipeRunner;
+use Drupal\starshot_installer\Form\RecipesForm;
 use Symfony\Component\Process\ExecutableFinder;
 
 /**
@@ -14,12 +15,6 @@ use Symfony\Component\Process\ExecutableFinder;
  */
 function starshot_installer_install_tasks(): array {
   return [
-    // 'starshot_installer_choose_add_on_recipes' => [
-      // We don't currently have the ability to present add-on recipes, so for
-      // now this task doesn't do anything and is hidden from users.
-      // @todo Fill this in after https://www.drupal.org/i/3450629 is fixed.
-      // 'display_name' => t('Choose add-ons'),
-    // ],
     'starshot_installer_uninstall_myself' => [
       // As a final task, this profile should uninstall itself.
     ],
@@ -29,7 +24,7 @@ function starshot_installer_install_tasks(): array {
 /**
  * Implements hook_install_tasks_alter().
  */
-function starshot_installer_install_tasks_alter(array &$tasks): void {
+function starshot_installer_install_tasks_alter(array &$tasks, array $install_state): void {
   $insert_before = function (string $key, array $additions) use (&$tasks): void {
     $key = array_search($key, array_keys($tasks), TRUE);
     if ($key === FALSE) {
@@ -42,16 +37,17 @@ function starshot_installer_install_tasks_alter(array &$tasks): void {
     $tasks = $tasks_before + $additions + $tasks_after;
   };
   $insert_before('install_settings_form', [
-    'starshot_installer_choose_template' => [
-      // Because the choice of template is currently hard-coded, this should
-      // not be presented to the user.
-      // 'display_name' => t('Choose template'),
+    'starshot_installer_choose_recipes' => [
+      'display_name' => t('Choose template & add-ons'),
+      'type' => 'form',
+      'run' => array_key_exists('recipes', $install_state['parameters']) ? INSTALL_TASK_SKIP : INSTALL_TASK_RUN_IF_REACHED,
+      'function' => RecipesForm::class,
     ],
   ]);
 
   // Wrap the install_profile_modules() function, which returns a batch job, and
   // add all the necessary operations to apply the chosen template recipe.
-  $tasks['install_profile_modules']['function'] = 'starshot_installer_apply_template';
+  $tasks['install_profile_modules']['function'] = 'starshot_installer_apply_recipes';
 }
 
 /**
@@ -126,23 +122,7 @@ function _starshot_installer_install_configure_form_submit(array &$form, FormSta
 }
 
 /**
- * Presents the user which a choice of which template should set up the site.
- *
- * @param array $install_state
- *   An array of information about the current installation state.
- *
- * @see starshot_installer_apply_template()
- */
-function starshot_installer_choose_template(array &$install_state): void {
-  // For now, hard-code the choice to the main Starshot recipe. When more
-  // choices are available, this should present a form whose submit handler
-  // should set the `template` install parameter for
-  // starshot_installer_apply_template() to act upon.
-  $install_state['parameters']['template'] = Drupal::root() . '/recipes/starshot';
-}
-
-/**
- * Runs a batch job that applies the template recipe.
+ * Runs a batch job that applies the template and add-on recipes.
  *
  * @param array $install_state
  *   An array of information about the current installation state.
@@ -150,14 +130,19 @@ function starshot_installer_choose_template(array &$install_state): void {
  * @return array
  *   The batch job definition.
  */
-function starshot_installer_apply_template(array &$install_state): array {
+function starshot_installer_apply_recipes(array &$install_state): array {
   $batch = install_profile_modules($install_state);
 
-  $recipe = Recipe::createFromDirectory($install_state['parameters']['template']);
-  Drupal::classResolver(InputCollector::class)->prepare($recipe);
+  $input_collector = Drupal::classResolver(InputCollector::class);
+  $cookbook_path = Drupal::root() . '/recipes';
 
-  foreach (RecipeRunner::toBatchOperations($recipe) as $operation) {
-    $batch['operations'][] = $operation;
+  foreach ($install_state['parameters']['recipes'] as $recipe) {
+    $recipe = Recipe::createFromDirectory($cookbook_path . '/' . $recipe);
+    $input_collector->prepare($recipe);
+
+    foreach (RecipeRunner::toBatchOperations($recipe) as $operation) {
+      $batch['operations'][] = $operation;
+    }
   }
   return $batch;
 }
