@@ -97,9 +97,4 @@ jobs:
 
       - name: Test
         working-directory: /var/www
-        run: |
-          # Disable Antibot, since it prevents non-JS functional tests from logging in.
-          ./vendor/bin/drush pm:uninstall --yes antibot
-
-          # Run the tests.
-          composer drupal:run-tests -- --testdox
+        run: composer drupal:run-tests -- --testdox

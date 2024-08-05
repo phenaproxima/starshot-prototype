@@ -21,8 +21,8 @@ class BasicExpectationsTest extends ExistingSiteBase {
   protected function setUp(): void {
     parent::setUp();
 
-    // Disable Antibot, since it prevents us non-JS functional tests from
-    // logging in.
+    // Disable Antibot because it prevents non-JS functional tests from logging
+    // in.
     $this->container->get(ConfigFactoryInterface::class)
       ->getEditable('antibot.settings')
       ->set('form_ids', [])
