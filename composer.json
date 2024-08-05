@@ -224,6 +224,7 @@
             "@drupal:install",
             "drush config:set --yes system.logging error_level verbose",
             "drush install --yes default_content",
+            "drush pm:uninstall --yes antibot",
             "drush user:password editor editor",
             "drush user:unblock editor"
         ],

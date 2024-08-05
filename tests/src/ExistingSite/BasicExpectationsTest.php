@@ -34,6 +34,28 @@ class BasicExpectationsTest extends ExistingSiteBase {
   }
 
   /**
+   * @testWith ["page"]
+   *   ["blog"]
+   *   ["event"]
+   */
+  public function testContentTypeBasics(string $type): void {
+    $node = $this->createNode(['type' => $type]);
+    $url = $node->toUrl();
+
+    // All content types should have pretty URLs.
+    $this->assertNotSame('/node/' . $node->id(), $url->toString());
+
+    // Content editors should be able to clone all content types.
+    $editor = $this->createUser();
+    $editor->addRole('content_editor')->save();
+    $this->drupalLogin($editor);
+
+    $this->drupalGet($url);
+    $this->getSession()->getPage()->clickLink('Clone');
+    $this->assertSession()->statusCodeEquals(200);
+  }
+
+  /**
    * Asserts that any number of contributed extensions are installed.
    *
    * @param \Drupal\Core\Extension\ExtensionList $list
