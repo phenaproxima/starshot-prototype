@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\starshot\ExistingSite;
 
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Extension\ExtensionList;
 use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Extension\ThemeExtensionList;
@@ -13,6 +14,20 @@ use weitzman\DrupalTestTraits\ExistingSiteBase;
  * @group starshot
  */
 class BasicExpectationsTest extends ExistingSiteBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
+    parent::setUp();
+
+    // Disable Antibot, since it prevents us non-JS functional tests from
+    // logging in.
+    $this->container->get(ConfigFactoryInterface::class)
+      ->getEditable('antibot.settings')
+      ->set('form_ids', [])
+      ->save();
+  }
 
   /**
    * Tests basic expectations of a successful Starshot install.
