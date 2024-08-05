@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\starshot\ExistingSite;
 
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Extension\ExtensionList;
 use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Extension\ThemeExtensionList;
@@ -13,6 +14,20 @@ use weitzman\DrupalTestTraits\ExistingSiteBase;
  * @group starshot
  */
 class BasicExpectationsTest extends ExistingSiteBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
+    parent::setUp();
+
+    // Disable Antibot because it prevents non-JS functional tests from logging
+    // in.
+    $this->container->get(ConfigFactoryInterface::class)
+      ->getEditable('antibot.settings')
+      ->set('form_ids', [])
+      ->save();
+  }
 
   /**
    * Tests basic expectations of a successful Starshot install.
@@ -31,6 +46,28 @@ class BasicExpectationsTest extends ExistingSiteBase {
     // recipes were applied during site installation.
     $this->assertContribInstalled($this->container->get(ModuleExtensionList::class));
     $this->assertContribInstalled($this->container->get(ThemeExtensionList::class));
+  }
+
+  /**
+   * @testWith ["page"]
+   *   ["blog"]
+   *   ["event"]
+   */
+  public function testContentTypeBasics(string $type): void {
+    $node = $this->createNode(['type' => $type]);
+    $url = $node->toUrl();
+
+    // All content types should have pretty URLs.
+    $this->assertNotSame('/node/' . $node->id(), $url->toString());
+
+    // Content editors should be able to clone all content types.
+    $editor = $this->createUser();
+    $editor->addRole('content_editor')->save();
+    $this->drupalLogin($editor);
+
+    $this->drupalGet($url);
+    $this->getSession()->getPage()->clickLink('Clone');
+    $this->assertSession()->statusCodeEquals(200);
   }
 
   /**
