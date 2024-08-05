@@ -7,6 +7,7 @@
         "drupal/core": ">=10.3",
         "drupal/easy_breadcrumb": "^2",
         "drupal/eca": "^2",
+        "drupal/login_emailusername": "^2.1",
         "drupal/metatag": "^2",
         "drupal/redirect": "^1.9",
         "drupal/starshot_admin_theme": "*",

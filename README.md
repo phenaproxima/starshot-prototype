@@ -50,6 +50,7 @@ Starshot's purpose is to get you going with the most useful tools favored by the
   * The ability to clone content
   * Comparing different versions of content
   * Email notifications when a comment is posted
+  * Logging in with your email address instead of a username
 * Some sample content, so you're not starting from nothing.
 
 ## How this is different from a distribution
@@ -74,6 +75,7 @@ We don't _quite_ support this yet, but you'll also be able to use Starshot's com
 * [Honeypot](https://drupal.org/project/honeypot)
 * [Leaflet More Maps](https://drupal.org/project/leaflet_more_maps)
 * [Linkit](https://drupal.org/project/linkit)
+* [Login Email or Username](https://drupal.org/project/login_emailusername)
 * [Media Entity Download](https://drupal.org/project/media_entity_download)
 * [Media File Delete](https://drupal.org/project/media_file_delete)
 * [Metatag](https://drupal.org/project/metatag)
