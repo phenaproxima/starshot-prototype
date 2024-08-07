@@ -205,9 +205,6 @@
                 "#3303127: Determine which core config entity methods should be config actions": "./patches/core/7940.patch",
                 "Ensure core recipes that affect user roles also install the User module": "./patches/core/core-recipes-user-import.patch",
                 "#3416357: Convert QueueFactory to use a service locator": "./patches/core/3416357-10.3.x-only.patch"
-            },
-            "drupal/automatic_updates": {
-                "#3465155: automatic_updates_modules_installed() significantly slows down module install": "./patches/automatic_updates/1091.patch"
             }
         }
     },
