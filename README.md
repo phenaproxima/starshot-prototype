@@ -101,6 +101,23 @@ Several formal work tracks have been defined for Starshot; [see the relevant iss
 
 ## Known issues & workarounds
 
+### Error: unknown command "quick-start" for "ddev"
+
+If you see an error like below and have already installed `starshot` before, you will need to use a different name for your directory since ddev can't have two projects with the same name.
+
+```
+$ ddev quick-start
+Error: unknown command "quick-start" for "ddev"
+Run 'ddev --help' for usage.
+```
+
+The workaround is to use something unique, e.g.
+
+```
+git clone https://github.com/phenaproxima/starshot-prototype.git starshot2
+cd starshot2 && ddev quick-start
+```
+
 ### Server timeout
 Some users might experience a timeout after logging into Starshot, particularly when the PHP web server remains idle for some time.
 
