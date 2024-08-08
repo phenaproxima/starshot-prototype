@@ -44,10 +44,24 @@ function starshot_installer_install_tasks_alter(array &$tasks, array $install_st
       'function' => RecipesForm::class,
     ],
   ]);
+  $insert_before('install_configure_form', [
+    'starshot_installer_choose_recipes_block' => [
+      'display_name' => t('Recipe browser'),
+    ],
+  ]);
 
   // Wrap the install_profile_modules() function, which returns a batch job, and
   // add all the necessary operations to apply the chosen template recipe.
   $tasks['install_profile_modules']['function'] = 'starshot_installer_apply_recipes';
+}
+
+/**
+ * Runs the custom block installation task.
+ */
+function starshot_installer_choose_recipes_block(&$install_state) {
+  $block_manager = \Drupal::service('plugin.manager.block');
+  $block_plugin = $block_manager->createInstance('custom_block');
+  return $block_plugin->build();
 }
 
 /**

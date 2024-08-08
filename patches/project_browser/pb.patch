@@ -1,0 +1,114 @@
+diff --git a/project_browser.routing.yml b/project_browser.routing.yml
+index b7ad176..9056bf8 100644
+--- a/project_browser.routing.yml
++++ b/project_browser.routing.yml
+@@ -15,7 +15,7 @@ project_browser.api_project_get_all:
+     _controller: '\Drupal\project_browser\Controller\ProjectBrowserEndpointController::getAllProjects'
+     _title: 'Get all projects'
+   requirements:
+-    _permission: 'administer modules'
++    _access: 'TRUE'
+   #options:
+   #  no_cache: 'TRUE'
+ project_browser.browse:
+diff --git a/sveltejs/public/build/bundle.js b/sveltejs/public/build/bundle.js
+index 77726f38845aab0952ba9f3b9f7640a3e39b1a8f..638c3052d89ff0f256e35379fcc7e20758ee2fe9 100644
+GIT binary patch
+delta 1408
+zcmZvce@t6d6vuP!ZGje~Ex(3YH*U&+cB{0nKY%j3h!c?v7!LWvkqKQ}ph?%q+9Kiv
+z8Cj-b1D(Yk9W#@-Y(U)5_{Yt3ptwZEXcnU`Q|6B?`)5XQ@edQCPH*RiE&Bd>FZX=U
+zIiGXxIq!v;tf`N)-kKQ9XX5e7p-7a~Hnl$7Tvyjxzx|<V=8j$MXPQ8ywY@tSY~3UK
+z{F~KkJex(>JM)9rhu1h=l~xnmR~Tqd^25EePyoBR!33`mYTw}CGn=3w4L_&_4Srrm
+zwfMUomT|!j>HJRzT*!%QPy&+A7i!^3N?f=Ww|xP6zSIbpAg<J+8%PHKeh2)NiUadR
+zL8S^OPHVvlc6|F+l8uM+h%UDLRTWMbLp8Qkz&aebNX%$q)WG#wU<TazEa-S78_okb
+zxHT7sDREj+d=%orS*nX&KBL3M1wo~`7w)G*Q>TZom1<X|bf-+z$%5>~?U0Kt1{jNj
+zrs2<8k?QbXx;CCU#7`E&4FDI86v4GPxe9L?;1pk10(k@*KO{OF_>3s=$8N<vXwfTl
+z8s<*!-c<(}@a%VFJuVH>kC2&ZIa+H#k(qcmCWdowkoB=QXVmz>N%Bohd##UuyA$dS
+zigJ6U15Z3fjM&r%-S|fyc|s}KcA168OEjNv?T0p^a7b1M{xt?0aiM`^;Kc?~M<g4L
+zAA>ruAshvUdOax-XMAoyTq4SHsnYJkxqMiIug?<|KYsvji8A?n2Vs<oJ7^q&X5o2i
+z2)3o#ca;YH?NNMx2=XxV5V*j`A2|dWMCh7_p;>X8rfp2LadrqYF>?gc@yamhg?)J#
+zT7<lL1eD4I%I9OyB*G{1)s8}uIFd)<LV~dE<yFFJ5v}GZT&4-4`eUm^3^T`|NFC?$
+z1;Wu@Gmbwk*hfY|hrThu72o}<AeN3piAa$58h90{U7n6W$P>lRad;9W{=+yNS0X${
+z?!#Z&Xf-aLhU*HO(`Cb(ry)N_vYOc)55I4R+!GOlfJXw5jk-x_z)cfSP?KceXkn7o
+z<`5gFjxVfArLtI9RaaNAm$e6iQGYlP>R`J)5x<Ygq2!s;IY}-qPJr$~qtV3NTmB89
+z63c5$o~)JdDplAY?GA^MF;NopU;BTS(tj|FVYw%sL%d2Oa(CG4XKuHfm4yA?K$kyK
+zV%mI{zt3be#g5#_#>R6b1#hZp8uo7`srbw!jNk3%bDAmOnkn+-yOxTT-;K``^;Ct!
+zo?bC%p^j)L+u~+6R$QD^H3vU^JPn+@We+_AP{CC)oy^WiEEdJG<skFZ6#mH|wSjhZ
+z41Dxc8on*SG9U)j?xX4a!~uFPP}a6#Ur!+96GaAPuO}LiL#16|IVyYQV4ubEUt^~n
+RiS}90w?rNM)g}7d^xsu}$Fcwb
+
+delta 897
+zcmZXSe@xV69LM*5p6}5eQpX7c>WlDIMj#``9UPoj^wV@nFgLxWQ<PKramDY>wh}0#
+zMz#UoQr<BqIA=`}FPN=oQ^8*&H~(>Kqm}-_O6OLS8Kc!7jp(^njOefDc|Ol;@4fea
+ze}-?Y>>FP>dis6Dvn5qn=bc^mdW5ftcV2{-_qQUOeJRFcpHxhx#qHT24mUS(_Bzt}
+z+!)GuWtH(f&t8-%9L<JLJ-HtF_?K$=3dwx8LAuo5mvIU3C~G5nq$u`LU$WFUn-G$E
+z`b;IJZ1JUjci~#=Kvt-h)eU%p=_XQGz7@xK%MUw4+wi$M62MPDDLY@okIZ!;iIt{s
+zapyX@n$=_4leUw^Hv(9zoZFEi)YC3>3*Ix4q^6SKw8ylZY@9>_7fj6azz#UoqpL8U
+z%&R__9M3i~mEpm7T#PhXS#Kor@Pe?bUwycZ81GQu`|-yk+$@EIiFt-Yd3T{=jZxzD
+z7c<x)av6OO`{ChbQ&b7JoAXDcsRj?CS{R-}ZwVuxB9HkWU_0FWrC*lEm<da4)Tc`S
+z5Z?-0Ns+&39mh5yl~;14L#2L%KcVT%{YHUW|1oNHYCPM6fS#cj<@#08i@*wZRlZeM
+z6W-lWQ_IANjw54-u(Rwfk*;QXaZNYC(ZdKx&9Smm$D0v>*Wsxu*wd_QZDeKyY20v7
+zC)5?uJ-XFs1UB0e*LVA|<-e{io+7gK>?U!2k?dFwwGYG~b#egT$wexUr;q<%FEseK
+zUf&>YEFq5#VFmk!@al5qS56>DE4QA&UV{%#p$3H<{#j<Ime0^>(?1V~bxwxcTjJx`
+zd6CA==ip*^1VJW5G0{C8g_@3v$qSjK{(tt*+7}E5UubI!zFp8z(^MC(x1KGtJpAEn
+zk;z?$WE|i5T_h;ub(w2Nv3jaap3^(2?z}0_B=P8^POs{aE^VY+7J{?MvQ_E#Oo;JO
+Zkw8zo@i+(Oq{)dP<0bXmoc!{OzX03eDrEow
+
+diff --git a/sveltejs/public/build/bundle.js.map b/sveltejs/public/build/bundle.js.map
+index b8b9abd3aeb50472487df518895306cb44580c54..e1d841c73fb364da88d76c8cf5b486c3e4a9d010 100644
+GIT binary patch
+delta 1379
+zcma)4UrbwN6wi0hEd$DAV}KB$`#@y3a;4OXlU>XBdfTzfU@(YTP%P_8TW(r<OIylj
+z#o<hR*);ykj&Bk*!|20^art6Q1`qn8WRlDW@WD8fsWEYLX3^-2-h1m7FfsAv+?((G
+z`TaTP!<TkmdSmDON95PQebJL?Ba@>MBbCijZDjo56aD?;1A~De_2Kh=LM!y_cx)z_
+z9G@~KqWorn^ea_#OQAfLqPUPHji^)#4fu11P|6GQ<g?1E!u@(|OX(c%euXseauhsz
+zY>tQCAqNP)B?;vfn}PA=AgRZ$N}(AqFA*nSeU~hdvUE7Er^31D1ZFRgvD1`#Jd~x=
+z$x}3@Cv(w^o{G~G;cRq*8mTRqCOg`)pXT+fej*tiHfFQbM<vNkeciNRB`GyoN}CzD
+z?<6SAL~}El6upaX^($kk*CUCl?k$h)MH*7Zn6)OGpZ2UVlZiyB&*!6iGSP^hj%N3`
+z&1OpH+>(27^#aLb;wkbU>Rq;zXgc`-uWuBth&yO&>lS7FhbG~6ZQyuIVOCE~n1D$m
+z63*#Hsy&@Caz?~R&Urj7|7fK2-$j!~HdoX?=fRtg36Jo$F5w$S_Tq2P2nV=U5ZtGo
+zvdWmMXiUuqarJjW+NLO)n)B!RsXv7m4&b*>!@Z6fRh{m`!AGH%uk^rK0YB}528^rl
+z1v)m&zaa@6d?WyWlsYt)2?mkuha1@SBe-~-0#l9(!_U0hq+cFoY!oj_Vw+P@jxqLR
+z@gZC#R^!6g;J~#6h`1udHeBw69XS6s>^3JRwIRIrKD1){FVKeProhdw48Y^}kZJB5
+zgY5#GJmSS$UqLOd_(caE4}lYxL+~I^gy3Vb#1xkd9>(@n=;i4MED<5@=S@+F5Yg+;
+z`_Wq_?!sqZgbEB@2N|!%KyC~&#$+=D<uGGmxtFnCo2zBiUTla%cb~?3^8tCvZ>3Bv
+z$E+e|xyj@KGbp1>9kzR{IZTQBnL1RQX4NQ)5@o@d{eZ9jB-E5?jA=Fyj(-64_<b0p
+z^Ac2-bokZ7-T-<Zf*MRqP|h#L;d~i3u0sP4PeUu&w1f9D@VOI%)8<arB(a>o`5Y_)
+z3GkjX@Ylnnm-k$P?@GmkvhK%g0chcUm*HwX(a^OHQ^hfh>kz`T=4@=*fMIgTO1b!J
+z8xX1>9sJgHNR;i?*hDf=RBDoD@=+`3rV-5IKY~l2Kuw+L!GLUQvJR~HcX$1@rjIP6
+z7A;Hs-%hV6x=J+WRVP*Z9=LfA%Odgc8@Hjfjtn4KGd-$S#i~wwc~($O6q}08!en~X
+zKKMJ#)Iqt!hPQTvUpAY@_X(oYG0K9SDjEUt2*>T>pxg4)h2lQ3jU3_~`@}Pqe*-$E
+Buh9Si
+
+delta 667
+zcmYk2T}YF06vp|#=l{+*%}va&T(X%V#%riS=4Oun-sv_?okoZ$I-OceQ4<F$eJJ5g
+zAD|!}5R4+igbbDHbP<#n1!W)BO@bCuAQdIiy68*j4ZG;Mdf+)c{LXW0G<NPn?7&U-
+z)dguv8qU9BX3W+}25Ko{7CX+YvLu=rV4saNJIpL`v~-2-XXv}m47h!c?WE&Z*(HXP
+zlPm_Ulk5<AuCa{}PRwfgMlDn6UaItr)5H$xTLQ{!Y%AXFmy&VaCZ*_=x(<t`Op3Hi
+zZv_52At|we?v}=$mWE(!LsNTapsisKrJt0P(-C&NSM7G@(b?b98Hemu_m+5Y(F5yJ
+z$cZ^qkb$eGAcEd`p;g8%KUn0DDvo;4zYh|~Q2^&8R*WNqkb-N4uz<NbZl#wF_@T#&
+zFzBR;avU*3FV*^>Fot!~cs*>9Aiq2ZFAr-4_x%v&vRCYJmEwWt;J)1oGmIUixg!u@
+zQil^q-a{hp4nh;2kLLRLBBff0YQ-&tTd5JE#_knrKTZds5bKJ$6-~RqsLOV$ja@GE
+zWkEdp<G?^qkHJ_Z25mf*274f#Z4z7PVF(^au~O3Tp8zWvdkq;hGz3eztcdFGz*{|Y
+zk(h^{$r$JXGgdD{6{-cAd$0`kIJK-f#|l*a8-S))pfQ^Dk?{kxMe5pA(cJFB7cx&W
+zsY;m;Wr|k_uc8W}VwR38a-UO(Zd{aka@2nZINu9a^o1dUY44k%lBU8i${}BE#+(?~
+zMu)${r$qcX1_u0c0}T4gzm-Di!*LT=a5Wlqyhgb5Xu-rUW^VEh*?1OKh9Hq1*?7D0
+E54P;z*8l(j
+
+diff --git a/sveltejs/src/ProjectBrowser.svelte b/sveltejs/src/ProjectBrowser.svelte
+index 8bf58aa..0ea1d82 100644
+--- a/sveltejs/src/ProjectBrowser.svelte
++++ b/sveltejs/src/ProjectBrowser.svelte
+@@ -102,9 +102,9 @@
+       );
+     }
+ 
+-    const url = Drupal.url(
+-      `drupal-org-proxy/project?${searchParams.toString()}`,
+-    );
++    const url = `${window.location.protocol}//${
++      window.location.host
++    }/drupal-org-proxy/project?${searchParams.toString()}`;
+ 
+     const res = await fetch(url);
+     if (res.ok) {

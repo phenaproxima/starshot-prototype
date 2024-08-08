@@ -5,7 +5,7 @@
     "require": {
         "drupal/core": ">=10.3",
         "drupal/automatic_updates": "^3.1.6",
-        "drupal/project_browser": "2.0.x-dev",
+        "drupal/project_browser": "dev-3450629-mini-browser",
         "drupal/upgrade_status": "^4.3"
     }
 }
