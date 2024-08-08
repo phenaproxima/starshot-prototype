@@ -131,6 +131,10 @@
             "options": {
                 "symlink": false
             }
+        },
+        "project_browser": {
+            "type": "vcs",
+            "url": "https://git.drupalcode.org/issue/project_browser-3450629.git"
         }
     },
     "require": {
@@ -205,6 +209,9 @@
                 "#3303127: Determine which core config entity methods should be config actions": "./patches/core/7940.patch",
                 "Ensure core recipes that affect user roles also install the User module": "./patches/core/core-recipes-user-import.patch",
                 "#3416357: Convert QueueFactory to use a service locator": "./patches/core/3416357-10.3.x-only.patch"
+            },
+            "drupal/project_browser": {
+                "Use absolute urls": "./patches/project_browser/pb.patch"
             }
         }
     },
