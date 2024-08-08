@@ -1,3 +1,6 @@
+## This project has moved to [GitLab on drupal.org](https://git.drupalcode.org/project/drupal_cms).
+
+---
 ![build status](https://github.com/phenaproxima/starshot-prototype/actions/workflows/main.yml/badge.svg)
 
 **This is an experimental prototype. Don't use it for production sites!**
