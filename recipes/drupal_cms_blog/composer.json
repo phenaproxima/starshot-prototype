@@ -1,0 +1,13 @@
+{
+    "name": "drupal/drupal_cms_blog",
+    "type": "drupal-recipe",
+    "description": "Sets up a basic blog, with tagging and commenting.",
+    "version": "dev-main",
+    "require": {
+        "drupal/core": ">=10.3",
+        "drupal/drupal_cms_anti_spam": "*",
+        "drupal/drupal_cms_content_type_base": "*",
+        "drupal/drupal_cms_image_media_type": "*",
+        "drupal-eca-recipe/notify_new_comments": "*"
+    }
+}

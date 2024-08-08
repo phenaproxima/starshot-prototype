@@ -1,0 +1,34 @@
+name: Event content type
+type: Drupal CMS
+recipes:
+  - drupal_cms_content_type_base
+  - drupal_cms_image_media_type
+install:
+  - address
+  - geocoder
+  - geocoder_address
+  - geocoder_geofield
+  - layout_builder
+  - leaflet_more_maps
+  - smart_date
+input:
+  site_uuid:
+    source: config
+    config: ['system.site', 'uuid']
+config:
+  import:
+    filter:
+      - filter.format.plain_text
+    smart_date: '*'
+  actions:
+    geocoder.geocoder_provider.nominatim:
+      # This is a hack; switch to a real config action as soon as reasonable.
+      simple_config_update:
+        configuration.userAgent: 'Drupal $site_uuid'
+        configuration.referer: 'http://drupal-$site_uuid.local'
+    metatag.settings:
+      simple_config_update:
+        entity_type_groups.node.event:
+          - basic
+          - advanced
+          - open_graph

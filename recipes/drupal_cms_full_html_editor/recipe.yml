@@ -1,0 +1,11 @@
+name: Full HTML editor
+type: Drupal CMS
+description: 'Enhances the Full HTML editor with better linking and media support.'
+install:
+  - ckeditor5
+  - linkit
+  - media_library
+config:
+  import:
+    linkit:
+      - image.style.linkit_result_thumbnail

@@ -1,0 +1,11 @@
+{
+    "name": "drupal/drupal_cms_anti_spam",
+    "type": "drupal-recipe",
+    "description": "Sets up anti-spam and anti-abuse functionality.",
+    "version": "dev-main",
+    "require": {
+        "drupal/antibot": "^2",
+        "drupal/core": ">=10.3",
+        "drupal/honeypot": "^2.1"
+    }
+}

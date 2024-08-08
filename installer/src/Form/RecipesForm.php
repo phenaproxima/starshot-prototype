@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\starshot_installer\Form;
+namespace Drupal\drupal_cms_installer\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -17,7 +17,7 @@ final class RecipesForm extends FormBase {
    * {@inheritdoc}
    */
   public function getFormId(): string {
-    return 'starshot_installer_recipes_form';
+    return 'drupal_cms_installer_recipes_form';
   }
 
   /**
@@ -30,15 +30,15 @@ final class RecipesForm extends FormBase {
       '#type' => 'radios',
       '#title' => $this->t('Choose your site template'),
       '#options' => [
-        'starshot' => $this->t('Starshot'),
+        'drupal_cms' => $this->t('Drupal CMS'),
       ],
       '#required' => TRUE,
-      '#default_value' => 'starshot',
+      '#default_value' => 'drupal_cms',
     ];
 
     $options = [
-      'starshot_multilingual' => $this->t('Multilingual support'),
-      'starshot_accessibility_tools' => $this->t('Accessibility tools'),
+      'drupal_cms_multilingual' => $this->t('Multilingual support'),
+      'drupal_cms_accessibility_tools' => $this->t('Accessibility tools'),
     ];
 
     $form['add_ons'] = [

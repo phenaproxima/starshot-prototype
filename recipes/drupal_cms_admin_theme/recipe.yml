@@ -1,0 +1,21 @@
+name: Admin Theme
+type: Drupal CMS
+description: Sets up a nice administrative theme and navigation.
+install:
+  - coffee
+  - gin
+  - gin_toolbar
+  - navigation
+  - sam
+  - type_tray
+config:
+  import:
+    gin: '*'
+    navigation: '*'
+  actions:
+    gin.settings:
+      simple_config_update:
+        high_contrast_mode: true
+    system.theme:
+      simple_config_update:
+        admin: gin

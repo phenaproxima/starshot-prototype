@@ -1,0 +1,23 @@
+name: Image media type
+type: Drupal CMS
+description: 'Adds focal point-based cropping to the image media type.'
+recipes:
+  - core/recipes/image_media_type
+install:
+  - focal_point
+config:
+  import:
+    focal_point: '*'
+  actions:
+    core.entity_form_display.media.image.media_library:
+      setComponent:
+        name: field_media_image
+        options:
+          type: image_focal_point
+          weight: 1
+          region: content
+          settings:
+            progress_indicator: throbber
+            preview_image_style: media_library
+            preview_link: true
+            offsets: '50,50'

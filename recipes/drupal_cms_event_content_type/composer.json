@@ -1,0 +1,16 @@
+{
+    "name": "drupal/drupal_cms_event_content_type",
+    "type": "drupal-recipe",
+    "version": "dev-main",
+    "require": {
+        "drupal/core": ">=10.3",
+        "drupal/address": "^2",
+        "drupal/geocoder": "^4.24",
+        "drupal/geofield": "^1.59",
+        "drupal/leaflet_more_maps": "^2.2",
+        "drupal/smart_date": "^4",
+        "drupal/drupal_cms_content_type_base": "*",
+        "drupal/drupal_cms_image_media_type": "*",
+        "geocoder-php/nominatim-provider": "^5.7"
+    }
+}

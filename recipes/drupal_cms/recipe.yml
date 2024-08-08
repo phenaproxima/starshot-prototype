@@ -1,0 +1,150 @@
+name: Drupal CMS
+description: Applies all the basic Drupal CMS recipes.
+type: Site
+recipes:
+  - core/recipes/basic_block_type
+  - core/recipes/content_search
+  - core/recipes/core_recommended_performance
+  # Put drupal_cms_admin_theme before core_recommended_front_end_theme to
+  # prevent blocks from the front-end theme being copied into the admin
+  # theme unexpectedly. This works around https://drupal.org/i/3372078.
+  - drupal_cms_admin_theme
+  - core/recipes/core_recommended_front_end_theme
+  - core/recipes/user_picture
+  # Provides a fallback text format which is available to all users.
+  - core/recipes/restricted_html_format
+  # Not in Standard...
+  - core/recipes/audio_media_type
+  - core/recipes/document_media_type
+  - core/recipes/local_video_media_type
+  - core/recipes/remote_video_media_type
+  - drupal_cms_blog
+  - drupal_cms_basic_html_editor
+  - drupal_cms_event_content_type
+  - drupal_cms_forms
+  - drupal_cms_full_html_editor
+  - drupal_cms_image_media_type
+  - drupal_cms_maintenance
+  - drupal_cms_media_tools
+  - drupal_cms_page_content_type
+  - drupal_cms_workflows
+install:
+  - easy_breadcrumb
+  - eca_ui
+  - login_emailusername
+  - metatag
+  - menu_link_content
+  - redirect
+  - uli_custom_workflow
+  # The rest of these are in Standard.
+  - help
+  - history
+  - inline_form_errors
+  - config
+  - contextual
+  - menu_link_content
+  - datetime
+  - menu_ui
+  - options
+  - shortcut
+  - toolbar
+  - field_ui
+  - views_ui
+config:
+  import:
+    help:
+      - search.page.help_search
+    image:
+      - image.style.large
+      - image.style.thumbnail
+    metatag: '*'
+    node:
+      - views.view.archive
+      - views.view.content
+      - views.view.content_recent
+      - views.view.frontpage
+      - views.view.glossary
+    olivero:
+      - block.block.olivero_breadcrumbs
+      - block.block.olivero_help
+      - block.block.olivero_search_form_narrow
+      - block.block.olivero_search_form_wide
+      - block.block.olivero_syndicate
+    shortcut:
+      - shortcut.set.default
+    user:
+      - core.entity_view_mode.user.compact
+      - search.page.user_search
+      - views.view.user_admin_people
+      - views.view.who_s_new
+      - views.view.who_s_online
+  actions:
+    node.type.blog:
+      # Don't allow blog posts to have menu links by default, since that's
+      # not normally what blog posts are for.
+      setThirdPartySettings:
+        -
+          module: menu_ui
+          key: available_menus
+          value: []
+        -
+          module: menu_ui
+          key: parent
+          value: ''
+    olivero.settings:
+      simple_config_update:
+        base_primary_color: '#0a205a'
+    project_browser.admin_settings:
+      simple_config_update:
+        allowed_projects:
+          recipes:
+            - drupal_cms_accessibility_tools
+            - drupal_cms_multilingual
+    system.site:
+      simple_config_update:
+        name: 'Drupal CMS'
+        page.front: '/node'
+    user.role.content_editor:
+      grantPermissionsForEachMediaType:
+        - 'create %bundle media'
+        - 'delete any %bundle media'
+        - 'edit any %bundle media'
+      grantPermissionsForEachNodeType:
+        - 'clone %bundle content'
+        - 'create %bundle content'
+        - 'delete %bundle revisions'
+        - 'delete any %bundle content'
+        - 'edit any %bundle content'
+      grantPermissionsForEachTaxonomyVocabulary:
+        - 'create terms in %bundle'
+        - 'edit terms in %bundle'
+    views.view.files:
+      disable: {}
+    node.settings:
+      simple_config_update:
+        use_admin_theme: true
+    user.role.authenticated:
+      grantPermissions:
+        - 'access help pages'
+        - 'access shortcuts'
+        - 'access user profiles'
+        - 'delete own files'
+        - 'use advanced search'
+        - 'view own unpublished content'
+    user.role.anonymous:
+      grantPermissions:
+        # We assume all published content should be accessible and searchable.
+        - 'access content'
+        - 'use advanced search'
+    user.settings:
+      simple_config_update:
+        verify_mail: true
+        register: admin_only
+        cancel_method: user_cancel_block
+    easy_breadcrumb.settings:
+      simple_config_update:
+        # Add Schema.org Breadcrumb markup.
+        add_structured_data_json_ld: true
+        # Remove breadcrumbs when only home appears.
+        # Since we print the page title, this is only the home page.
+        hide_single_home_item: true

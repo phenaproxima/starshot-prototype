@@ -1,0 +1,40 @@
+name: Multilingual support
+type: Drupal CMS
+description: Adds support for translations to all content types.
+install:
+  - content_translation
+  - language
+  - node
+  - user
+config:
+  actions:
+    core.entity_form_display.node.*.default:
+      setComponent:
+        name: langcode
+        options:
+          type: language_select
+          weight: 2
+          region: content
+    'language.content_settings.node.%bundle':
+      createIfNotExistsForEachNodeType:
+        target_entity_type_id: node
+        target_bundle: '%bundle'
+        language_alterable: true
+    language.content_settings.node.*:
+      setThirdPartySettings:
+        -
+          module: content_translation
+          key: enabled
+          value: true
+        -
+          module: content_translation
+          key: bundle_settings
+          value:
+            untranslatable_fields_hide: '1'
+    user.role.content_editor:
+      grantPermissions:
+        - 'create content translations'
+        - 'delete content translations'
+        - 'update content translations'
+      grantPermissionsForEachNodeType:
+        - 'translate %bundle node'

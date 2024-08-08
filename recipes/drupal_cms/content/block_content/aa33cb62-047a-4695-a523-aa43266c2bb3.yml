@@ -1,0 +1,24 @@
+_meta:
+  version: '1.0'
+  entity_type: block_content
+  uuid: aa33cb62-047a-4695-a523-aa43266c2bb3
+  bundle: basic
+  default_langcode: en
+default:
+  status:
+    -
+      value: true
+  info:
+    -
+      value: 'Welcome to Drupal CMS'
+  reusable:
+    -
+      value: true
+  revision_translation_affected:
+    -
+      value: true
+  body:
+    -
+      value: '<drupal-media data-entity-type="media" data-entity-uuid="5b1245d1-4916-4c20-bdf8-27f3fd155918">&nbsp;</drupal-media><p>Drupal CMS is Drupal 10, but supercharged with some of the best modules and themes out there, set up in useful ways to help you get started building a site right away.</p><p><a href="https://drupal.org/starshot">Find out more</a></p>'
+      format: basic_html
+      summary: ''

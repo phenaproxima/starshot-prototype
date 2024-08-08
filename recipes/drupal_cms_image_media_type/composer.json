@@ -1,0 +1,10 @@
+{
+    "name": "drupal/drupal_cms_image_media_type",
+    "type": "drupal-recipe",
+    "description": "Adds focal point-based cropping to the image media type.",
+    "version": "dev-main",
+    "require": {
+        "drupal/core": ">=10.3",
+        "drupal/focal_point": "^2"
+    }
+}

@@ -1,0 +1,13 @@
+{
+    "name": "drupal/drupal_cms_content_type_base",
+    "type": "drupal-recipe",
+    "description": "Provides basic infrastructure for meta tags and cloning of content.",
+    "version": "dev-main",
+    "require": {
+        "drupal/core": ">=10.3",
+        "drupal/metatag": "^2",
+        "drupal/pathauto": "^1.12",
+        "drupal/quick_node_clone": "^1.18",
+        "drupal/simple_sitemap": "^4.1"
+    }
+}

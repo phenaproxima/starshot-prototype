@@ -1,6 +1,6 @@
 #!/bin/bash
 
-## Description: Installs Starshot and opens it in a browser.
+## Description: Installs Drupal CMS and opens it in a browser.
 
 set -e
 

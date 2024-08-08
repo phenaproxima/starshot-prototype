@@ -1,0 +1,10 @@
+{
+    "name": "drupal/drupal_cms_accessibility_tools",
+    "version": "dev-main",
+    "description": "Installs and configures tools to help authors make their content accessible.",
+    "type": "drupal-recipe",
+    "require": {
+        "drupal/core": ">=10.3",
+        "drupal/editoria11y": "^2.1"
+    }
+}

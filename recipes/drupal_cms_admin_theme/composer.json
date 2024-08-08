@@ -1,0 +1,14 @@
+{
+    "name": "drupal/drupal_cms_admin_theme",
+    "type": "drupal-recipe",
+    "description": "Sets up a nice administrative theme and navigation.",
+    "version": "dev-main",
+    "require": {
+        "drupal/coffee": "^1.4",
+        "drupal/core": ">=10.3",
+        "drupal/gin": "^3-rc11",
+        "drupal/gin_toolbar": "^1-rc6",
+        "drupal/sam": "^1.2",
+        "drupal/type_tray": "^1.2"
+    }
+}

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\starshot\ExistingSite;
+namespace Drupal\Tests\drupal_cms\ExistingSite;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Extension\ExtensionList;
@@ -11,7 +11,7 @@ use Drupal\Core\Extension\ThemeExtensionList;
 use weitzman\DrupalTestTraits\ExistingSiteBase;
 
 /**
- * @group starshot
+ * @group drupal_cms
  */
 class BasicExpectationsTest extends ExistingSiteBase {
 
@@ -30,7 +30,7 @@ class BasicExpectationsTest extends ExistingSiteBase {
   }
 
   /**
-   * Tests basic expectations of a successful Starshot install.
+   * Tests basic expectations of a successful Drupal CMS install.
    */
   public function testBasicExpectations(): void {
     $this->drupalGet('/');

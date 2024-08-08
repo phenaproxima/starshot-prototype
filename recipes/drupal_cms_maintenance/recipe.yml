@@ -1,0 +1,20 @@
+name: Recommended maintenance
+type: Drupal CMS
+description: Sets up best practices for ongoing site maintenance.
+recipes:
+  - core/recipes/core_recommended_maintenance
+install:
+  - automatic_updates
+  - automatic_updates_extensions
+  - project_browser
+  - upgrade_status
+config:
+  actions:
+    automatic_updates.settings:
+      simple_config_update:
+        allow_core_minor_updates: true
+    project_browser.admin_settings:
+      simple_config_update:
+        enabled_sources:
+          - drupalorg_jsonapi
+          - recipes
