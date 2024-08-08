@@ -1,0 +1,23 @@
+name: Anti-spam
+type: Drupal CMS
+description: 'Sets up anti-spam and anti-abuse functionality.'
+install:
+  - antibot
+  - honeypot
+  - user
+config:
+  import:
+    user: '*'
+  actions:
+    honeypot.settings:
+      simple_config_update:
+        # Protect the user registration form, password reset form, and
+        # comment form using Honeypot, since those are fairly likely to
+        # be exposed to anonymous users.
+        form_settings.comment_comment_form: true
+        form_settings.user_pass: true
+        form_settings.user_register_form: true
+    user.role.authenticated:
+      grantPermissions:
+        - 'bypass honeypot protection'
+        - 'skip antibot'

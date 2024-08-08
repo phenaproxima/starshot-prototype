@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\starshot_installer;
+namespace Drupal\drupal_cms_installer;
 
 use Drupal\Component\Serialization\Yaml;
 

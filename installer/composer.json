@@ -1,7 +1,7 @@
 {
-    "name": "drupal/starshot_installer",
+    "name": "drupal/drupal_cms_installer",
     "type": "drupal-profile",
-    "description": "Provides install-time tweaks for Starshot. Not to be used in production.",
+    "description": "Provides install-time tweaks for Drupal CMS. Not to be used in production.",
     "version": "dev-main",
     "require": {
         "drupal/core": ">=10.3",

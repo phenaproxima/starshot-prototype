@@ -1,5 +1,5 @@
 {
-    "name": "drupal/starshot-project",
+    "name": "drupal/drupal-cms-project",
     "description": "Drupal with a bunch of useful stuff.",
     "type": "project",
     "license": "GPL-2.0-or-later",
@@ -13,121 +13,121 @@
             "type": "composer",
             "url": "https://packages.drupal.org/8"
         },
-        "starshot": {
+        "drupal_cms": {
             "type": "path",
-            "url": "recipes/starshot",
+            "url": "recipes/drupal_cms",
             "options": {
                 "symlink": false
             }
         },
-        "starshot_admin_theme": {
+        "drupal_cms_admin_theme": {
             "type": "path",
-            "url": "recipes/starshot_admin_theme",
+            "url": "recipes/drupal_cms_admin_theme",
             "options": {
                 "symlink": false
             }
         },
-        "starshot_anti_spam": {
+        "drupal_cms_anti_spam": {
             "type": "path",
-            "url": "recipes/starshot_anti_spam",
+            "url": "recipes/drupal_cms_anti_spam",
             "options": {
                 "symlink": false
             }
         },
-        "starshot_basic_html_editor": {
+        "drupal_cms_basic_html_editor": {
             "type": "path",
-            "url": "recipes/starshot_basic_html_editor",
+            "url": "recipes/drupal_cms_basic_html_editor",
             "options": {
                 "symlink": false
             }
         },
-        "starshot_blog": {
+        "drupal_cms_blog": {
             "type": "path",
-            "url": "recipes/starshot_blog",
+            "url": "recipes/drupal_cms_blog",
             "options": {
                 "symlink": false
             }
         },
-        "starshot_content_type_base": {
+        "drupal_cms_content_type_base": {
             "type": "path",
-            "url": "recipes/starshot_content_type_base",
+            "url": "recipes/drupal_cms_content_type_base",
             "options": {
                 "symlink": false
             }
         },
-        "starshot_accessibility_tools": {
+        "drupal_cms_accessibility_tools": {
             "type": "path",
-            "url": "recipes/starshot_accessibility_tools",
+            "url": "recipes/drupal_cms_accessibility_tools",
             "options": {
                 "symlink": false
             }
         },
-        "starshot_event_content_type": {
+        "drupal_cms_event_content_type": {
             "type": "path",
-            "url": "recipes/starshot_event_content_type",
+            "url": "recipes/drupal_cms_event_content_type",
             "options": {
                 "symlink": false
             }
         },
-        "starshot_forms": {
+        "drupal_cms_forms": {
             "type": "path",
-            "url": "recipes/starshot_forms",
+            "url": "recipes/drupal_cms_forms",
             "options": {
                 "symlink": false
             }
         },
-        "starshot_full_html_editor": {
+        "drupal_cms_full_html_editor": {
             "type": "path",
-            "url": "recipes/starshot_full_html_editor",
+            "url": "recipes/drupal_cms_full_html_editor",
             "options": {
                 "symlink": false
             }
         },
-        "starshot_image_media_type": {
+        "drupal_cms_image_media_type": {
             "type": "path",
-            "url": "recipes/starshot_image_media_type",
+            "url": "recipes/drupal_cms_image_media_type",
             "options": {
                 "symlink": false
             }
         },
-        "starshot_installer": {
+        "drupal_cms_installer": {
             "type": "path",
             "url": "installer",
             "options": {
                 "symlink": false
             }
         },
-        "starshot_maintenance": {
+        "drupal_cms_maintenance": {
             "type": "path",
-            "url": "recipes/starshot_maintenance",
+            "url": "recipes/drupal_cms_maintenance",
             "options": {
                 "symlink": false
             }
         },
-        "starshot_media_tools": {
+        "drupal_cms_media_tools": {
             "type": "path",
-            "url": "recipes/starshot_media_tools",
+            "url": "recipes/drupal_cms_media_tools",
             "options": {
                 "symlink": false
             }
         },
-        "starshot_multilingual": {
+        "drupal_cms_multilingual": {
             "type": "path",
-            "url": "recipes/starshot_multilingual",
+            "url": "recipes/drupal_cms_multilingual",
             "options": {
                 "symlink": false
             }
         },
-        "starshot_page_content_type": {
+        "drupal_cms_page_content_type": {
             "type": "path",
-            "url": "recipes/starshot_page_content_type",
+            "url": "recipes/drupal_cms_page_content_type",
             "options": {
                 "symlink": false
             }
         },
-        "starshot_workflows": {
+        "drupal_cms_workflows": {
             "type": "path",
-            "url": "recipes/starshot_workflows",
+            "url": "recipes/drupal_cms_workflows",
             "options": {
                 "symlink": false
             }
@@ -139,8 +139,8 @@
         "drupal/core-composer-scaffold": "^10.3",
         "drupal/core-project-message": "^10.3",
         "drupal/core-recommended": "^10.3",
-        "drupal/starshot": "*",
-        "drupal/starshot_installer": "*",
+        "drupal/drupal_cms": "*",
+        "drupal/drupal_cms_installer": "*",
         "drush/drush": "^12.5"
     },
     "require-dev": {
@@ -187,12 +187,12 @@
         "drupal-core-project-message": {
             "include-keys": ["homepage", "support"],
             "post-create-project-cmd-message": [
-                "<bg=blue;fg=white>                                                 </>",
-                "<bg=blue;fg=white>  Congratulations, you’ve installed Starshot!    </>",
-                "<bg=blue;fg=white>                                                 </>",
+                "<bg=blue;fg=white>                                                   </>",
+                "<bg=blue;fg=white>  Congratulations, you’ve installed Drupal CMS!    </>",
+                "<bg=blue;fg=white>                                                   </>",
                 "",
                 "<bg=yellow;fg=black>Next steps</>:",
-                "  * Run <fg=yellow>composer quick-start</> to install Starshot and open it in a browser",
+                "  * Run <fg=yellow>composer quick-start</> to initialize Drupal CMS and open it in a browser",
                 "  * Read the user guide: https://www.drupal.org/docs/user_guide/en/index.html",
                 "  * Get support: https://drupal.org/support",
                 "  * Get involved with the Drupal community: https://drupal.org/getting-involved"
@@ -211,7 +211,7 @@
     "scripts": {
         "drupal:install": [
             "Composer\\Config::disableProcessTimeout",
-            "\\Drupal\\starshot_installer\\ScriptHandler::configureDrush",
+            "\\Drupal\\drupal_cms_installer\\ScriptHandler::configureDrush",
             "drush site:install --yes --account-pass admin --config drush-install.yml",
             "rm -f drush-install.yml",
             "drush webform-libraries-download"
@@ -243,12 +243,12 @@
         ]
     },
     "scripts-descriptions": {
-        "drupal:install": "Installs Starshot.",
-        "drupal:install-dev": "Installs Starshot, with additional modules and configuration tweaks for development.",
-        "drupal:rebuild": "Rebuilds the codebase and reinstalls Starshot from scratch. Should only be used for internal development.",
-        "drupal:run-server": "Runs Starshot using the PHP webserver and opens it in the default browser.",
-        "drupal:run-tests": "Runs Starshot's automated test suite.",
-        "quick-start": "Installs Starshot and opens it in a browser."
+        "drupal:install": "Installs Drupal CMS.",
+        "drupal:install-dev": "Installs Drupal CMS, with additional modules and configuration tweaks for development.",
+        "drupal:rebuild": "Rebuilds the codebase and reinstalls Drupal CMS from scratch. Should only be used for internal development.",
+        "drupal:run-server": "Runs Drupal CMS using the PHP webserver and opens it in the default browser.",
+        "drupal:run-tests": "Runs Drupal CMS's automated test suite.",
+        "quick-start": "Installs Drupal CMS and opens it in a browser."
     },
     "scripts-aliases": {
         "drupal:install": [
@@ -265,7 +265,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Drupal\\starshot_installer\\": "installer/src"
+            "Drupal\\drupal_cms_installer\\": "installer/src"
         }
     }
 }

@@ -1,0 +1,31 @@
+name: 'Content type basics'
+type: Drupal CMS
+description: 'Provides basic infrastructure for meta tags and cloning of content.'
+install:
+  - metatag
+  - metatag_open_graph
+  - node
+  - pathauto
+  - quick_node_clone
+  - simple_sitemap
+config:
+  import:
+    language: '*'
+    metatag:
+      - metatag.metatag_defaults.global
+      - metatag.metatag_defaults.node
+    node:
+      # Only import config which is also imported by the Standard profile.
+      - core.entity_view_mode.node.full
+      - core.entity_view_mode.node.rss
+      - core.entity_view_mode.node.teaser
+      - field.storage.node.body
+      - system.action.node_delete_action
+      - system.action.node_make_sticky_action
+      - system.action.node_make_unsticky_action
+      - system.action.node_promote_action
+      - system.action.node_publish_action
+      - system.action.node_save_action
+      - system.action.node_unpromote_action
+      - system.action.node_unpublish_action
+    simple_sitemap: '*'

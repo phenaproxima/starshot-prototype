@@ -1,0 +1,26 @@
+name: Blog
+type: Drupal CMS
+description: 'Sets up a basic blog, with tagging and commenting.'
+recipes:
+  - core/recipes/comment_base
+  - drupal_cms_anti_spam
+  - drupal_cms_content_type_base
+  - drupal_cms_image_media_type
+  - core/recipes/tags_taxonomy
+  - notify_new_comments
+config:
+  import:
+    image:
+      # Only import config which is also imported by the Standard profile.
+      - image.style.medium
+      - image.style.thumbnail
+      - image.style.wide
+    taxonomy:
+      - views.view.taxonomy_term
+  actions:
+    metatag.settings:
+      simple_config_update:
+        entity_type_groups.node.blog:
+          - basic
+          - advanced
+          - open_graph

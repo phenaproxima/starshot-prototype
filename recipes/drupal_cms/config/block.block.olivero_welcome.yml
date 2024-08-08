@@ -1,0 +1,34 @@
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:basic:aa33cb62-047a-4695-a523-aa43266c2bb3'
+  module:
+    - block_content
+    - system
+  theme:
+    - olivero
+id: olivero_welcome
+theme: olivero
+region: sidebar
+weight: 0
+provider: null
+plugin: 'block_content:aa33cb62-047a-4695-a523-aa43266c2bb3'
+settings:
+  id: 'block_content:aa33cb62-047a-4695-a523-aa43266c2bb3'
+  label: 'Welcome to Drupal CMS'
+  label_display: visible
+  provider: block_content
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  response_status:
+    id: response_status
+    negate: false
+    status_codes:
+      - 200
+  request_path:
+    id: request_path
+    negate: false
+    pages: '<front>'

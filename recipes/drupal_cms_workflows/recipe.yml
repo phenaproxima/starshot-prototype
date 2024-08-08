@@ -1,0 +1,76 @@
+name: 'Content workflows'
+type: Drupal CMS
+description: 'Adds support for moderation workflows and scheduled publishing to all content types.'
+recipes:
+  - core/recipes/editorial_workflow
+  - drupal_cms_content_type_base
+install:
+  - diff
+  - scheduler
+  - views
+  - workflows
+config:
+  import:
+    scheduler:
+      - views.view.scheduler_scheduled_content
+  actions:
+    core.entity_form_display.node.*.default:
+      setComponents:
+        - name: moderation_state
+          options:
+            type: moderation_state_default
+            region: content
+        - name: scheduler_settings
+          options:
+            region: content
+        - name: publish_on
+          options:
+            type: datetime_timestamp_no_default
+            region: content
+        - name: unpublish_on
+          options:
+            type: datetime_timestamp_no_default
+            region: content
+    node.type.*:
+      setThirdPartySettings:
+        - module: scheduler
+          key: expand_fieldset
+          value: when_required
+        - module: scheduler
+          key: fields_display_mode
+          value: vertical_tab
+        - module: scheduler
+          key: publish_enable
+          value: true
+        - module: scheduler
+          key: publish_past_date
+          value: error
+        - module: scheduler
+          key: publish_past_date_created
+          value: false
+        - module: scheduler
+          key: publish_required
+          value: false
+        - module: scheduler
+          key: publish_revision
+          value: true
+        - module: scheduler
+          key: publish_touch
+          value: true
+        - module: scheduler
+          key: show_message_after_update
+          value: true
+        - module: scheduler
+          key: unpublish_enable
+          value: true
+        - module: scheduler
+          key: unpublish_required
+          value: false
+        - module: scheduler
+          key: unpublish_revision
+          value: true
+    scheduler.settings:
+      simple_config_update:
+        hide_seconds: true
+    workflows.workflow.editorial:
+      addNodeTypes: '*'

@@ -1,0 +1,10 @@
+{
+    "name": "drupal/drupal_cms_page_content_type",
+    "type": "drupal-recipe",
+    "description": "Provides a basic Page content type with pretty URLs and meta tags.",
+    "version": "dev-main",
+    "require": {
+        "drupal/core": ">=10.3",
+        "drupal/drupal_cms_content_type_base": "*"
+    }
+}

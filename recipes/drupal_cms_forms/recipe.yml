@@ -1,0 +1,22 @@
+name: Forms
+type: Drupal CMS
+description: Provides a simple contact form, and tools for building more complex forms.
+recipes:
+  - drupal_cms_anti_spam
+install:
+  - webform
+  - webform_ui
+config:
+  import:
+    webform: '*'
+  actions:
+    webform.webform.contact:
+      setThirdPartySettings:
+        -
+          module: antibot
+          key: antibot
+          value: true
+        -
+          module: honeypot
+          key: honeypot
+          value: true

@@ -1,0 +1,9 @@
+{
+    "name": "drupal/drupal_cms_multilingual",
+    "type": "drupal-recipe",
+    "version": "dev-main",
+    "description": "Configures multilingual support for all content types.",
+    "require": {
+        "drupal/core": ">=10.3"
+    }
+}

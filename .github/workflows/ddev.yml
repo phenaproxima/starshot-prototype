@@ -31,11 +31,11 @@ jobs:
           sudo sh -c 'echo ""'
           sudo apt update && sudo apt install -y ddev
 
-      - name: Install Starshot
+      - name: Install Drupal CMS
         run: |
           ddev quick-start
 
-      - name: Confirm that Starshot is running
+      - name: Confirm that Drupal CMS is running
         run: |
           ddev list -W
           curl --location --silent http://starshot-prototype.ddev.site/node/1 | grep "<title>"

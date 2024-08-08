@@ -55,7 +55,7 @@ jobs:
             --stability=dev \
             --repository='{"type":"vcs","url":"'"$(pwd)"'"}' \
             --ansi \
-            drupal/starshot-project \
+            drupal/drupal-cms-project \
             /var/www
           cd /var/www
           composer quick-start

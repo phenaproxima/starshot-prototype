@@ -1,0 +1,13 @@
+name: Accessibility tools
+type: Drupal CMS
+description: Installs and configures tools to help authors make their content accessible.
+install:
+  - editoria11y
+config:
+  actions:
+    editoria11y.settings:
+      simple_config_update:
+        # Map tiles contain no alt text.
+        # Skipping the map pane to limit reports
+        # where the fix is outwith editors control.
+        ignore_elements: '.leaflet-map-pane *'

@@ -1,0 +1,10 @@
+{
+    "name": "drupal/drupal_cms_basic_html_editor",
+    "type": "drupal-recipe",
+    "description": "Enhances the Basic HTML editor with better linking and media support.",
+    "version": "dev-main",
+    "require": {
+        "drupal/core": ">=10.3",
+        "drupal/linkit": "^6.1.4"
+    }
+}

@@ -1,0 +1,28 @@
+{
+    "name": "drupal/drupal_cms",
+    "type": "drupal-recipe",
+    "description": "Sets up a site with useful features and sample content.",
+    "version": "dev-main",
+    "require": {
+        "drupal/core": ">=10.3",
+        "drupal/easy_breadcrumb": "^2",
+        "drupal/eca": "^2",
+        "drupal/login_emailusername": "^2.1",
+        "drupal/metatag": "^2",
+        "drupal/redirect": "^1.9",
+        "drupal/drupal_cms_admin_theme": "*",
+        "drupal/drupal_cms_blog": "*",
+        "drupal/drupal_cms_basic_html_editor": "*",
+        "drupal/drupal_cms_accessibility_tools": "*",
+        "drupal/drupal_cms_event_content_type": "*",
+        "drupal/drupal_cms_forms": "*",
+        "drupal/drupal_cms_full_html_editor": "*",
+        "drupal/drupal_cms_image_media_type": "*",
+        "drupal/drupal_cms_maintenance": "*",
+        "drupal/drupal_cms_media_tools": "*",
+        "drupal/drupal_cms_multilingual": "*",
+        "drupal/drupal_cms_page_content_type": "*",
+        "drupal/drupal_cms_workflows": "*",
+        "drupal/uli_custom_workflow": "^1"
+    }
+}

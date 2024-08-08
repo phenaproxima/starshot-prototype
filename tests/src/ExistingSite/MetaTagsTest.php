@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\starshot\ExistingSite;
+namespace Drupal\Tests\drupal_cms\ExistingSite;
 
 use Behat\Mink\Element\NodeElement;
 use Drupal\Core\File\FileUrlGeneratorInterface;
@@ -11,7 +11,7 @@ use Drupal\media\Entity\Media;
 use weitzman\DrupalTestTraits\ExistingSiteBase;
 
 /**
- * @group starshot
+ * @group drupal_cms
  */
 class MetaTagsTest extends ExistingSiteBase {
 

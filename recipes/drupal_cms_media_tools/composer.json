@@ -1,0 +1,11 @@
+{
+    "name": "drupal/drupal_cms_media_tools",
+    "version": "dev-main",
+    "description": "Installs and configures tools for better media management.",
+    "type": "drupal-recipe",
+    "require": {
+        "drupal/core": ">=10.3",
+        "drupal/media_entity_download": "^2.2",
+        "drupal/media_file_delete": "^1.3"
+    }
+}
