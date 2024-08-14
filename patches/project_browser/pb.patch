@@ -1,16 +1,3 @@
-diff --git a/project_browser.routing.yml b/project_browser.routing.yml
-index b7ad176..9056bf8 100644
---- a/project_browser.routing.yml
-+++ b/project_browser.routing.yml
-@@ -15,7 +15,7 @@ project_browser.api_project_get_all:
-     _controller: '\Drupal\project_browser\Controller\ProjectBrowserEndpointController::getAllProjects'
-     _title: 'Get all projects'
-   requirements:
--    _permission: 'administer modules'
-+    _access: 'TRUE'
-   #options:
-   #  no_cache: 'TRUE'
- project_browser.browse:
 diff --git a/sveltejs/public/build/bundle.js b/sveltejs/public/build/bundle.js
 index 77726f38845aab0952ba9f3b9f7640a3e39b1a8f..638c3052d89ff0f256e35379fcc7e20758ee2fe9 100644
 GIT binary patch

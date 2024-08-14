@@ -1,0 +1,5 @@
+services:
+  starshot_installer.route_subscriber:
+    class: Drupal\starshot_installer\Routing\RouteSubscriber
+    tags:
+      - { name: event_subscriber }
